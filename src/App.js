@@ -1,7 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './Components/Admin/Sidebar';
+import Header from './Components/Admin/Header';
 import Home from './Pages/Admin/Home';
+import Helpers from './Config/Helpers';
 import Login from './Pages/Admin/Login';
 import Secure from './Pages/Admin/Secure'; // Import the Secure component
 import Adduser from './Pages/Admin/Adduser';
@@ -11,7 +13,12 @@ import UserSidebar from './Pages/users/Sidebar'; // Correct the import capitaliz
 import UserLogin from './Pages/users/Login'; // Import the new UserLogin component
 import UserSecure from './Pages/users/UserSecure'; // Import the new UserSecure component
 
+
+
+
 function App() {
+
+
   return (
     <BrowserRouter>
       <Routes>
@@ -24,6 +31,7 @@ function App() {
             element={
               <div className="d-flex" style={{ height: '100vh' }}>
                 <Sidebar />
+                <Header />
                 <div className="flex-grow-1">
                   <Routes>
                     <Route path="home" element={<Home />} />
