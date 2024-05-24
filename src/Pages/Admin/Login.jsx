@@ -87,7 +87,7 @@ const AdminLogin = () => {
               style={{ borderRadius: '10px', border: '1px solid #ced4da' }}
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100" disabled={loading} style={{ borderRadius: '10px', backgroundColor: '#007bff', border: 'none', fontWeight: 'bold' }}>
+          <button type="submit" className="btn btn-primary w-100 text-center" disabled={loading} style={{ borderRadius: '10px', backgroundColor: '#007bff', border: 'none', fontWeight: 'bold' }}>
             {loading ? <Spinner animation="border" size="sm" /> : 'Login'}
           </button>
         </form>

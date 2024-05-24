@@ -32,7 +32,7 @@ function App() {
               <div className="d-flex" style={{ height: '100vh' }}>
                 <Sidebar />
                 <Header />
-                <div className="flex-grow-1">
+                <div className="flex-grow-1 bg-dark">
                   <Routes>
                     <Route path="home" element={<Home />} />
                     <Route path="add-user" element={<Adduser />} />

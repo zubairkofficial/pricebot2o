@@ -6,14 +6,6 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Helpers from "../../Config/Helpers";
 import toast from "react-hot-toast";
 
-const services = [
-  { name: "Preisbot" },
-  { name: "Protokoll" },
-  { name: "Preishistorie" },
-];
-
-// const roles = ["Admin", "User"];
-
 const myData = [
   { label: "Preisbot", value: "Preisbot" },
   { label: "Protokoll", value: "Protokoll" },
@@ -26,12 +18,10 @@ const AddUserForm = () => {
     name: "",
     email: "",
     password: "",
-   
     services: [],
-   
+    showPassword: false,
   });
-  const [showAlert, setShowAlert] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -52,8 +42,7 @@ const AddUserForm = () => {
     e.preventDefault();
 
     if (!user.name || !user.email || !user.password) {
-      setErrorMessage("Name, email, and password are required.");
-      setShowAlert(true);
+      Helpers.toast(  "error" ,"Name, email, and password are required.");
       return;
     }
 
@@ -75,132 +64,106 @@ const AddUserForm = () => {
         throw new Error("Failed to register user");
       }
 
-      // Reset form fields
       setUser({
         name: "",
         email: "",
         password: "",
         services: [],
-       
+        showPassword: false,
       });
 
-      setErrorMessage("");
-      setShowAlert(false);
-
-    //   Show success toast
-        Helpers.toast(  "success" , "Benutzer hat sich erfolgreich registriert", {
-          duration: 4000, // Duration of the toast
-        });
+      Helpers.toast(  "success" ,  "User registered successfully!");
 
       setTimeout(() => {
         navigate("/admin/home");
       }, 2000);
     } catch (error) {
-    //   console.error("Error registering user:", error.message);
-      setErrorMessage("Failed to register user.");
-      setShowAlert(true);
-
-       Helpers.toast("success" , "Benutzer hat sich erfolgreich registriert");
+      toast.error("Failed to register user.");
     }
   };
 
-  const handleCloseAlert = () => {
-    setShowAlert(false);
-    setErrorMessage("");
-  };
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="container p-4 rounded shadow-sm bg-light"
-      style={{
-        maxWidth: '600px',
-        marginTop: '50px',
-        boxShadow: '0px 20px 30px -10px rgb(38, 57, 77)',
-        borderRadius: '10px'
-      }}
-    >
-      <h2 className="mb-4" style={{ color: '#333' }}>Benutzer hinzufügen</h2>
-
-      <div className="mb-3">
-        <label htmlFor="nameInput" className="form-label">
-          Name
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="nameInput"
-          name="name"
-          value={user.name}
-          onChange={handleChange}
-          required
-        />
+    <div className="modal-content">
+    <div className="modal-header">
+      <h5 className="modal-title">Benutzer hinzufügen</h5>
+    </div>
+    <div className="modal-body modal-body-two">
+      <div className="from-main">
+        <form className="row g-3" onSubmit={handleSubmit}>
+          <div className="col-md-6">
+            <label htmlFor="name" className="form-label">
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="name"
+              name="name"
+              value={user.name}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
+            <input
+              type="email"
+              className="form-control"
+              id="email"
+              name="email"
+              value={user.email}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="password" className="form-label">
+              Passwort
+            </label>
+            <div className="input-group">
+              <input
+                type={user.showPassword ? "text" : "password"}
+                className="form-control"
+                id="password"
+                name="password"
+                value={user.password}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="services" className="form-label">
+              Dienstleistungen
+            </label>
+            <Select
+              options={myData}
+              multi
+              onChange={handleServiceChange}
+              values={user.services.map((service) => ({
+                label: service,
+                value: service,
+              }))}
+              className="custom-select"
+            />
+          </div>
+          <div className="d-flex justify-content-end">
+            <button type="submit" className="btn-one btn-wide">
+              Registrieren
+            </button>
+          </div>
+        </form>
       </div>
-      <div className="mb-3">
-        <label htmlFor="emailInput" className="form-label">
-          Email
-        </label>
-        <input
-          type="email"
-          className="form-control"
-          id="emailInput"
-          name="email"
-          value={user.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label
-          htmlFor="passwordInput"
-          className="form-label d-flex align-items-center"
-        >
-          Passwort
-          <span className="ms-auto" onClick={togglePasswordVisibility} style={{ cursor: 'pointer', marginLeft: '10px' }}>
-            <FontAwesomeIcon icon={user.showPassword ? faEyeSlash : faEye} />
-          </span>
-        </label>
-        <input
-          type={user.showPassword ? "text" : "password"}
-          className="form-control"
-          id="passwordInput"
-          name="password"
-          value={user.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="serviceSelect" className="form-label">
-        Dienstleistungen
-        </label>
-        <Select
-          options={myData}
-          onChange={handleServiceChange}
-          multi
-          placeholder="Select Services"
-          className="form-control"
-          name="services"
-          required
-        />
-      </div>
-      <button type="submit" className="btn btn-primary m-2">
-      Benutzer hinzufügen
-
-      </button>
-      <Link to={`/`} className="btn btn-secondary ">
-      Stornieren
-      </Link>
-    </form>
+    </div>
+  </div>
   );
 };
 
 const AdminPanel = () => {
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-md-12">
-          <div className="card border-0">
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark  ms-5">
+      <div className="row justify-content-center w-100">
+        <div className="col-md-6">
+          <div className="border-0">
             <div className="card-body">
               <AddUserForm />
             </div>

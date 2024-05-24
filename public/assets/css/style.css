@@ -1641,7 +1641,7 @@ h4 {
   cursor: pointer;
   z-index: 1;
   position: relative;
-  width: 100%;
+  width: 10%;
   text-align: center;
   height: 56px;
   border-radius: 8px;
@@ -6185,3 +6185,70 @@ h4 {
 }/*# sourceMappingURL=style.css.map */
 
 
+/* AddUserForm.css */
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+
+
+
+
+.input-group .form-control {
+  border-right: 0;
+}
+
+.input-group .btn-outline-secondary {
+  border-left: 0;
+}
+
+.from-main {
+  padding: 20px;
+}
+/* AddUserForm.css */
+
+
+
+.btn-wide {
+  width: 100%; /* Adjust this value as needed */
+}
+
+/* AddUserForm.css */
+
+
+.custom-select .react-dropdown-select-dropdown {
+  background-color: #343a40;
+  color: white;
+}
+
+.custom-select .react-dropdown-select-item {
+  background-color: #343a40;
+  color: white;
+}
+
+.custom-select .react-dropdown-select-clear,
+.custom-select .react-dropdown-select-dropdown-handle {
+  color: white;
+}
+
+
+/* UserDetail.css */
+
+
+.card {
+  background-color: #1D1E24 !important;
+}
+
+.form-control.bg-dark {
+  background-color: #495057 !important;
+}
+
+.text-muted {
+  color: #adb5bd !important;
+}
