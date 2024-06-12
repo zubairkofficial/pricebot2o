@@ -12,6 +12,8 @@ import UserHome from './Pages/users/Home';
 import UserSidebar from './Pages/users/Sidebar'; // Correct the import capitalization
 import UserLogin from './Pages/users/Login'; // Import the new UserLogin component
 import UserSecure from './Pages/users/UserSecure'; // Import the new UserSecure component
+import FileUpload from './Pages/users/Fileupload';
+import ChangePass from './Pages/users/ChangePass';
 
 
 
@@ -46,17 +48,20 @@ function App() {
         </Route>
 
         {/* User Routes */}
-        <Route path="/user-login" element={<UserLogin />} /> {/* Add user login route */}
+        <Route path="/user-login" element={<UserLogin />} /> 
 
         <Route element={<UserSecure />}> 
           <Route 
-            path="/*" // Use /* for user routes
+            path="/*" 
             element={
               <div className="d-flex" style={{ height: '100vh' }}>
-                <UserSidebar />
+                <UserSidebar />   
                 <div className="flex-grow-1">
                   <Routes>
                     <Route path="/" element={<UserHome />} />
+                    <Route path="/fileupload" element={<FileUpload />} />
+                    <Route path="/changePass" element={<ChangePass/>} />
+
                      
                   </Routes>
                 </div>

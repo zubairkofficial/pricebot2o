@@ -46,6 +46,8 @@ const AdminLogin = () => {
         // localStorage.setItem('accessToken', accessToken);
         localStorage.setItem("userEmail", user.email);
         localStorage.setItem("userName", user.name);
+        localStorage.setItem("services", user.services);
+        localStorage.setItem("id", user.id);
 
         navigate("/", { state: { successMessage: "Login successful" } });
       } else {
@@ -62,6 +64,8 @@ const AdminLogin = () => {
     }
   };
 
+  
+
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-100">
       <div
@@ -75,7 +79,7 @@ const AdminLogin = () => {
         }}
       >
         <h3
-          className="text-center mb-4"
+          className="text-center mb-4 text-light"
           style={{ color: "#343a40", fontWeight: "bold", letterSpacing: "1px" }}
         >
           User Login
@@ -87,8 +91,8 @@ const AdminLogin = () => {
           <div className="mb-3">
             <label
               htmlFor="email"
-              className="form-label m-2"
-              style={{ color: "#343a40", fontWeight: "bold" }}
+              className="form-label m-2 "
+              style={{ color: "white", fontWeight: "bold" }}
             >
               E-Mail-Adresse
             </label>
@@ -108,7 +112,7 @@ const AdminLogin = () => {
             <label
               htmlFor="password"
               className="form-label m-1"
-              style={{ color: "#343a40", fontWeight: "bold" }}
+              style={{ color: "white", fontWeight: "bold" }}
             >
               Passwort
             </label>
@@ -125,11 +129,11 @@ const AdminLogin = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-primary w-100"
+            className="btn btn-one w-100 text-center"
             disabled={loading}
             style={{
               borderRadius: "10px",
-              backgroundColor: "#007bff",
+             
               border: "none",
               fontWeight: "bold",
             }}

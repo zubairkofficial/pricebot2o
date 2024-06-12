@@ -34,7 +34,7 @@ const Sidebar = () => {
   return (
     <div className={`nftmax-smenu ${isVisible ? "" : "nftmax-close"}`}>
       <div className="logo">
-        <a href="index-2.html">
+        <a href="/admin/home">
           <img
           height={40}
           
@@ -58,7 +58,7 @@ const Sidebar = () => {
             >
               <path
                 d="M0 10C0 4.47715 4.47715 0 10 0H16V40H10C4.47715 40 0 35.5228 0 30V10Z"
-                fill="#22C55E"
+                fill="darkblue"
               ></path>
               <path
                 d="M10 15L6 20.0049L10 25.0098"
@@ -129,7 +129,7 @@ const Sidebar = () => {
               </li>
 
               <li className="menu-main">
-                <a href="user.html">
+                <a href="/admin/home">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
                       <div className="has-child-icon">
@@ -172,7 +172,7 @@ const Sidebar = () => {
               </li>
 
               <li className="menu-main">
-                <a href="setting.html">
+                <a href="/admin/home">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
                       <div className="has-child-icon">

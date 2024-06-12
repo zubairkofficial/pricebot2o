@@ -7,10 +7,10 @@ import Helpers from "../../Config/Helpers";
 import toast from "react-hot-toast";
 
 const myData = [
-  { label: "Preisbot", value: "Preisbot" },
-  { label: "Protokoll", value: "Protokoll" },
-  { label: "Preishistorie", value: "Preishistorie" },
-  { label: "Finde Lieferscheine mit", value: "Finde Lieferscheine mit" },
+  { label: "Sthamer", value: "Sthamer" },
+  // { label: "Protokoll", value: "Protokoll" },
+  // { label: "Preishistorie", value: "Preishistorie" },
+  // { label: "Finde Lieferscheine mit", value: "Finde Lieferscheine mit" },
 ];
 
 const AddUserForm = () => {
@@ -83,9 +83,9 @@ const AddUserForm = () => {
   };
 
   return (
-    <div className="modal-content">
+    <div className="modal-content ">
     <div className="modal-header">
-      <h5 className="modal-title">Benutzer hinzufügen</h5>
+      <h5 className="modal-title ms-3">Benutzer hinzufügen</h5>
     </div>
     <div className="modal-body modal-body-two">
       <div className="from-main">
@@ -122,7 +122,7 @@ const AddUserForm = () => {
             </label>
             <div className="input-group">
               <input
-                type={user.showPassword ? "text" : "password"}
+                type={user.showPassword }
                 className="form-control"
                 id="password"
                 name="password"
@@ -143,11 +143,11 @@ const AddUserForm = () => {
                 label: service,
                 value: service,
               }))}
-              className="custom-select"
+              className="custom-select p-2"
             />
           </div>
-          <div className="d-flex justify-content-end">
-            <button type="submit" className="btn-one btn-wide">
+          <div className="d-flex justify-content-end   ">
+            <button type="submit" className="btn-one"  style={{width:'30%'}} >
               Registrieren
             </button>
           </div>
@@ -160,17 +160,25 @@ const AddUserForm = () => {
 
 const AdminPanel = () => {
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark  ms-5">
-      <div className="row justify-content-center w-100">
-        <div className="col-md-6">
-          <div className="border-0">
-            <div className="card-body">
-              <AddUserForm />
+    <div className="container-fluid vh-100 bg-dark text-white " style={{paddingTop:'2rem'}} >
+    <div className="row h-100">
+      <div className="col-2 ">
+        
+      </div>
+      <div className="col-10 d-flex justify-content-center align-items-center">
+        <div className="row justify-content-center w-100">
+          <div className="col-md-8">
+            <div className="card bg-dark text-white border-0">
+              <div className="card-body">
+                <AddUserForm />
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  
   );
 };
 

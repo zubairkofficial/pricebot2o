@@ -216,7 +216,7 @@ const UserList = () => {
                             fontSize: "16px",
                             margin: "4px 2px",
                             cursor: "pointer",
-                            borderRadius: "18px",
+                            borderRadius: "10px",
                           }}
                           onClick={() => handleEdit(user.id)}
                         >
@@ -234,7 +234,7 @@ const UserList = () => {
                             fontSize: "16px",
                             margin: "4px 2px",
                             cursor: "pointer",
-                            borderRadius: "18px",
+                            borderRadius: "10px",
                           }}
                           onClick={() => {
                             setSelectedUserId(user.id);
@@ -257,7 +257,7 @@ const UserList = () => {
         <Modal.Header closeButton>
           <Modal.Title>Löschen bestätigen</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?</Modal.Body>
+        <Modal.Body className="text-white"> Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowConfirmation(false)}>
             Abbrechen
