@@ -41,12 +41,13 @@ const AdminLogin = () => {
       });
 
       if (response.status === 200) {
-        const { accessToken, user } = response.data;
-
-        // localStorage.setItem('accessToken', accessToken);
+        const user = response.data;
+        console.log(response.data);
+        Helpers.setItem("token", response.data.token);
         localStorage.setItem("userEmail", user.email);
         localStorage.setItem("userName", user.name);
-        localStorage.setItem("services", user.services);
+        localStorage.setItem("Department", JSON.stringify(user.department));
+        localStorage.setItem("services", JSON.stringify(user.services));
         localStorage.setItem("id", user.id);
 
         navigate("/", { state: { successMessage: "Login successful" } });
@@ -79,7 +80,7 @@ const AdminLogin = () => {
         }}
       >
         <h3
-          className="text-center mb-4 text-light"
+          className="text-center mb-4 text-dark"
           style={{ color: "#343a40", fontWeight: "bold", letterSpacing: "1px" }}
         >
           User Login

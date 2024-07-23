@@ -126,16 +126,16 @@ const UserList = () => {
   };
 
   return (
-    <section className="nftmax-adashboard nftmax-show w-100 h-100 bg-dark">
+    <section className="nftmax-adashboard nftmax-show w-100 h-100 "  >
       <div className="nftmax-adashboard-left">
      <div className="d-flex justify-content-end align-items-center ">
-            <button className="btn-one" onClick={handleAddUser}>
+            <button className="btn-one text-white" onClick={handleAddUser}>
               Benutzer 
             </button>
           </div>
-        <div className="row tabel-main-box">
+        <div className="row tabel-main-box" style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
           
-          <div className="col-lg-12 col-padding-0">
+          <div className="col-lg-12 col-padding-0" >
             
             <div className="tabel-search-box">
               <div className="tabel-search-box-item">
@@ -168,7 +168,7 @@ const UserList = () => {
                   </div>
                   <input
                     type="text"
-                    className="form-control text-white"
+                    className="form-control "
                     id="search"
                     placeholder="Nach Name suchen"
                     value={searchTerm}
@@ -200,7 +200,7 @@ const UserList = () => {
                       <td>{index + 1}</td>
                       <td>{user.name}</td>
                       <td>{user.email}</td>
-                      <p className="text-light">
+                      <p className="">
                         {user.services ? user.services.join(", ") : ""}
                       </p>
                       <td>

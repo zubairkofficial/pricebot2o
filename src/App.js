@@ -14,11 +14,13 @@ import UserLogin from './Pages/users/Login'; // Import the new UserLogin compone
 import UserSecure from './Pages/users/UserSecure'; // Import the new UserSecure component
 import FileUpload from './Pages/users/Fileupload';
 import ChangePass from './Pages/users/ChangePass';
+import Voice from './Pages/users/Voice';
+import SentEmails from './Pages/users/SentEmails';
+import Transcription from './Pages/users/Transcription';
+import ResendEmail from './Pages/users/ResendEmail';
+import "./App.css";
 
-
-
-
-function App() {
+const App = () => {
 
 
   return (
@@ -28,13 +30,13 @@ function App() {
         <Route path="/admin-login" element={<Login />} />
 
         <Route element={<Secure />}> {/* Use Secure component to wrap protected routes */}
-          <Route 
+          <Route
             path="/admin/*" // Use /admin/* for admin routes
             element={
-              <div className="d-flex" style={{ height: '100vh' }}>
+              <div className="container d-flex" style={{ height: '100vh' }}>
                 <Sidebar />
                 <Header />
-                <div className="flex-grow-1 bg-dark">
+                <div className="flex-grow-1">
                   <Routes>
                     <Route path="home" element={<Home />} />
                     <Route path="add-user" element={<Adduser />} />
@@ -43,30 +45,34 @@ function App() {
                   </Routes>
                 </div>
               </div>
-            } 
+            }
           />
         </Route>
 
         {/* User Routes */}
-        <Route path="/user-login" element={<UserLogin />} /> 
+        <Route path="/user-login" element={<UserLogin />} />
 
-        <Route element={<UserSecure />}> 
-          <Route 
-            path="/*" 
+        <Route element={<UserSecure />}>
+          <Route
+            path="/*"
             element={
-              <div className="d-flex" style={{ height: '100vh' }}>
-                <UserSidebar />   
+              <div className="container d-flex" style={{ height: '100vh' }}>
+                <UserSidebar />
                 <div className="flex-grow-1">
                   <Routes>
                     <Route path="/" element={<UserHome />} />
                     <Route path="/fileupload" element={<FileUpload />} />
-                    <Route path="/changePass" element={<ChangePass/>} />
+                    <Route path="/voice" element={<Voice />} />
+                    <Route path="/transcription" element={<Transcription />} />
+                    <Route path="/sent-emails" element={<SentEmails />} />
+                    <Route path="/resend-email/:userId" element={<ResendEmail />} />
+                    <Route path="/changePass" element={<ChangePass />} />
 
-                     
+
                   </Routes>
                 </div>
               </div>
-            } 
+            }
           />
         </Route>
       </Routes>

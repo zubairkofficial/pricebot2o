@@ -32,7 +32,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`nftmax-smenu ${isVisible ? "" : "nftmax-close"}`}>
+    <div className={`nftmax-smenu ${isVisible ? "" : "nftmax-close"}`} style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       <div className="logo">
         <a href="/admin/home">
           <img
@@ -76,7 +76,7 @@ const Sidebar = () => {
         <div className="admin-menu__one">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title  text-white ">
+              <li className="menu-bar-title   ">
                 <span>Menu</span>
               </li>
 
@@ -127,7 +127,7 @@ const Sidebar = () => {
                   </div>
                 </Link>
               </li>
-
+{/* 
               <li className="menu-main">
                 <a href="/admin/home">
                   <div className="has-child-main">
@@ -159,7 +159,7 @@ const Sidebar = () => {
                     </div>
                   </div>
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -167,11 +167,11 @@ const Sidebar = () => {
         <div className="admin-menu__one admin-menu__two">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title  text-white">
+              {/* <li className="menu-bar-title  text-white">
                 <span>Helfen</span>
-              </li>
+              </li> */}
 
-              <li className="menu-main">
+              {/* <li className="menu-main">
                 <a href="/admin/home">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
@@ -199,7 +199,7 @@ const Sidebar = () => {
                     </div>
                   </div>
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -207,7 +207,7 @@ const Sidebar = () => {
         <div className="admin-menu__one admin-menu__two">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title text-white ">
+              <li className="menu-bar-title  ">
                 <span>Helfen</span>
               </li>
 

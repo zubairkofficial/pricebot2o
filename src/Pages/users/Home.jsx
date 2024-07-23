@@ -45,6 +45,14 @@ const FileUpload = () => {
       img: "../../../public/assets/44.jpeg",
       link: "fileupload",
     },
+    {
+      id: "voice",
+      name: "Protokoll",
+      description:
+        "Erstelle automatisch Protokolle aus Memos",
+      img: "../../../public/assets/43.jpeg",
+      link: "voice",
+    },
   ];
 
   useEffect(() => {
@@ -71,11 +79,11 @@ const FileUpload = () => {
       style={{ overflow: "hidden" }}
     >
       <Row className="flex-grow-1">
-        <Col xs={2} lg={2} className="px-0">
+        <Col xs={2} lg={2} md={2} className="px-0">
           {/* Sidebar Placeholder */}
         </Col>
-        <Col xs={12} lg={10} className="mt-3">
-          <h2 className="ps-3 text-center text-white">Tool-Dashboard</h2>
+        <Col xs={10} lg={10} md={10} className="mt-3">
+          <h2 className="ps-3 text-center">Tool-Dashboard</h2>
           <Container className="px-lg-5">
             <Row className="mb-4 g-4 pt-4">
               {services.map((service) => (

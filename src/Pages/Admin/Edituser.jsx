@@ -8,7 +8,7 @@ import userAvatar from "../../Components/Admin/user.png";
 
 const servicesOptions = [
   { label: "Sthamer", value: "Sthamer" },
-  // { label: "Protokoll", value: "Protokoll" },
+  { label: "Protokoll", value: "Protokoll" },
   // { label: "Preishistorie", value: "Preishistorie" },
   // { label: "Finde Lieferscheine mit", value: "Finde Lieferscheine mit" },
 ];
@@ -100,7 +100,7 @@ const UserDetail = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
+      <div className="d-flex justify-content-center align-items-center vh-100 ">
         <Spinner animation="border" role="status">
           <span className="visually-hidden"></span>
         </Spinner>
@@ -117,140 +117,160 @@ const UserDetail = () => {
   }
 
   return (
-    <div className="container-fluid vh-100 bg-dark text-white mt-5 ">
-      <div className="row h-100">
-        <div className="col-2 "></div>
-        <div
-          className="col-9 d-flex flex-column align-items-center"
-          style={{ paddingTop: "40px", overflow: "hidden" }}
-        >
-          <h2 className="text-center my-5">Benutzer bearbeiten</h2>
-          <div
-            className="card bg-dark text-white shadow-lg"
-            style={{ borderRadius: "20px", width: "90%", maxWidth: "700px" }}
-          >
-            <div className="card-body m-3">
-              {isEditing ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="text-center">
-                    <Avatar
-                      name={user.name}
-                      src={userAvatar}
-                      round
-                      size="100"
-                      className="my-3"
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
-                      type="text"
-                      className="form-control bg-dark text-white border-0"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">E-Mail</label>
-                    <input
-                      type="email"
-                      className="form-control bg-dark text-white border-0"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Dienstleistungen</label>
-                    <Select
-                      options={servicesOptions}
-                      onChange={handleServiceChange}
-                      values={formData.services.map((service) => ({
-                        label: service,
-                        value: service,
-                      }))}
-                      multi
-                      placeholder="Dienstleistungen auswählen"
-                      className="custom-select"
-                      classNamePrefix="select"
-                    />
-                  </div>
-                  <div className="d-flex justify-content-end gap-2">
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm text-center"
-                      style={{ width: "30%", borderRadius: "10px" }}
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Abbrechen
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn btn-one btn-sm text-center "
-                      style={{ width: "30%" }}
-                    >
-                      Speichern
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <>
-                  <div className="text-center">
-                    <Avatar
-                      name={user.name}
-                      src={userAvatar}
-                      round
-                      size="100"
-                      className="my-3"
-                    />
-                  </div>
-                  <h6>Informationen</h6>
-                  <hr className="mt-0 mb-4" />
-                  <div className="row pt-1">
-                    <div className="col-6 mb-3">
-                      <h6>Name</h6>
-                      <p className="text-muted">{user.name}</p>
-                    </div>
-                    <div className="col-6 mb-3">
-                      <h6>E-Mail</h6>
-                      <p className="text-muted">{user.email}</p>
-                    </div>
-                  </div>
-                  <h6>Dienstleistungen</h6>
-                  <hr className="mt-0 mb-4" />
-                  <div className="row pt-1">
-                    <div className="col-12 mb-3">
-                      <p className="text-muted">
-                        {user.services ? user.services.join(", ") : ""}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-end gap-2 p-2">
-                    <Link
-                      to="/admin/home"
-                      className="btn btn-secondary btn-sm text-center"
-                      style={{ width: "30%", borderRadius: "10px" }}
-                    >
-                      Zurück
-                    </Link>
-                    <button
-                      className="btn btn-one btn-sm text-center"
-                      onClick={() => setIsEditing(true)}
-                      style={{ width: "30%" }}
-                    >
-                      Bearbeiten
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+    <div className="container-fluid vh-100 mt-5">
+  <div className="row h-100">
+    <div className="col-2"></div>
+    <div
+      className="col-9 d-flex flex-column align-items-center"
+      style={{ paddingTop: "40px", overflow: "hidden" }}
+    >
+      <h2 className="text-center my-5" style={{ color: "black" }}>
+        Benutzer bearbeiten
+      </h2>
+      <div
+        className="card bg-light shadow-lg"
+        style={{
+          borderRadius: "20px",
+          width: "90%",
+          maxWidth: "700px",
+          color: "black",
+        }}
+      >
+        <div className="card-body m-3">
+          {isEditing ? (
+            <form onSubmit={handleSubmit}>
+              <div className="text-center">
+                <Avatar
+                  name={user.name}
+                  src={userAvatar}
+                  round
+                  size="100"
+                  className="my-3"
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label" style={{ color: "black" }}>
+                  Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control bg-light border-0"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  style={{ color: "black" }}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label" style={{ color: "black" }}>
+                  E-Mail
+                </label>
+                <input
+                  type="email"
+                  className="form-control bg-light border-0"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  style={{ color: "black" }}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label" style={{ color: "black" }}>
+                  Dienstleistungen
+                </label>
+                <Select
+                  options={servicesOptions}
+                  onChange={handleServiceChange}
+                  values={formData.services.map((service) => ({
+                    label: service,
+                    value: service,
+                  }))}
+                  multi
+                  placeholder="Dienstleistungen auswählen"
+                  className="custom-select"
+                  classNamePrefix="select"
+                />
+              </div>
+              <div className="d-flex justify-content-end gap-2">
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm text-center"
+                  style={{ width: "30%", borderRadius: "10px" }}
+                  onClick={() => setIsEditing(false)}
+                >
+                  Abbrechen
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-one btn-sm text-center text-white"
+                  style={{ width: "30%" }}
+                >
+                  Speichern
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <div className="text-center">
+                <Avatar
+                  name={user.name}
+                  src={userAvatar}
+                  round
+                  size="100"
+                  className="my-3"
+                />
+              </div>
+              <h6 style={{ color: "black" }}>Informationen</h6>
+              <hr className="mt-0 mb-4" />
+              <div className="row pt-1">
+                <div className="col-6 mb-3">
+                  <h6 style={{ color: "black" }}>Name</h6>
+                  <p className="text-muted" style={{ color: "black" }}>
+                    {user.name}
+                  </p>
+                </div>
+                <div className="col-6 mb-3">
+                  <h6 style={{ color: "black" }}>E-Mail</h6>
+                  <p className="text-muted" style={{ color: "black" }}>
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+              <h6 style={{ color: "black" }}>Dienstleistungen</h6>
+              <hr className="mt-0 mb-4" />
+              <div className="row pt-1">
+                <div className="col-12 mb-3">
+                  <p className="text-muted" style={{ color: "black" }}>
+                    {user.services ? user.services.join(", ") : ""}
+                  </p>
+                </div>
+              </div>
+              <div className="d-flex justify-content-end gap-2 p-2">
+                <Link
+                  to="/admin/home"
+                  className="btn btn-secondary btn-sm text-center"
+                  style={{ width: "30%", borderRadius: "10px" }}
+                >
+                  Zurück
+                </Link>
+                <button
+                  className="btn btn-one btn-sm text-center text-light"
+                  onClick={() => setIsEditing(true)}
+                  style={{ width: "30%" }}
+                >
+                  Bearbeiten
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 

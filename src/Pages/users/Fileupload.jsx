@@ -69,7 +69,7 @@ function FileUpload() {
             <input
               type="file"
               className="form-control mb-2"
-              style={{ backgroundColor: "#343a40", color: "#fff" }}
+             
               accept="application/pdf"
               required
               multiple
@@ -88,7 +88,7 @@ function FileUpload() {
           </div>
           <ListGroup className="mt-4">
             {selectedFiles.map((file, index) => (
-              <ListGroup.Item key={index} style={{ backgroundColor: "#343a40", color: "#fff" }}>
+              <ListGroup.Item key={index} style={{ backgroundColor: "#fff" }}>
                 {file.name} ({file.size} bytes)
                 {fileResponses[file.name] && (
                   <div style={{ marginTop: '10px' }}>

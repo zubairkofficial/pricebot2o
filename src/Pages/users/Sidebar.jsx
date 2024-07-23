@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import {
   FaHome,
@@ -8,6 +9,7 @@ import {
   FaAngleRight,
 } from "react-icons/fa";
 import { Link, useNavigate, Outlet } from "react-router-dom";
+import Helpers from "../../Config/Helpers";
 
 // Make sure to include your CSS file
 
@@ -24,23 +26,38 @@ const Sidebar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
+  const handleLogout =async () => {
     // Clear the access token from local storage
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('id');
-    localStorage.removeItem('services');
+    const token = localStorage.getItem("token");
+    try { 
+    const response = await axios.post(`${Helpers.apiUrl}user/logout`,{},{headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }},);
+    console.log(response.data)
+
+      if (response.status === 200) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('Department');
+        localStorage.removeItem('services');
+        localStorage.removeItem('id');
+        navigate('/user-login', { state: { successMessage: response.data.message } });
+      } 
+    } catch (error) {
+      console.log(error)
+    }
     // Navigate to the login page
-    navigate('/user-login', { state: { successMessage: 'Logout successful' } });
   };
 
   return (
-    <div className={`nftmax-smenu ${isVisible ? "" : "nftmax-close"}`}>
-      <div className="logo">
+    <div className={`nftmax-smenu ${isVisible ? "" : "nftmax-close"} `} style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+      <div className="logo" >
         <a href="/">
           <img
-          height={40}
-          
+            height={40}
+
             className="nftmax-logo__main"
             src="./../../../assets/123.webp"
             alt="logo"
@@ -50,7 +67,7 @@ const Sidebar = () => {
         {/* <div className="logo-two">
           <img src="./../../../assets/images/logo/logo-sort.png" alt="img" />
         </div> */}
-        <div className="nftmax__sicon close-icon" onClick={toggleSidebar}>
+        <div className="nftmax__sicon close-icon" onClick={toggleSidebar} >
           <span>
             <svg
               width="16"
@@ -74,12 +91,11 @@ const Sidebar = () => {
           </span>
         </div>
       </div>
-
       <div className="admin-menu">
         <div className="admin-menu__one">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title  text-white ">
+              <li className="menu-bar-title  ">
                 <span>Menu</span>
               </li>
 
@@ -131,7 +147,7 @@ const Sidebar = () => {
                 </Link>
               </li>
 
-              
+
             </ul>
           </div>
         </div>
@@ -139,7 +155,7 @@ const Sidebar = () => {
         <div className="admin-menu__one admin-menu__two">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title  text-white">
+              <li className="menu-bar-title  ">
                 <span>Helfen</span>
               </li>
 
@@ -179,7 +195,7 @@ const Sidebar = () => {
         <div className="admin-menu__one admin-menu__two">
           <div className="menu-bar">
             <ul className="sidebar_nav">
-              <li className="menu-bar-title text-white ">
+              <li className="menu-bar-title ">
                 <span>Helfen</span>
               </li>
 

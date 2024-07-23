@@ -7,7 +7,7 @@ import Helpers from "../../Config/Helpers";
 
 const ChangePasswordForm = () => {
   const [credentials, setCredentials] = useState({
-    name: "",
+
     email: "",
     password: "",
     showPassword: false,
@@ -17,7 +17,7 @@ const ChangePasswordForm = () => {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const id = localStorage.getItem("id"); // Assuming userId is stored in local storage
+      const id = localStorage.getItem("id"); 
       if (!id) {
         toast.error("User ID not found in local storage.");
         return;
@@ -95,17 +95,17 @@ const ChangePasswordForm = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container"  >
       <div className="row">
         <div className="col-2">
-          {/* Sidebar content goes here */}
+        
         </div>
-        <div className="col-10">
+        <div className="col-10" >
           <div className="modal-content " style={{ marginTop: '80px' }}>
             <div className="modal-header">
               <h5 className="modal-title ms-3">Passwort ändern</h5>
             </div>
-            <div className="modal-body modal-body-two">
+            <div className="modal-body modal-body-two" style={{boxShadow:'0 4px 8px rgba(0, 0, 0, 0.1)'}}>
               <div className="from-main">
                 <form className="row g-3" onSubmit={handleSubmit}>
                   <div className="col-md-6">
@@ -158,7 +158,7 @@ const ChangePasswordForm = () => {
                   <div className="d-flex justify-content-end">
                     <button
                       type="submit"
-                      className="btn-one"
+                      className="btn-one text-white"
                       style={{ width: "30%" }}
                     >
                       Ändern

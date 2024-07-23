@@ -6223,18 +6223,18 @@ h4 {
 
 
 .custom-select .react-dropdown-select-dropdown {
-  background-color: #343a40;
-  color: white;
+
+  color: black;
 }
 
 .custom-select .react-dropdown-select-item {
-  background-color: #343a40;
-  color: white;
+
+  color: black;
 }
 
 .custom-select .react-dropdown-select-clear,
 .custom-select .react-dropdown-select-dropdown-handle {
-  color: white;
+  color: black;
 }
 
 
@@ -6242,11 +6242,11 @@ h4 {
 
 
 .card {
-  background-color: #1D1E24 !important;
+  background-color: white !important;
 }
 
 .form-control.bg-dark {
-  background-color: #495057 !important;
+  background-color: white !important;
 }
 
 .text-muted {

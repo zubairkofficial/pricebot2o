@@ -83,7 +83,7 @@ const AddUserForm = () => {
   };
 
   return (
-    <div className="modal-content ">
+    <div className="modal-content "  style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}> 
     <div className="modal-header">
       <h5 className="modal-title ms-3">Benutzer hinzufügen</h5>
     </div>
@@ -147,7 +147,7 @@ const AddUserForm = () => {
             />
           </div>
           <div className="d-flex justify-content-end   ">
-            <button type="submit" className="btn-one"  style={{width:'30%'}} >
+            <button type="submit" className="btn-one text-white"  style={{width:'30%'}} >
               Registrieren
             </button>
           </div>
@@ -160,12 +160,12 @@ const AddUserForm = () => {
 
 const AdminPanel = () => {
   return (
-    <div className="container-fluid vh-100 bg-dark text-white " style={{paddingTop:'2rem'}} >
-    <div className="row h-100">
+    <div className="container-fluid vh-100  text-white " style={{paddingTop:'2rem' , boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}  >
+    <div className="row h-100"> 
       <div className="col-2 ">
         
       </div>
-      <div className="col-10 d-flex justify-content-center align-items-center">
+      <div className="col-9 d-flex justify-content-center align-items-center">
         <div className="row justify-content-center w-100">
           <div className="col-md-8">
             <div className="card bg-dark text-white border-0">

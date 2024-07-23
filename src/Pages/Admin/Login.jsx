@@ -55,13 +55,13 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark">
+    <div className="d-flex justify-content-center align-items-center min-vh-100 ">
       <div className="card p-5 shadow-sm" style={{ width: '400px', borderRadius: '15px', backgroundColor: '#ffffff', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px' }}>
-        <h3 className="text-center mb-4" style={{ color: 'white', fontWeight: 'bold', letterSpacing: '1px' }}>Admin Login</h3>
+        <h3 className="text-center mb-4" style={{ color: 'black', fontWeight: 'bold', letterSpacing: '1px' }}>Admin Login</h3>
         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label m-2" style={{ color: 'white', fontWeight: 'bold' }}>E-Mail-Adresse</label>
+            <label htmlFor="email" className="form-label m-2" style={{ color: 'black', fontWeight: 'bold' }}>E-Mail-Adresse</label>
             <input
               type="email"
               className="form-control"
@@ -75,7 +75,7 @@ const AdminLogin = () => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="password" className="form-label m-1" style={{ color: 'white', fontWeight: 'bold' }}>Passwort</label>
+            <label htmlFor="password" className="form-label m-1" style={{ color: 'black', fontWeight: 'bold' }}>Passwort</label>
             <input
               type="password"
               className="form-control"
