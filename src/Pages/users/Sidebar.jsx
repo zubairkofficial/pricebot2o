@@ -37,12 +37,7 @@ const Sidebar = () => {
     console.log(response.data)
 
       if (response.status === 200) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('Department');
-        localStorage.removeItem('services');
-        localStorage.removeItem('id');
+        localStorage.clear();
         navigate('/user-login', { state: { successMessage: response.data.message } });
       } 
     } catch (error) {
