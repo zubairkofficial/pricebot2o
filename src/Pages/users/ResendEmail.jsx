@@ -30,7 +30,7 @@ function ResendEmail() {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${Helpers.apiUrl}getemailId/${userId}`
+          `${Helpers.apiUrl}getemailId/${userId}`,Helpers.authHeaders
         );
         const emailData = response.data.emails[0];
         setName(emailData.name || "");
@@ -93,7 +93,7 @@ function ResendEmail() {
         branchManager,
         participants,
         author,
-      });
+      },Helpers.authHeaders);
       setSuccess("Transkription erfolgreich gesendet!");
       setError("");
     } catch (err) {

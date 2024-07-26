@@ -106,7 +106,7 @@ const App = () => {
                     <Route path="add-user" element={<Auth isAdmin={true}><Adduser /> </Auth>} />
                     <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /> </Auth>} />
                     <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
-                    <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} />
+                    {/* <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} /> */}
                     <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
                   </Routes>
                 </div>

@@ -99,11 +99,11 @@ const Services = () => {
     return (
         <section className="nftmax-adashboard nftmax-show w-100 h-100 "  >
             <div className="nftmax-adashboard-left">
-                <div className="d-flex justify-content-end align-items-center ">
+                {/* <div className="d-flex justify-content-end align-items-center ">
                     <button className="btn-one text-white" onClick={handleAddservice}>
                         Dienst hinzufügen
                     </button>
-                </div>
+                </div> */}
                 <div className="row tabel-main-box" style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
 
                     <div className="col-lg-12 col-padding-0" >
