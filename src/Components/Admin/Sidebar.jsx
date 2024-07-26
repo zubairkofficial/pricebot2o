@@ -8,6 +8,8 @@ import {
   FaAngleRight,
 } from "react-icons/fa";
 import { Link, useNavigate, Outlet } from "react-router-dom";
+import axios from "axios";
+import Helpers from "../../Config/Helpers";
 
 // Make sure to include your CSS file
 
@@ -24,11 +26,24 @@ const Sidebar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    navigate("/admin-login", {
-      state: { successMessage: "Logout successful" },
-    });
+  const handleLogout = async () => {
+    // Clear the access token from local storage
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(`${Helpers.apiUrl}logout`, {}, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      if (response.status === 200) {
+        localStorage.clear();
+        Helpers.toast("success", response.data.message);
+        navigate('/login');
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -36,17 +51,14 @@ const Sidebar = () => {
       <div className="logo">
         <a href="/admin/home">
           <img
-          height={40}
-          
+            height={40}
+
             className="nftmax-logo__main"
             src="./../../../assets/123.webp"
             alt="logo"
           />
         </a>
 
-        {/* <div className="logo-two">
-          <img src="./../../../assets/images/logo/logo-sort.png" alt="img" />
-        </div> */}
         <div className="nftmax__sicon close-icon" onClick={toggleSidebar}>
           <span>
             <svg
@@ -80,7 +92,7 @@ const Sidebar = () => {
                 <span>Menu</span>
               </li>
 
-              <li className="has-child menu-main">
+              <li className="menu-main">
                 <Link to="/admin/home" className="active">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
@@ -106,60 +118,42 @@ const Sidebar = () => {
                         <span> Dashboards </span>
                       </div>
                     </div>
-
-                    <div className="has-child-icon-two">
-                      <span>
-                        <svg
-                          width="6"
-                          height="12"
-                          viewBox="0 0 6 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M0.531506 0.414376C0.20806 0.673133 0.155619 1.1451 0.414376 1.46855L4.03956 6.00003L0.414376 10.5315C0.155618 10.855 0.208059 11.3269 0.531506 11.5857C0.854952 11.8444 1.32692 11.792 1.58568 11.4685L5.58568 6.46855C5.80481 6.19464 5.80481 5.80542 5.58568 5.53151L1.58568 0.531506C1.32692 0.20806 0.854953 0.155619 0.531506 0.414376Z"
-                          />
-                        </svg>
-                      </span>
-                    </div>
                   </div>
                 </Link>
               </li>
-{/* 
               <li className="menu-main">
-                <a href="/admin/home">
+                <a href="/admin/services">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
                       <div className="has-child-icon">
                         <span>
                           <svg
-                            width="14"
-                            height="18"
-                            viewBox="0 0 14 18"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <ellipse
+                            <path
                               className="svg-color-1"
-                              cx="7"
-                              cy="14"
-                              rx="7"
-                              ry="4"
+                              d="M8 1.33333C4.318 1.33333 1.33333 4.318 1.33333 8C1.33333 11.682 4.318 14.6667 8 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33333 8 1.33333ZM8 13.3333C5.05467 13.3333 2.66667 10.9453 2.66667 8C2.66667 5.05467 5.05467 2.66667 8 2.66667C10.9453 2.66667 13.3333 5.05467 13.3333 8C13.3333 10.9453 10.9453 13.3333 8 13.3333Z"
                             />
-                            <circle cx="7" cy="4" r="4" />
+                            <path
+                              className="svg-color-1"
+                              d="M10.6667 8C10.6667 9.472 9.472 10.6667 8 10.6667C6.528 10.6667 5.33333 9.472 5.33333 8C5.33333 6.528 6.528 5.33333 8 5.33333C9.472 5.33333 10.6667 6.528 10.6667 8Z"
+                            />
                           </svg>
                         </span>
                       </div>
 
                       <div className="has-child-text">
-                        <span> Benutzer</span>
+                        <span>Dienstleistungen</span>
                       </div>
                     </div>
                   </div>
                 </a>
-              </li> */}
+              </li>
+
             </ul>
           </div>
         </div>
@@ -212,8 +206,8 @@ const Sidebar = () => {
               </li>
 
               <li className="menu-main">
-                <a href="#">
-                  <div className="has-child-main" onClick={handleLogout}>
+                <a onClick={handleLogout}>
+                  <div className="has-child-main">
                     <div className="has-child-main-inner">
                       <div className="has-child-icon">
                         <span>
@@ -245,10 +239,7 @@ const Sidebar = () => {
                         </span>
                       </div>
 
-                      <div
-                        className="has-child-text has-child-text-mt"
-                        onClick={handleLogout}
-                      >
+                      <div className="has-child-text has-child-text-mt">
                         <span> Ausloggen</span>
                       </div>
                     </div>

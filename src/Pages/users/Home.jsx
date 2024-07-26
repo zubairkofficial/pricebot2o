@@ -6,70 +6,58 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import img from "./44.jpeg";
 import { useLocation, useNavigate } from "react-router-dom";
 import Helpers from "../../Config/Helpers";
+import axios from "axios";
+
 
 const FileUpload = () => {
-  const [userServices, setUserServices] = useState([]);
-  const userName = localStorage.getItem("userName");
-  const userEmail = localStorage.getItem("userEmail");
-  const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [userServices, setUserServices] = useState(Helpers.authUser.services || []);
+  const [services, setServices] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;
-
   useEffect(() => {
-   
-    const storedServices = localStorage.getItem("user_Services");
-    if (storedServices) {
-      const parsedServices = JSON.parse(storedServices);
-      setUserServices(parsedServices);
-    } else {
-     
-      setUserServices([]);
-    }
+    fetchServices();
   }, []);
 
-  const services = [
-    {
-      id: "fileupload",
-      name: "Sthamer",
-      description:
-        "Umfassende KI-gesteuerte Dateianalyse- und Insights-Plattform",
-      img: "../../../public/assets/44.jpeg",
-      link: "fileupload",
-    },
-    {
-      id: "voice",
-      name: "Protokoll",
-      description:
-        "Erstelle automatisch Protokolle aus Memos",
-      img: "../../../public/assets/43.jpeg",
-      link: "voice",
-    },
-  ];
+
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get(`${Helpers.apiUrl}active-services`, Helpers.authHeaders);
+      if (response.status != 200) {
+        throw new Error("Failed to fetch services");
+      }
+      setServices(response.data);
+    } catch (error) {
+      Helpers.toast('error', error.message);
+    }
+  };
+
+  // const services = [
+  //   {
+  //     id: "fileupload",
+  //     name: "Sthamer",
+  //     description:
+  //       "Umfassende KI-gesteuerte Dateianalyse- und Insights-Plattform",
+  //     link: "fileupload",
+  //   },
+  //   {
+  //     id: "voice",
+  //     name: "Protokoll",
+  //     description:
+  //       "Erstelle automatisch Protokolle aus Memos",
+  //     link: "voice",
+  //   },
+  // ];
 
   useEffect(() => {
     if (successMessage) {
       Helpers.toast("success", successMessage);
-      // Clear the state after displaying the message
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [successMessage, navigate, location.pathname]);
 
-  // Check if a service is enabled or if the userServices array is empty
-  const isServiceEnabled = (serviceName) => {
-    // If no services stored, return true (all services enabled)
-    if (userServices.length === 0) return true;
-
-    // Otherwise, check if the service is included in userServices
-    return userServices.includes(serviceName);
+  const isServiceEnabled = (serviceId) => {
+    return userServices.includes(serviceId);
   };
 
   return (
@@ -89,26 +77,25 @@ const FileUpload = () => {
               {services.map((service) => (
                 <Col xs={12} md={6} lg={4} key={service.id}>
                   <Link
-                    to={isServiceEnabled(service.name) ? `/${service.id}` : "#"}
+                    to={isServiceEnabled(service.id) ? `/${service.link}` : "#"}
                     className="text-decoration-none"
                     style={{ position: "relative" }}
                   >
                     <Card
-                      className={`shadow-sm ${
-                        isServiceEnabled(service.name) ? "" : "disabled"
-                      }`}
+                      className={`shadow-sm ${isServiceEnabled(service.id) ? "" : "disabled"
+                        }`}
                       style={{
                         cursor: "pointer",
                         borderRadius: "0.75rem",
                         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${img})`,
-                        backgroundSize: "150%", // This makes the image larger by 50% than its normal size
+                        backgroundSize: "150%",
                         backgroundPosition: "center",
                         color: "white",
                         height: "180px",
-                        opacity: isServiceEnabled(service.name) ? 0.9 : 0.5,
+                        opacity: isServiceEnabled(service.id) ? 0.9 : 0.5,
                       }}
                     >
-                      {!isServiceEnabled(service.name) && (
+                      {!isServiceEnabled(service.id) && (
                         <div
                           style={{
                             position: "absolute",

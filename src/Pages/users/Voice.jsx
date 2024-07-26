@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Select from "react-dropdown-select";
 import Helpers from "../../Config/Helpers";
+import axios from "axios";
 
 function Voice() {
   const [isListening, setIsListening] = useState(false);
@@ -30,9 +31,8 @@ function Voice() {
   const [hasHistory, setHasHistory] = useState(false);
   const navigate = useNavigate();
 
-  const userLoginId = localStorage.getItem("id");
-  const userDepartments = JSON.parse(localStorage.getItem("Department") || "[]");
-
+  const userLoginId = Helpers.authUser.id;
+  const userDepartments = Helpers.authUser.department || "[]";
   useEffect(() => {
     setHasHistory(window.history.length > 1);
   }, []);
@@ -71,25 +71,23 @@ function Voice() {
     }
   }, [isListening]);
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await fetch(`${Helpers.apiUrl}GetDepartments`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch departments");
-        }
-        const data = await response.json();
-        const filteredDepartments = data.filter(dept => userDepartments.includes(dept.name));
-        setDepartments(filteredDepartments.map(dept => ({ label: dept.name, value: dept.prompt })));
-      } catch (error) {
-        console.error("Error fetching departments:", error.message);
+  const fetchDepartments = async () => {
+    try {
+      const response = await axios.get(`${Helpers.apiUrl}GetDepartments`,Helpers.authHeaders);
+      if (response.status != 200) {
+        throw new Error("Failed to fetch departments");
       }
-    };
+      console.log(response.data)
+      const filteredDepartments = response.data.filter(dept => userDepartments.includes(dept.name));
+      setDepartments(filteredDepartments.map(dept => ({ label: dept.name, value: dept.prompt })));
+    } catch (error) {
+      console.error("Error fetching departments:", error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchDepartments();
   }, [userDepartments]);
-
-  const handleListen = () => setIsListening(!isListening);
 
   const handleTranscribeClick = async () => {
     if (file) {
@@ -101,23 +99,17 @@ function Voice() {
         setTranscribing(true);
         setErrorMessage("");
 
-        const response = await fetch(
-          `${Helpers.apiUrl}transcribe`,
-          {
-            method: "POST",
-            body: formData,
-          }
+        const response = await axios.post(
+          `${Helpers.apiUrl}transcribe`,formData,Helpers.authFileHeaders
         );
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(errorText || "Netzwerkantwort war nicht erfolgreich.");
+        if (response.status != 200) {
+          throw new Error(response.message || "Netzwerkantwort war nicht erfolgreich.");
         }
 
-        const data = await response.json();
 
         setTranscriptionText(
-          data.transcription.results.channels[0].alternatives[0].transcript
+          response.data.transcription.results.channels[0].alternatives[0].transcript
         );
         setShowDepartmentSelectionTranscription(true);
         setIsGenerateSummaryButtonVisible(true);
@@ -147,25 +139,17 @@ function Voice() {
     try {
       setIsSummaryGenerating(true);
 
-      const response = await fetch(`${Helpers.apiUrl}generateSummary`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
           recordedText: listeningText,
           user_login_id: userLoginId,
           prompts: selectedPromptsVoice
-        }),
-      });
+      },Helpers.authHeaders);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to generate summary.");
+      if (response.status != 200) {
+        throw new Error(response.message || "Failed to generate summary.");
       }
 
-      const data = await response.json();
-      setSummary(data.summary);
+      setSummary(response.data.summary);
       setShowSummary(true);
       setIsEmailButtonVisible(true);
     } catch (error) {
@@ -180,25 +164,17 @@ function Voice() {
     try {
       setIsSummaryGenerating(true);
 
-      const response = await fetch(`${Helpers.apiUrl}generateSummary`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
           recordedText: transcriptionText,
           user_login_id: userLoginId,
           prompts: selectedPromptsTranscription
-        }),
-      });
+      },Helpers.authHeaders);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to generate summary.");
+      if (response.status != 200) {
+        throw new Error(response.message || "Failed to generate summary.");
       }
 
-      const data = await response.json();
-      setTranscriptionSummary(data.summary);
+      setTranscriptionSummary(response.data.summary);
       setShowTranscriptionSummary(true);
       setIsEmailButtonVisible(true);
     } catch (error) {

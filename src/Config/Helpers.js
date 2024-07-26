@@ -7,7 +7,7 @@ class Helpers {
   static basePath = `${this.localhost}`;
   static apiUrl = `${this.basePath}/api/`;
 
-  static authUser = JSON.parse(localStorage.getItem("user")) ?? {};
+  static authUser = JSON.parse(localStorage.getItem("user") ?? "{}");
 
   static serverImage = (name) => {
     return `${this.basePath}/uploads/${name}`;

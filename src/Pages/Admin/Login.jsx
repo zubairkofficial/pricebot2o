@@ -16,12 +16,6 @@ const AdminLogin = () => {
 
   useEffect(() => {
    
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      navigate('/home');
-    }
-
-   
     if (successMessage) {
       Helpers.toast('success', successMessage);
       // Clear the success message to prevent it from displaying again
@@ -41,8 +35,8 @@ const AdminLogin = () => {
       });
 
       if (response.status === 200) {
-        const token = response.data.accessToken;
-        localStorage.setItem('accessToken', token);
+        const token = response.data.token;
+        localStorage.setItem('token', token);
         navigate('/admin/home', { state: { successMessage: 'Login successful' } });
       } else {
         setErrorMessage('Login failed. Please check your credentials and try again.');

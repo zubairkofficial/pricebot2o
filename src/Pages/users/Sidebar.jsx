@@ -26,24 +26,24 @@ const Sidebar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout =async () => {
+  const handleLogout = async () => {
     // Clear the access token from local storage
     const token = localStorage.getItem("token");
-    try { 
-    const response = await axios.post(`${Helpers.apiUrl}user/logout`,{},{headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    }},);
-    console.log(response.data)
-
+    try {
+      const response = await axios.post(`${Helpers.apiUrl}logout`, {}, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      });
       if (response.status === 200) {
         localStorage.clear();
-        navigate('/user-login', { state: { successMessage: response.data.message } });
-      } 
+        Helpers.toast("success", response.data.message);
+        navigate('/login');
+      }
     } catch (error) {
       console.log(error)
     }
-    // Navigate to the login page
   };
 
   return (
@@ -94,7 +94,7 @@ const Sidebar = () => {
                 <span>Menu</span>
               </li>
 
-              <li className="has-child menu-main">
+              <li className="menu-main">
                 <Link to="/" className="active">
                   <div className="has-child-main">
                     <div className="has-child-main-inner">
@@ -120,29 +120,9 @@ const Sidebar = () => {
                         <span> Dashboards </span>
                       </div>
                     </div>
-
-                    <div className="has-child-icon-two">
-                      <span>
-                        <svg
-                          width="6"
-                          height="12"
-                          viewBox="0 0 6 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M0.531506 0.414376C0.20806 0.673133 0.155619 1.1451 0.414376 1.46855L4.03956 6.00003L0.414376 10.5315C0.155618 10.855 0.208059 11.3269 0.531506 11.5857C0.854952 11.8444 1.32692 11.792 1.58568 11.4685L5.58568 6.46855C5.80481 6.19464 5.80481 5.80542 5.58568 5.53151L1.58568 0.531506C1.32692 0.20806 0.854953 0.155619 0.531506 0.414376Z"
-                          />
-                        </svg>
-                      </span>
-                    </div>
                   </div>
                 </Link>
               </li>
-
-
             </ul>
           </div>
         </div>
@@ -195,8 +175,8 @@ const Sidebar = () => {
               </li>
 
               <li className="menu-main">
-                <a href="#">
-                  <div className="has-child-main" onClick={handleLogout}>
+                <a onClick={handleLogout}>
+                  <div className="has-child-main">
                     <div className="has-child-main-inner">
                       <div className="has-child-icon">
                         <span>
@@ -228,10 +208,7 @@ const Sidebar = () => {
                         </span>
                       </div>
 
-                      <div
-                        className="has-child-text has-child-text-mt"
-                        onClick={handleLogout}
-                      >
+                      <div className="has-child-text has-child-text-mt" >
                         <span> Ausloggen</span>
                       </div>
                     </div>

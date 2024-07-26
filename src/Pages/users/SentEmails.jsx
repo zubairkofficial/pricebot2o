@@ -16,7 +16,7 @@ const SentEmails = () => {
     const fetchEmails = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${Helpers.apiUrl}getSentEmails`);
+        const response = await axios.get(`${Helpers.apiUrl}getSentEmails`,Helpers.authHeaders);
         setEmails(response.data.emails);
         setFilteredEmails(response.data.emails);
         setIsLoading(false);

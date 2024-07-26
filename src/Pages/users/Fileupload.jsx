@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Container, Row, Col, Button, ListGroup } from "react-bootstrap";
 import Helpers from "../../Config/Helpers";
+import axios from "axios";
 
 function FileUpload() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -29,17 +30,14 @@ function FileUpload() {
       formData.append("fileName", file.name);
 
       try {
-        const response = await fetch(`${Helpers.apiUrl}uploadFile`, {
-          method: "POST",
-          body: formData,
-        });
+        const response = await axios.post(`${Helpers.apiUrl}uploadFile`, {formData,
+        },Helpers.authFileHeaders);
 
-        const responseData = await response.json();
-        if (response.ok) {
+        if (response.status == 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");
-          newFileResponses[file.name] = { status: "Success", data: responseData.data }; // Focus only on data field
+          newFileResponses[file.name] = { status: "Success", data: response.data }; // Focus only on data field
         } else {
-          throw new Error(responseData.message || "Fehler beim Hochladen der Datei");
+          throw new Error(response.message || "Fehler beim Hochladen der Datei");
         }
       } catch (error) {
         console.error("Error:", error);

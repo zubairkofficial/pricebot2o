@@ -1,83 +1,122 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Sidebar from './Components/Admin/Sidebar';
-import Header from './Components/Admin/Header';
-import Home from './Pages/Admin/Home';
-import Helpers from './Config/Helpers';
-import Login from './Pages/Admin/Login';
-import Secure from './Pages/Admin/Secure'; // Import the Secure component
-import Adduser from './Pages/Admin/Adduser';
-import Edituser from './Pages/Admin/Edituser';
-import UserHome from './Pages/users/Home';
-import UserSidebar from './Pages/users/Sidebar'; // Correct the import capitalization
-import UserLogin from './Pages/users/Login'; // Import the new UserLogin component
-import UserSecure from './Pages/users/UserSecure'; // Import the new UserSecure component
-import FileUpload from './Pages/users/Fileupload';
-import ChangePass from './Pages/users/ChangePass';
-import Voice from './Pages/users/Voice';
-import SentEmails from './Pages/users/SentEmails';
-import Transcription from './Pages/users/Transcription';
-import ResendEmail from './Pages/users/ResendEmail';
+import React from "react";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import Sidebar from "./Components/Admin/Sidebar";
+import Header from "./Components/Admin/Header";
+import { HeaderProvider } from './Components/Admin/HeaderContext';
+import Home from "./Pages/Admin/Home";
+import Helpers from "./Config/Helpers";
+import Login from "./Pages/Auth/Login";
+import Adduser from "./Pages/Admin/Adduser";
+import AddService from "./Pages/Admin/Service/AddService";
+import Edituser from "./Pages/Admin/Edituser";
+import UserHome from "./Pages/users/Home";
+import UserSidebar from "./Pages/users/Sidebar";
+import FileUpload from "./Pages/users/Fileupload";
+import ChangePass from "./Pages/users/ChangePass";
+import Voice from "./Pages/users/Voice";
+import SentEmails from "./Pages/users/SentEmails";
+import Transcription from "./Pages/users/Transcription";
+import ResendEmail from "./Pages/users/ResendEmail";
 import "./App.css";
+import Services from "./Pages/Admin/Service/Services";
+import EditService from "./Pages/Admin/Service/EditService";
+
+const Auth = ({ children, isAuth = true, isAdmin = false }) => {
+  let user = Helpers.getItem("user", true);
+  let token = Helpers.getItem("token");
+  let loginTime = Helpers.getItem("loginTimestamp");
+  let currentTime = new Date().getTime();
+  let minutesPassed = Math.floor((currentTime - loginTime) / (1000 * 60));
+
+  // Check for session expiration
+  if (loginTime && minutesPassed > 120) {
+    localStorage.clear();
+    Helpers.toast("error", "Session expired. Login again to continue");
+    return <Navigate to="/login" />;
+  }
+  // For protected routes
+  else if (isAuth) {
+    if (!user || !token) {
+      Helpers.toast("error", "Please login to continue");
+      return <Navigate to="/login" />;
+    }
+
+    // Ensure only admins can access admin routes
+    if (isAdmin && parseInt(user.user_type) !== 1) {
+      Helpers.toast("error", "Access denied. Only admin allowed.");
+      return <Navigate to="/home" />;
+    }
+
+    // Ensure admins cannot access user routes
+    if (!isAdmin && parseInt(user.user_type) === 1) {
+      Helpers.toast(
+        "error",
+        "Access denied. Admins cannot access user routes."
+      );
+      return <Navigate to="/admin/home" />;
+    }
+
+    return children;
+  }
+  // For non-protected routes like /login
+  else {
+    if (user && token) {
+      if (user.user_type === 1) {
+        return <Navigate to="/admin/home" />;
+      } else {
+        return <Navigate to="/home" />;
+      }
+    }
+    return children;
+  }
+};
 
 const App = () => {
-
-
   return (
     <BrowserRouter>
-      <Routes>
-        {/* Admin Routes */}
-        <Route path="/admin-login" element={<Login />} />
-
-        <Route element={<Secure />}> {/* Use Secure component to wrap protected routes */}
-          <Route
-            path="/admin/*" // Use /admin/* for admin routes
+      <HeaderProvider>
+        <Routes>
+          <Route path="/login" element={<Auth isAuth={false}><Login /></Auth>} />
+          <Route path="/*"
             element={
-              <div className="container d-flex" style={{ height: '100vh' }}>
+              <div className="container d-flex" style={{ height: "100vh" }}>
+                <UserSidebar />
+                <div className="flex-grow-1">
+                  <Routes>
+                    <Route path="/" element={<Auth><UserHome /> </Auth>} />
+                    <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
+                    <Route path="/voice" element={<Auth><Voice /></Auth>} />
+                    <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
+                    <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
+                    <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
+                    <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
+                  </Routes>
+                </div>
+              </div>
+            }
+          />
+          <Route path="/admin/*"
+            element={
+              <div className="container d-flex" style={{ height: "100vh" }}>
                 <Sidebar />
                 <Header />
                 <div className="flex-grow-1">
                   <Routes>
-                    <Route path="home" element={<Home />} />
-                    <Route path="add-user" element={<Adduser />} />
-                    <Route path="edit-user/:id" element={<Edituser />} />
-                    {/* Add other admin routes here */}
+                    <Route path="home" element={<Auth isAdmin={true}> <Home /> </Auth>} />
+                    <Route path="add-user" element={<Auth isAdmin={true}><Adduser /> </Auth>} />
+                    <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /> </Auth>} />
+                    <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
+                    <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} />
+                    <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
                   </Routes>
                 </div>
               </div>
             }
           />
-        </Route>
-
-        {/* User Routes */}
-        <Route path="/user-login" element={<UserLogin />} />
-
-        <Route element={<UserSecure />}>
-          <Route
-            path="/*"
-            element={
-              <div className="container d-flex" style={{ height: '100vh' }}>
-                <UserSidebar />
-                <div className="flex-grow-1">
-                  <Routes>
-                    <Route path="/" element={<UserHome />} />
-                    <Route path="/fileupload" element={<FileUpload />} />
-                    <Route path="/voice" element={<Voice />} />
-                    <Route path="/transcription" element={<Transcription />} />
-                    <Route path="/sent-emails" element={<SentEmails />} />
-                    <Route path="/resend-email/:userId" element={<ResendEmail />} />
-                    <Route path="/changePass" element={<ChangePass />} />
-
-
-                  </Routes>
-                </div>
-              </div>
-            }
-          />
-        </Route>
-      </Routes>
+        </Routes>
+      </HeaderProvider>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

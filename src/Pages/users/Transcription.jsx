@@ -5,16 +5,13 @@ import Select from "react-select";
 import Helpers from "../../Config/Helpers";
 
 function Transcription() {
-  const [name, setName] = useState("");
+  const location = useLocation();
   const [email, setEmail] = useState("");
-  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [combinedText, setCombinedText] = useState("");
   const [text, setText] = useState("");
   const [summary, setSummary] = useState("");
-  const location = useLocation();
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
   const [partner, setPartner] = useState(null); // For selected partner
@@ -28,8 +25,6 @@ function Transcription() {
   // Initialize form fields with values from location state
   useEffect(() => {
     if (location.state) {
-      setName(location.state.name || "");
-      setTitle(location.state.title || "");
       setEmail(location.state.email || "");
       setText(location.state.text || "");
       setSummary(location.state.summary || "");
@@ -45,11 +40,10 @@ function Transcription() {
   useEffect(() => {
     const fetchPartnerNumbers = async () => {
       try {
-        const response = await fetch(`${Helpers.apiUrl}getData`);
-        const data = await response.json();
-        setPartnerNumbers(data.data);
+        const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
+        setPartnerNumbers(response.data.data);
       } catch (error) {
-        setError(error.message);
+        Helpers.toast('error', error.message);
       }
     };
 
@@ -60,21 +54,21 @@ function Transcription() {
     const fetchLatestNumber = async () => {
       try {
         const response = await axios.get(
-          `${Helpers.apiUrl}getLatestNumber`
+          `${Helpers.apiUrl}getLatestNumber`,Helpers.authHeaders
         );
-        console.log(response.data);
         setPartnerNumber(response.data.number);
         // Convert the date format from "DD-MM-YY" to "YYYY-MM-DD"
-        const parts = response.data.Datum.split("-");
+        const parts = response.data?.Datum?.split("-");
         const parsedDate = `20${parts[2]}-${parts[1]}-${parts[0]}`;
         setDate(parsedDate); // Set the date
-        setTheme(response.data.Thema); // Set the theme
-        setAuthor(response.data.BM); // Set the theme
-        setBranchManager(response.data.Niederlassungsleiter); // Set the theme
-        setParticipants(response.data.Teilnehmer); // Set the participants
-        console.log(response.data.Teilnehmer); // Ensure Teilnehmer data is received
+        setTheme(response.data?.Thema); // Set the theme
+        setAuthor(response.data?.BM); // Set the theme
+        setBranchManager(response.data?.Niederlassungsleiter); // Set the theme
+        setParticipants(response.data?.Teilnehmer); // Set the participants
+        // console.log(response.data?.Teilnehmer); // Ensure Teilnehmer data is received
       } catch (error) {
-        setError(error.message);
+        console.log(error)
+        Helpers.toast('error', error.message);
       }
     };
 
@@ -85,34 +79,29 @@ function Transcription() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${Helpers.apiUrl}sendEmail`,
-        {
+      await axios.post(`${Helpers.apiUrl}sendEmail`,{
           email,
           transcriptionText: text,
           summary,
           date,
           theme,
           partnerNumber,
-          // Extract the number from the partner object
           branchManager,
           participants,
           author,
         }
       );
+
       setSuccess(true);
-      setTimeout(() => {
-        navigate("/");
-      }, 5000);
+      navigate("/");
     } catch (error) {
-      setError(error.message);
+      Helpers.toast('error', error.message);
     }
     setLoading(false);
   };
 
   const back = () => {
     window.history.back();
-
   };
 
   const options = partnerNumbers.map((partner) => ({
@@ -122,7 +111,6 @@ function Transcription() {
 
   const handleChange = (selectedOption) => {
     setPartner(selectedOption);
-
   };
 
   return (

@@ -21,7 +21,7 @@ function ResendEmail() {
   const [participants, setParticipants] = useState("");
   const [author, setAuthor] = useState("");
   const [partnerNumbers, setPartnerNumbers] = useState([]);
-  const [partnerNumber, setPartnerNumber] = useState(""); 
+  const [partnerNumber, setPartnerNumber] = useState("");
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -32,7 +32,6 @@ function ResendEmail() {
         const response = await axios.get(
           `${Helpers.apiUrl}getemailId/${userId}`
         );
-        console.log(response.data);
         const emailData = response.data.emails[0];
         setName(emailData.name || "");
         setTitle(emailData.title || "");
@@ -63,13 +62,12 @@ function ResendEmail() {
   useEffect(() => {
     const fetchPartnerNumbers = async () => {
       try {
-        const response = await fetch(`${Helpers.apiUrl}getData`);
-        const data = await response.json();
-        if (Array.isArray(data.data)) {
-          setPartnerNumbers(data.data);
+        const response = await axios.get(`${Helpers.apiUrl}getData`,Helpers.authHeaders);
+        if (Array.isArray(response.data)) {
+          setPartnerNumbers(response.data);
         } else {
           setPartnerNumbers([]); // Ensure partnerNumbers is an array
-          console.error("Fetched data is not an array:", data);
+          console.error("Fetched data is not an array:", response);
         }
       } catch (error) {
         setError(error.message);
@@ -85,18 +83,17 @@ function ResendEmail() {
     e.preventDefault();
     setLoading(true);
     try {
-        const response = await axios.post(`${Helpers.apiUrl}sendEmail`, {
+      const response = await axios.post(`${Helpers.apiUrl}sendEmail`, {
         email,
         transcriptionText: text,
         summary,
         date,
         theme,
-        partnerNumber: partner?.value.number, 
+        partnerNumber: partner?.value.number,
         branchManager,
         participants,
         author,
       });
-      console.log(response);
       setSuccess("Transkription erfolgreich gesendet!");
       setError("");
     } catch (err) {
@@ -115,7 +112,7 @@ function ResendEmail() {
 
   const handleChange = (selectedOption) => {
     setPartner(selectedOption);
-    setPartnerNumber(selectedOption?.value.number || ""); 
+    setPartnerNumber(selectedOption?.value.number || "");
   };
 
   const back = () => navigate("/voice");
@@ -225,21 +222,21 @@ function ResendEmail() {
                     />
                   </div>
                   <div className="d-flex justify-content-start">
-                  <button
-                    type="submit"
+                    <button
+                      type="submit"
                       className="button text-white btn-primary mb-3 mb-sm-0"
                       style={{ marginRight: '10px', width: "30%" }}
-                    disabled={loading}
-                  >
-                    {loading ? "Bitte warten..." : "Transkription senden"}
-                  </button>
+                      disabled={loading}
+                    >
+                      {loading ? "Bitte warten..." : "Transkription senden"}
+                    </button>
                     <button
                       className="button text-white btn-danger mb-3 mb-sm-0"
                       style={{ width: "30%" }}
                       onClick={back}
                     >
-                    Abbrechen
-                  </button>
+                      Abbrechen
+                    </button>
                   </div>
                 </form>
               )}

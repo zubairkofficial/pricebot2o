@@ -1,46 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Helpers from "../../Config/Helpers";
+import axios from "axios";
 
 const ChangePasswordForm = () => {
   const [credentials, setCredentials] = useState({
-
-    email: "",
     password: "",
+    password_confirmation: "",
     showPassword: false,
+    showconfirmPassword: false,
   });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      const id = localStorage.getItem("id"); 
-      if (!id) {
-        toast.error("User ID not found in local storage.");
-        return;
-      }
-
-      try {
-        const response = await fetch(`${Helpers.apiUrl}auth/getUserCredentials/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch user details");
-        }
-        const data = await response.json();
-        setCredentials((prevCredentials) => ({
-          ...prevCredentials,
-          name: data.name,
-          email: data.email,
-        }));
-      } catch (error) {
-        toast.error("Failed to fetch user details.");
-      }
-    };
-
-    fetchUserDetails();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,47 +24,39 @@ const ChangePasswordForm = () => {
   const togglePasswordVisibility = () => {
     setCredentials({ ...credentials, showPassword: !credentials.showPassword });
   };
+  const toggleconfirmPasswordVisibility = () => {
+    setCredentials({ ...credentials, showconfirmPassword: !credentials.showconfirmPassword });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!credentials.email || !credentials.password) {
-      toast.error("Email and password are required.");
+    if (!credentials.password || !credentials.password_confirmation) {
+      Helpers.toast('error',"Password and Confirm password are required.");
       return;
     }
-
-    const id = localStorage.getItem("id"); // Retrieve user ID here
-
     try {
-      const response = await fetch(`${Helpers.apiUrl}auth/changePassword/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-        }),
-      });
+      const response = await axios.post(`${Helpers.apiUrl}changePassword/${Helpers.authUser.id}`, {
+        password: credentials.password,
+        password_confirmation: credentials.password_confirmation
+      }, Helpers.authHeaders
+      );
 
-      if (!response.ok) {
+      if (response.status != 200) {
         throw new Error("Failed to change password");
       }
 
       setCredentials({
-        name: "",
-        email: "",
         password: "",
+        password_confirmation: "",
         showPassword: false,
+        showconfirmPassword: false,
       });
 
-      toast.success("Password changed successfully!");
-
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      Helpers.toast('success',"Password changed successfully!");
+      navigate("/");
     } catch (error) {
-      toast.error("Failed to change password.");
+      Helpers.toast('error',"Failed to change password.");
     }
   };
 
@@ -98,30 +64,16 @@ const ChangePasswordForm = () => {
     <div className="container"  >
       <div className="row">
         <div className="col-2">
-        
+
         </div>
         <div className="col-10" >
           <div className="modal-content " style={{ marginTop: '80px' }}>
             <div className="modal-header">
               <h5 className="modal-title ms-3">Passwort ändern</h5>
             </div>
-            <div className="modal-body modal-body-two" style={{boxShadow:'0 4px 8px rgba(0, 0, 0, 0.1)'}}>
+            <div className="modal-body modal-body-two" style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
               <div className="from-main">
                 <form className="row g-3" onSubmit={handleSubmit}>
-                  <div className="col-md-6">
-                    <label htmlFor="email" className="form-label">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      value={credentials.email}
-                      onChange={handleChange}
-                      readOnly
-                    />
-                  </div>
                   <div className="col-md-6">
                     <label htmlFor="password" className="form-label">
                       Neues Passwort
@@ -134,7 +86,7 @@ const ChangePasswordForm = () => {
                         name="password"
                         value={credentials.password}
                         onChange={handleChange}
-                        
+
                       />
                       <div
                         onClick={togglePasswordVisibility}
@@ -142,18 +94,51 @@ const ChangePasswordForm = () => {
                           position: 'relative',
                           right: '2rem',
                           // top: '48%',
-                          bottom : '8px',
+                          bottom: '8px',
                           transform: 'translateY(-50%)',
                           cursor: 'pointer',
                           color: 'gray',
-                     
+
                         }}
                       >
                         <FontAwesomeIcon
                           icon={credentials.showPassword ? faEyeSlash : faEye}
                         />
                       </div>
+                    </div>
                   </div>
+                  <div className="col-md-6">
+                    <label htmlFor="password_confirmation" className="form-label">
+                      Passwort bestätigen
+                    </label>
+                    <div className="input-group" style={{ position: 'relative' }}>
+                      <input
+                        type={credentials.showconfirmPassword ? "text" : "password"}
+                        className="form-control"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        value={credentials.password_confirmation}
+                        onChange={handleChange}
+
+                      />
+                      <div
+                        onClick={toggleconfirmPasswordVisibility}
+                        style={{
+                          position: 'relative',
+                          right: '2rem',
+                          // top: '48%',
+                          bottom: '8px',
+                          transform: 'translateY(-50%)',
+                          cursor: 'pointer',
+                          color: 'gray',
+
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={credentials.showconfirmPassword ? faEyeSlash : faEye}
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className="d-flex justify-content-end">
                     <button

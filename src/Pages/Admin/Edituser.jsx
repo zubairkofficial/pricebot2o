@@ -5,17 +5,21 @@ import { Spinner } from "react-bootstrap";
 import Helpers from "../../Config/Helpers";
 import Avatar from "react-avatar";
 import userAvatar from "../../Components/Admin/user.png";
+import axios from "axios";
+import { useHeader } from '../../Components/Admin/HeaderContext';
 
-const servicesOptions = [
-  { label: "Sthamer", value: "Sthamer" },
-  { label: "Protokoll", value: "Protokoll" },
-  // { label: "Preishistorie", value: "Preishistorie" },
-  // { label: "Finde Lieferscheine mit", value: "Finde Lieferscheine mit" },
-];
 
 const UserDetail = () => {
+  
+  const { setHeaderData } = useHeader();
+  
+  useEffect(() => {
+    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+}, [setHeaderData]);
+
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -32,21 +36,16 @@ const UserDetail = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`${Helpers.apiUrl}auth/Getuser/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch user");
-      }
-      const data = await response.json();
-      setUser(data);
+        const response = await axios.get(`${Helpers.apiUrl}getuser/${id}`, Helpers.authHeaders);
+        if (response.status != 200) {
+          throw new Error("Failed to fetch user");
+        }
+        setUser(response.data.user);
+        setServices(response.data.services)
       setFormData({
-        name: data.name,
-        email: data.email,
-        services: data.services,
+        name: response.data.user.name,
+        email: response.data.user.email,
+        services: response.data.user.services,
       });
       setLoading(false);
     } catch (error) {
@@ -71,24 +70,22 @@ const UserDetail = () => {
     }));
   };
 
+  const servicesOptions = services.map((service) => ({
+    value: service.id,
+    label: service.name,
+  }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${Helpers.apiUrl}auth/updateUser/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(`${Helpers.apiUrl}updateUser/${id}`, {
           ...formData,
           services: formData.services,
-        }),
-      });
-      if (!response.ok) {
+        },Helpers.authHeaders);
+      if (response.status != 200) {
         throw new Error("Failed to update user");
       }
-      const updatedUser = await response.json();
-      setUser(updatedUser);
+      setUser(response.data);
       setIsEditing(false);
 
       window.location.reload();
@@ -107,6 +104,11 @@ const UserDetail = () => {
       </div>
     );
   }
+  const getServiceName = (id) => {
+    if (!id) return '';
+    const service = services.find((service) => service.id === id);
+    return service ? service.name : '';
+  };
 
   if (error) {
     return <div className="text-white text-center mt-5">Error: {error}</div>;
@@ -183,8 +185,8 @@ const UserDetail = () => {
                 <Select
                   options={servicesOptions}
                   onChange={handleServiceChange}
-                  values={formData.services.map((service) => ({
-                    label: service,
+                  values={formData.services?.map((service) => ({
+                    label: getServiceName(service),
                     value: service,
                   }))}
                   multi
@@ -243,7 +245,7 @@ const UserDetail = () => {
               <div className="row pt-1">
                 <div className="col-12 mb-3">
                   <p className="text-muted" style={{ color: "black" }}>
-                    {user.services ? user.services.join(", ") : ""}
+                    {user.service_names ? user.service_names.join(", ") : ""}
                   </p>
                 </div>
               </div>

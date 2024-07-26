@@ -45,8 +45,8 @@ export default function Feature() {
                         </div>
                     </div>
                     <img src="assets/images/shape/137.svg" alt="" className="shapes shape-one" />
-                </div >
-            </div >
+                </div>
+            </div>
         </div>
     )
 }

@@ -3,11 +3,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../Config/Helpers";
+import axios from "axios";
+import { useHeader } from '../../Components/Admin/HeaderContext';
 
 const UserList = () => {
+  
+  const { setHeaderData } = useHeader();
+  
+  useEffect(() => {
+    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+}, [setHeaderData]);
+
   const [users, setUsers] = useState([]);
+  const [services, setServices] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [alertMessage, setAlertMessage] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,18 +49,13 @@ const UserList = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${Helpers.apiUrl}auth/Getuser`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
+      const response = await axios.get(`${Helpers.apiUrl}dashboardInfo`, Helpers.authHeaders);
+      if (response.status != 200) {
         throw new Error("Failed to fetch users");
       }
-      const data = await response.json();
-      setUsers(data);
-      setFilteredUsers(data);
+      setUsers(response.data.users);
+      setFilteredUsers(response.data.users);
+      // setServices(response.data.services);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -60,21 +64,13 @@ const UserList = () => {
   };
 
   const handleEdit = (userId) => {
-    navigate(`/admin/Edit-user/${userId}`);
+    navigate(`/admin/edit-user/${userId}`);
   };
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `${Helpers.apiUrl}auth/delete/${selectedUserId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
+      const response = await axios.delete( `${Helpers.apiUrl}delete/${selectedUserId}`,Helpers.authHeaders );
+      if (response.status != 200) {
         throw new Error("Failed to delete user");
       }
       setUsers(users.filter((user) => user.id !== selectedUserId));
@@ -93,16 +89,6 @@ const UserList = () => {
     handleDelete(selectedUserId);
     setShowConfirmation(false);
   };
-
-  const toggleUserSelection = (userId) => {
-    setSelectedUsers((prevSelected) =>
-      prevSelected.includes(userId)
-        ? prevSelected.filter((id) => id !== userId)
-        : [...prevSelected, userId]
-    );
-  };
-
-  const isUserSelected = (userId) => selectedUsers.includes(userId);
 
   if (loading) {
     return (
@@ -201,7 +187,7 @@ const UserList = () => {
                       <td>{user.name}</td>
                       <td>{user.email}</td>
                       <p className="">
-                        {user.services ? user.services.join(", ") : ""}
+                        {user.service_names ? user.service_names.join(", ") : ""}
                       </p>
                       <td>
                         <button
