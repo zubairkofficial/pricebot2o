@@ -153,6 +153,38 @@ const Sidebar = () => {
                   </div>
                 </a>
               </li>
+              <li className="menu-main">
+                <a href="/admin/orgs">
+                  <div className="has-child-main">
+                    <div className="has-child-main-inner">
+                      <div className="has-child-icon">
+                        <span>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              className="svg-color-1"
+                              d="M8 1.33333C4.318 1.33333 1.33333 4.318 1.33333 8C1.33333 11.682 4.318 14.6667 8 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33333 8 1.33333ZM8 13.3333C5.05467 13.3333 2.66667 10.9453 2.66667 8C2.66667 5.05467 5.05467 2.66667 8 2.66667C10.9453 2.66667 13.3333 5.05467 13.3333 8C13.3333 10.9453 10.9453 13.3333 8 13.3333Z"
+                            />
+                            <path
+                              className="svg-color-1"
+                              d="M10.6667 8C10.6667 9.472 9.472 10.6667 8 10.6667C6.528 10.6667 5.33333 9.472 5.33333 8C5.33333 6.528 6.528 5.33333 8 5.33333C9.472 5.33333 10.6667 6.528 10.6667 8Z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+
+                      <div className="has-child-text">
+                        <span>Organisationen</span>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
 
             </ul>
           </div>

@@ -20,6 +20,9 @@ import ResendEmail from "./Pages/users/ResendEmail";
 import "./App.css";
 import Services from "./Pages/Admin/Service/Services";
 import EditService from "./Pages/Admin/Service/EditService";
+import Orgs from "./Pages/Admin/Organization/Orgs";
+import AddOrg from "./Pages/Admin/Organization/AddOrg";
+import EditOrg from "./Pages/Admin/Organization/EditOrg";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -108,6 +111,9 @@ const App = () => {
                     <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
                     {/* <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} /> */}
                     <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
+                    <Route path="orgs" element={<Auth isAdmin={true}><Orgs /> </Auth>} />
+                    <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /> </Auth>} />
+                    <Route path="edit-org/:id" element={<Auth isAdmin={true}><EditOrg /> </Auth>} />
                   </Routes>
                 </div>
               </div>

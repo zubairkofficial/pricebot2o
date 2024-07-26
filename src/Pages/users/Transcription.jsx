@@ -14,12 +14,12 @@ function Transcription() {
   const [summary, setSummary] = useState("");
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
-  const [partner, setPartner] = useState(null); // For selected partner
+  const [partner, setPartner] = useState(null);
   const [branchManager, setBranchManager] = useState("");
   const [participants, setParticipants] = useState("");
   const [author, setAuthor] = useState("");
   const [partnerNumbers, setPartnerNumbers] = useState([]);
-  const [partnerNumber, setPartnerNumber] = useState(""); // Previous default value number
+  const [partnerNumber, setPartnerNumber] = useState("");
   const navigate = useNavigate();
 
   // Initialize form fields with values from location state
@@ -41,7 +41,7 @@ function Transcription() {
     const fetchPartnerNumbers = async () => {
       try {
         const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
-        setPartnerNumbers(response.data.data);
+        setPartnerNumbers(response.data);
       } catch (error) {
         Helpers.toast('error', error.message);
       }
@@ -89,7 +89,7 @@ function Transcription() {
           branchManager,
           participants,
           author,
-        }
+        },Helpers.authHeaders
       );
 
       setSuccess(true);
