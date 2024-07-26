@@ -32,23 +32,6 @@ const FileUpload = () => {
     }
   };
 
-  // const services = [
-  //   {
-  //     id: "fileupload",
-  //     name: "Sthamer",
-  //     description:
-  //       "Umfassende KI-gesteuerte Dateianalyse- und Insights-Plattform",
-  //     link: "fileupload",
-  //   },
-  //   {
-  //     id: "voice",
-  //     name: "Protokoll",
-  //     description:
-  //       "Erstelle automatisch Protokolle aus Memos",
-  //     link: "voice",
-  //   },
-  // ];
-
   useEffect(() => {
     if (successMessage) {
       Helpers.toast("success", successMessage);
