@@ -100,7 +100,7 @@ const AddOrg = () => {
                                                             Number
                                                         </label>
                                                         <input
-                                                            type="number"
+                                                            type="text"
                                                             className="form-control"
                                                             id="number"
                                                             name="number"

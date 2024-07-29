@@ -28,10 +28,8 @@ function FileUpload() {
       const formData = new FormData();
       formData.append("document", file);
       formData.append("fileName", file.name);
-
       try {
-        const response = await axios.post(`${Helpers.apiUrl}uploadFile`, {formData,
-        },Helpers.authFileHeaders);
+        const response = await axios.post(`${Helpers.apiUrl}uploadFile`, formData,Helpers.authFileHeaders);
 
         if (response.status == 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");

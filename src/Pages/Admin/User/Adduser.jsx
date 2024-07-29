@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import Helpers from "../../Config/Helpers";
+import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/Admin/HeaderContext';
 
 
 const AddUserForm = () => {
@@ -19,11 +19,13 @@ const AddUserForm = () => {
     name: "",
     email: "",
     password: "",
+    org_id: "",
     services: [],
     showPassword: false,
   });
 
   const [services, setServices] = useState([]);
+  const [orgs, setOrgs] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -41,12 +43,25 @@ const AddUserForm = () => {
       Helpers.toast('error', error.message);
     }
   };
+  const fetchPartnerNumbers = async () => {
+    try {
+      const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
+      setOrgs(response.data);
+    } catch (error) {
+      Helpers.toast('error', error.message);
+    }
+  };
+
   useEffect(() => {
+    fetchPartnerNumbers();
     fetchServices();
   }, []);
   const handleServiceChange = (values) => {
     const selectedValues = values.map((option) => option.value);
     setUser({ ...user, services: selectedValues });
+  };
+  const handleOrgChange = (id) => {
+    setUser({ ...user, org_id: id });
   };
 
   const togglePasswordVisibility = () => {
@@ -66,6 +81,7 @@ const AddUserForm = () => {
         name: user.name,
         email: user.email,
         password: user.password,
+        org_id: user.org_id,
         services: user.services,
       });
 
@@ -77,6 +93,7 @@ const AddUserForm = () => {
         name: "",
         email: "",
         password: "",
+        org_id: "",
         services: [],
         showPassword: false,
       });
@@ -87,15 +104,23 @@ const AddUserForm = () => {
       Helpers.toast('error', "Failed to register user.");
     }
   };
+
   const getServiceName = (id) => {
     if (!id) return '';
     const service = services.find((service) => service.id === id);
     return service ? service.name : '';
   };
+
   const servicesOptions = services.map((service) => ({
     value: service.id,
     label: service.name,
   }));
+
+  const OrgsOptions = orgs.map((org) => ({
+    value: org.id,
+    label: org.name,
+  }));
+
   return (
     <div className="modal-content " style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       <div className="modal-header">
@@ -154,12 +179,24 @@ const AddUserForm = () => {
                 multi
                 onChange={handleServiceChange}
                 values={user.services.map((service) => ({
-                    label: getServiceName(service),
-                    value: service,
-                  }))}
+                  label: getServiceName(service),
+                  value: service,
+                }))}
                 className="custom-select p-2"
               />
             </div>
+            {user.services.includes(2) &&
+              <div className="col-md-12">
+                <label htmlFor="services" className="form-label">
+                  Organisation
+                </label>
+                <Select
+                  style={{ color: "#000000" }}
+                  options={OrgsOptions}
+                  value={user.org_id}
+                  className="custom-select p-2"
+                />
+              </div>}
             <div className="d-flex justify-content-end   ">
               <button type="submit" className="btn-one text-white" style={{ width: '30%' }} >
                 Registrieren
@@ -172,7 +209,7 @@ const AddUserForm = () => {
   );
 };
 
-const AdminPanel = () => {
+const AddUser = () => {
   return (
     <div className="container-fluid vh-100  text-white " style={{ paddingTop: '2rem', boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}  >
       <div className="row h-100">
@@ -196,4 +233,4 @@ const AdminPanel = () => {
   );
 };
 
-export default AdminPanel;
+export default AddUser;

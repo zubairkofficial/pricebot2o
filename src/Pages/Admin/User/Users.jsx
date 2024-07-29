@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import Helpers from "../../Config/Helpers";
+import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/Admin/HeaderContext';
 
 const UserList = () => {
   
@@ -177,6 +177,7 @@ const UserList = () => {
                     <th>Name</th>
                     <th>Email</th>
                     <th>Berechtigungen</th>
+                    <th>Organisation</th>
                     <th>Aktionen</th>
                   </tr>
                 </thead>
@@ -189,6 +190,7 @@ const UserList = () => {
                       <p className="">
                         {user.service_names ? user.service_names.join(", ") : ""}
                       </p>
+                      <td>{user.organization?.name}</td>
                       <td>
                         <button
                           style={{

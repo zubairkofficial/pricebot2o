@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt, FaCheck, FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
@@ -11,7 +11,7 @@ const Orgs = () => {
 
     useEffect(() => {
         setHeaderData({ title: 'Organisationen', desc: 'Verwalten Sie hier Ihre Organisationen' });
-      }, [setHeaderData]);
+    }, [setHeaderData]);
 
     const [orgs, setOrgs] = useState([]);
     const [filteredOrgs, setFilteredOrgs] = useState([]);
@@ -92,17 +92,13 @@ const Orgs = () => {
         return <div>Error: {error}</div>;
     }
 
-    const handleAddOrg = () => {
-        navigate("/admin/add-org");
-    };
-
     return (
         <section className="nftmax-adashboard nftmax-show w-100 h-100 "  >
             <div className="nftmax-adashboard-left">
                 <div className="d-flex justify-content-end align-items-center ">
-                    <button className="btn-one text-white" onClick={handleAddOrg}>
+                    <Link className="btn-one text-white" to="/admin/add-org">
                         Organisation hinzufügen
-                    </button>
+                    </Link>
                 </div>
                 <div className="row tabel-main-box" style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
 

@@ -54,23 +54,41 @@ function Transcription() {
     const fetchLatestNumber = async () => {
       try {
         const response = await axios.get(
-          `${Helpers.apiUrl}getLatestNumber`,Helpers.authHeaders
+          `${Helpers.apiUrl}getLatestNumber`, Helpers.authHeaders
         );
-        setPartnerNumber(response.data.number);
+    
+        const data = response.data ?? {};
+        const number = data.number ?? '';
+        const dateStr = data.Datum ?? '';
+        const theme = data.Thema ?? '';
+        const author = data.BM ?? '';
+        const branchManager = data.Niederlassungsleiter ?? '';
+        const participants = data.Teilnehmer ?? '';
+    
+        setPartnerNumber(number);
+    
         // Convert the date format from "DD-MM-YY" to "YYYY-MM-DD"
-        const parts = response.data?.Datum?.split("-");
-        const parsedDate = `20${parts[2]}-${parts[1]}-${parts[0]}`;
-        setDate(parsedDate); // Set the date
-        setTheme(response.data?.Thema); // Set the theme
-        setAuthor(response.data?.BM); // Set the theme
-        setBranchManager(response.data?.Niederlassungsleiter); // Set the theme
-        setParticipants(response.data?.Teilnehmer); // Set the participants
-        // console.log(response.data?.Teilnehmer); // Ensure Teilnehmer data is received
+        let parsedDate = '';
+        if (dateStr) {
+          const parts = dateStr.split("-");
+          if (parts.length === 3) {
+            parsedDate = `20${parts[2]}-${parts[1]}-${parts[0]}`;
+          }
+        }
+        setDate(parsedDate);
+    
+        setTheme(theme);
+        setAuthor(author);
+        setBranchManager(branchManager); 
+        setParticipants(participants); // Set the participants
+    
+        // console.log(participants);
       } catch (error) {
-        console.log(error)
+        console.log(error);
         Helpers.toast('error', error.message);
       }
     };
+    
 
     fetchLatestNumber();
   }, []);

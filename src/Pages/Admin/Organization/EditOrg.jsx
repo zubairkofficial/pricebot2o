@@ -136,11 +136,10 @@ const EditOrg = () => {
                                             Number
                                         </label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             className="form-control"
                                             id="number"
                                             name="number"
-                                            readOnly
                                             value={formData.number}
                                             onChange={handleChange}
                                         />

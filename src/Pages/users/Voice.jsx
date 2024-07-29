@@ -19,20 +19,11 @@ function Voice() {
   const [isEmailButtonVisible, setIsEmailButtonVisible] = useState(false);
   const [isGenerateSummaryButtonVisible, setIsGenerateSummaryButtonVisible] = useState(false);
   const [isSummaryGenerating, setIsSummaryGenerating] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [selectedDepartmentVoice, setSelectedDepartmentVoice] = useState(null);
-  const [selectedDepartmentTranscription, setSelectedDepartmentTranscription] = useState(null);
-  const [selectedPromptsVoice, setSelectedPromptsVoice] = useState("");
-  const [selectedPromptsTranscription, setSelectedPromptsTranscription] = useState("");
-  const [showDepartmentSelectionVoice, setShowDepartmentSelectionVoice] = useState(false);
-  const [showDepartmentSelectionTranscription, setShowDepartmentSelectionTranscription] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [showTranscriptionSummary, setShowTranscriptionSummary] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
   const navigate = useNavigate();
 
-  const userLoginId = Helpers.authUser.id;
-  const userDepartments = Helpers.authUser.department || "[]";
   useEffect(() => {
     setHasHistory(window.history.length > 1);
   }, []);
@@ -71,36 +62,18 @@ function Voice() {
     }
   }, [isListening]);
 
-  const fetchDepartments = async () => {
-    try {
-      const response = await axios.get(`${Helpers.apiUrl}GetDepartments`,Helpers.authHeaders);
-      if (response.status != 200) {
-        throw new Error("Failed to fetch departments");
-      }
-      console.log(response.data)
-      const filteredDepartments = response.data.filter(dept => userDepartments.includes(dept.name));
-      setDepartments(filteredDepartments.map(dept => ({ label: dept.name, value: dept.prompt })));
-    } catch (error) {
-      console.error("Error fetching departments:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchDepartments();
-  }, [userDepartments]);
 
   const handleTranscribeClick = async () => {
     if (file) {
       const formData = new FormData();
       formData.append("audio", file);
-      formData.append("user_login_id", userLoginId);
 
       try {
         setTranscribing(true);
         setErrorMessage("");
 
         const response = await axios.post(
-          `${Helpers.apiUrl}transcribe`,formData,Helpers.authFileHeaders
+          `${Helpers.apiUrl}transcribe`, formData, Helpers.authFileHeaders
         );
 
         if (response.status != 200) {
@@ -111,7 +84,6 @@ function Voice() {
         setTranscriptionText(
           response.data.transcription.results.channels[0].alternatives[0].transcript
         );
-        setShowDepartmentSelectionTranscription(true);
         setIsGenerateSummaryButtonVisible(true);
       } catch (error) {
         console.error("Fehler beim Transkribieren der Datei:", error);
@@ -140,10 +112,8 @@ function Voice() {
       setIsSummaryGenerating(true);
 
       const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
-          recordedText: listeningText,
-          user_login_id: userLoginId,
-          prompts: selectedPromptsVoice
-      },Helpers.authHeaders);
+        recordedText: listeningText,
+      }, Helpers.authHeaders);
 
       if (response.status != 200) {
         throw new Error(response.message || "Failed to generate summary.");
@@ -165,10 +135,8 @@ function Voice() {
       setIsSummaryGenerating(true);
 
       const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
-          recordedText: transcriptionText,
-          user_login_id: userLoginId,
-          prompts: selectedPromptsTranscription
-      },Helpers.authHeaders);
+        recordedText: transcriptionText
+      }, Helpers.authHeaders);
 
       if (response.status != 200) {
         throw new Error(response.message || "Failed to generate summary.");
@@ -191,57 +159,23 @@ function Voice() {
     navigate("/transcription", {
       state: {
         text: transcriptionText,
-        summary: transcriptionSummary,
-        prompts: selectedPromptsTranscription
+        summary: transcriptionSummary
       },
     });
   };
 
-  // const handleNextPageClickListening = () => {
-  //   navigate("/Recorded-text-mail", {
-  //     state: {
-  //       listeningText: listeningText,
-  //       summary: summary,
-  //       prompts: selectedPromptsVoice
-  //     },
-  //   });
-  // };
   const handleNextPageClickListening = () => {
     navigate("/transcription", {
       state: {
         text: listeningText,
-        summary: summary,
-        prompts: selectedPromptsVoice
+        summary: summary
       }
     });
   };
 
   const handleStopListening = () => {
     setIsListening(false);
-    setShowDepartmentSelectionVoice(true);
     setIsGenerateSummaryButtonVisible(true);
-  };
-
-  const handleDepartmentChangeVoice = (values) => {
-    if (values.length > 0) {
-      const selectedPrompts = values[0].value;
-      setSelectedPromptsVoice(selectedPrompts);
-      setSelectedDepartmentVoice(values[0]);
-    } else {
-      setSelectedPromptsVoice("");
-      setSelectedDepartmentVoice(null);
-    }
-  };
-
-  const handleDepartmentChangeTranscription = (values) => {
-    if (values.length > 0) {
-      const selectedPrompts = values[0].value;
-      setSelectedPromptsTranscription(selectedPrompts);
-      setSelectedDepartmentTranscription(values[0]);
-    } else {
-      setSelectedPromptsTranscription("");
-      setSelectedDepartmentTranscription(null);
-    }
   };
 
   const forword = () => {
@@ -293,29 +227,6 @@ function Voice() {
                     />
                   ) : null}
 
-                  {showDepartmentSelectionVoice && (
-                    <div className="mt-3">
-                      <h5>Wählen Sie Ihre Abteilungen aus</h5>
-                      <Select
-                        options={departments}
-                        onChange={handleDepartmentChangeVoice}
-                        values={selectedDepartmentVoice ? [selectedDepartmentVoice] : []}
-                        multi={false}
-                        placeholder="Wählen Sie eine Abteilung"
-                        className="form-control"
-                      />
-                      {selectedPromptsVoice && (
-                        <input
-                          type="hidden"
-                          className="form-control mt-3"
-                          style={{ minHeight: "100px" }}
-                          readOnly
-                          value={selectedPromptsVoice}
-                        />
-                      )}
-                    </div>
-                  )}
-
                   {summaryError && (
                     <div style={{ color: "red", marginTop: "5px", fontSize: "14px" }}>
                       {summaryError}
@@ -327,7 +238,7 @@ function Voice() {
                       <p className="card-text" style={{ whiteSpace: 'break-spaces' }}>{summary}</p>
                     </div>
                   )}
-                  {!isListening && isGenerateSummaryButtonVisible && showDepartmentSelectionVoice && (
+                  {!isListening && isGenerateSummaryButtonVisible && (
                     <div>
                       <button
                         onClick={handleGenerateSummaryVoice}
@@ -350,6 +261,7 @@ function Voice() {
               </div>
 
               <button
+                disabled={isSummaryGenerating}
                 onClick={() => {
                   if (isListening) {
                     handleStopListening();
@@ -357,7 +269,6 @@ function Voice() {
                     setIsListening(true);
                     setIsEmailButtonVisible(false);
                     setIsGenerateSummaryButtonVisible(false);
-                    setShowDepartmentSelectionVoice(false);
                     setShowSummary(false);
                   }
                 }}
@@ -366,7 +277,6 @@ function Voice() {
                 {isListening ? "Spracherkennung stoppen" : "Spracherkennung starten"}
               </button>
 
-              {/* Voice Transcription Section */}
               <h4 className="text-center p-3">Sprachaufzeichnung hochladen</h4>
               <input
                 type="file"
@@ -395,28 +305,6 @@ function Voice() {
                       value={transcriptionText}
                       onChange={(e) => setTranscriptionText(e.target.value)}
                     ></textarea>
-                    {showDepartmentSelectionTranscription && (
-                      <div className="mt-3">
-                        <h5>Wählen Sie Ihre Abteilungen aus</h5>
-                        <Select
-                          options={departments}
-                          onChange={handleDepartmentChangeTranscription}
-                          values={selectedDepartmentTranscription ? [selectedDepartmentTranscription] : []}
-                          multi={false}
-                          placeholder="Wählen Sie eine Abteilung"
-                          className="form-control"
-                        />
-                        {selectedPromptsTranscription && (
-                          <input
-                            type="hidden"
-                            className="form-control mt-3"
-                            style={{ minHeight: "100px" }}
-                            readOnly
-                            value={selectedPromptsTranscription}
-                          />
-                        )}
-                      </div>
-                    )}
 
                     {showTranscriptionSummary && (
                       <div>
@@ -424,7 +312,7 @@ function Voice() {
                         <p className="card-text" style={{ whiteSpace: 'break-spaces' }}>{transcriptionSummary}</p>
                       </div>
                     )}
-                    {showDepartmentSelectionTranscription && isGenerateSummaryButtonVisible && (
+                    {isGenerateSummaryButtonVisible && (
                       <div>
                         <button
                           onClick={handleGenerateSummaryTranscription}
