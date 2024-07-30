@@ -5,7 +5,7 @@ import Select from "react-dropdown-select";
 import Helpers from "../../Config/Helpers";
 import axios from "axios";
 
-function Voice() {
+const Voice = () => {
   const [isListening, setIsListening] = useState(false);
   const [listeningText, setListeningText] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -58,7 +58,7 @@ function Voice() {
         recognition.stop();
       }
 
-      return () => recognition.stop();
+      // return () => recognition.stop();
     }
   }, [isListening]);
 

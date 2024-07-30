@@ -28,12 +28,13 @@ function FileUpload() {
       const formData = new FormData();
       formData.append("document", file);
       formData.append("fileName", file.name);
+      
       try {
         const response = await axios.post(`${Helpers.apiUrl}uploadFile`, formData,Helpers.authFileHeaders);
 
         if (response.status == 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");
-          newFileResponses[file.name] = { status: "Success", data: response.data }; // Focus only on data field
+          newFileResponses[file.name] = { status: "Success", data: response.data }; 
         } else {
           throw new Error(response.message || "Fehler beim Hochladen der Datei");
         }

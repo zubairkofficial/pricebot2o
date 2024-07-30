@@ -13,6 +13,7 @@ import UserSidebar from "./Pages/users/Sidebar";
 import FileUpload from "./Pages/users/Fileupload";
 import ChangePass from "./Pages/users/ChangePass";
 import Voice from "./Pages/users/Voice";
+import TestVoice from "./Pages/users/TestVoice";
 import SentEmails from "./Pages/users/SentEmails";
 import Transcription from "./Pages/users/Transcription";
 import ResendEmail from "./Pages/users/ResendEmail";
@@ -89,6 +90,7 @@ const App = () => {
                     <Route path="/" element={<Auth><UserHome /> </Auth>} />
                     <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
                     <Route path="/voice" element={<Auth><Voice /></Auth>} />
+                    <Route path="/testvoice" element={<Auth><TestVoice /></Auth>} />
                     <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
                     <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
                     <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
