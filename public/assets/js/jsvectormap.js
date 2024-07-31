@@ -1618,7 +1618,7 @@
 
     for (var index in this.lines) {
       for (var mindex in this.markers) {
-        var marker = this.markers[mindex]; 
+        var marker = this.markers[mindex]; // console.log(this.lines[index], index);
 
         if (marker.config.name === this.lines[index].config.from) {
           point1 = this.getMarkerPosition(marker.config);

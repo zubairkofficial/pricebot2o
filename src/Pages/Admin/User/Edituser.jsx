@@ -6,7 +6,7 @@ import Helpers from "../../../Config/Helpers";
 import Avatar from "react-avatar";
 import userAvatar from "../../../Components/Admin/user.png";
 import axios from "axios";
-import { useHeader } from '../../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/HeaderContext';
 const EditUser = () => {
 
   const { setHeaderData } = useHeader();

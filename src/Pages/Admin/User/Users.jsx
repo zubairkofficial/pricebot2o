@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate,Link } from "react-router-dom";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/HeaderContext';
+import Pagination from '../../../Components/Pagination'; // Adjust the path to your Pagination component
 
 const UserList = () => {
-  
   const { setHeaderData } = useHeader();
-  
+
   useEffect(() => {
     setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
-}, [setHeaderData]);
+  }, [setHeaderData]);
 
   const [users, setUsers] = useState([]);
-  const [services, setServices] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const location = useLocation();
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;
@@ -30,7 +28,6 @@ const UserList = () => {
   useEffect(() => {
     if (successMessage) {
       Helpers.toast("success", successMessage);
-      // Clear the state after displaying the message
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [successMessage, navigate, location.pathname]);
@@ -50,12 +47,11 @@ const UserList = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}dashboardInfo`, Helpers.authHeaders);
-      if (response.status != 200) {
+      if (response.status !== 200) {
         throw new Error("Failed to fetch users");
       }
       setUsers(response.data.users);
       setFilteredUsers(response.data.users);
-      // setServices(response.data.services);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -67,35 +63,27 @@ const UserList = () => {
     navigate(`/admin/edit-user/${userId}`);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     try {
-      const response = await axios.delete( `${Helpers.apiUrl}delete/${selectedUserId}`,Helpers.authHeaders );
-      if (response.status != 200) {
+      const response = await axios.delete(`${Helpers.apiUrl}delete/${id}`, Helpers.authHeaders);
+      if (response.status !== 200) {
         throw new Error("Failed to delete user");
       }
-      setUsers(users.filter((user) => user.id !== selectedUserId));
-      setFilteredUsers(
-        filteredUsers.filter((user) => user.id !== selectedUserId)
-      );
-      setSelectedUserId(null);
-      setShowConfirmation(false);
+      setUsers(users.filter((user) => user.id !== id));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
       Helpers.toast("success", "User deleted successfully");
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const confirmDelete = () => {
-    handleDelete(selectedUserId);
-    setShowConfirmation(false);
-  };
+  const indexOfLastUser = currentPage * itemsPerPage;
+  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   if (loading) {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
-      >
+      <div className="flex justify-center items-center h-screen">
         <Spinner animation="border" role="status">
           <span className="visually-hidden"></span>
         </Spinner>
@@ -104,157 +92,109 @@ const UserList = () => {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-red-500">Error: {error}</div>;
   }
 
-  const handleAddUser = () => {
-    navigate("/admin/add-user");
-  };
-
   return (
-    <section className="nftmax-adashboard nftmax-show w-100 h-100 "  >
-      <div className="nftmax-adashboard-left">
-     <div className="d-flex justify-content-end align-items-center ">
-            <button className="btn-one text-white" onClick={handleAddUser}>
-              Benutzer 
-            </button>
-          </div>
-        <div className="row tabel-main-box" style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-          
-          <div className="col-lg-12 col-padding-0" >
-            
-            <div className="tabel-search-box">
-              <div className="tabel-search-box-item">
-                <div className="tabel-search-box-inner">
-                  <div className="search-icon">
-                    <span>
-                      <svg
-                        width={20}
-                        height={20}
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle
-                          cx="9.7859"
-                          cy="9.78614"
-                          r="8.23951"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M15.5166 15.9448L18.747 19.1668"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control "
-                    id="search"
-                    placeholder="Nach Name suchen"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+    <section className="w-full h-full p-4">
+      <div className="shadow-lg rounded-lg p-4">
+        <div className="flex justify-end mb-4">
+          <Link to="/admin/add-user"
+            className="h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
+          >
+            Benutzer hinzufügen
+          </Link>
+        </div>
+        <div className="shadow-lg rounded-lg p-4">
+          <div className="mb-4">
+            <div className="relative">
+              <input
+                type="text"
+                className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                id="search"
+                placeholder="Nach Name suchen"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <svg
+                  width={20}
+                  height={20}
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="9.7859"
+                    cy="9.78614"
+                    r="8.23951"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                </div>
+                  <path
+                    d="M15.5166 15.9448L18.747 19.1668"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
             </div>
           </div>
-         
-          <div className="col-lg-12">
-            <div className="tabel-main">
-              <table
-                id="expendable-data-table"
-                className="table display nowrap w-100"
-              >
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Berechtigungen</th>
-                    <th>Organisation</th>
-                    <th>Aktionen</th>
+
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-darkblack-200">
+              <thead className="bg-white-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Berechtigungen</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisation</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody className="">
+                {currentUsers.map((user, index) => (
+                  <tr key={user.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstUser + index + 1}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.service_names ? user.service_names.join(", ") : ""}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.organization?.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button
+                        className="bg-blue-500 text-black p-2 rounded-lg hover:bg-blue-600"
+                        onClick={() => handleEdit(user.id)}
+                      >
+                        <FaPencilAlt />
+                      </button>
+                      <button
+                        className="bg-red-500 text-black   p-2 rounded-lg hover:bg-red-600 ml-2"
+                        onClick={() => {
+                          handleDelete(user.id);
+                        }}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((user, index) => (
-                    <tr key={user.id}>
-                      <td>{index + 1}</td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <p className="">
-                        {user.service_names ? user.service_names.join(", ") : ""}
-                      </p>
-                      <td>{user.organization?.name}</td>
-                      <td>
-                        <button
-                          style={{
-                            backgroundColor: "#007bff",
-                            border: "none",
-                            color: "white",
-                            padding: "5px 10px",
-                            textAlign: "center",
-                            textDecoration: "none",
-                            display: "inline-block",
-                            fontSize: "16px",
-                            margin: "4px 2px",
-                            cursor: "pointer",
-                            borderRadius: "10px",
-                          }}
-                          onClick={() => handleEdit(user.id)}
-                        >
-                          <FaPencilAlt />
-                        </button>
-                        <button
-                          style={{
-                            backgroundColor: "#dc3545",
-                            border: "none",
-                            color: "white",
-                            padding: "5px 10px",
-                            textAlign: "center",
-                            textDecoration: "none",
-                            display: "inline-block",
-                            fontSize: "16px",
-                            margin: "4px 2px",
-                            cursor: "pointer",
-                            borderRadius: "10px",
-                          }}
-                          onClick={() => {
-                            setSelectedUserId(user.id);
-                            setShowConfirmation(true);
-                          }}
-                        >
-                          <FaTrashAlt />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalItems={filteredUsers.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
-
-      <Modal show={showConfirmation} onHide={() => setShowConfirmation(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Löschen bestätigen</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="text-white"> Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmation(false)}>
-            Abbrechen
-          </Button>
-          <Button variant="danger" onClick={confirmDelete}>
-            Löschen
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </section>
   );
 };

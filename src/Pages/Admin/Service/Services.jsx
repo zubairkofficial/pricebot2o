@@ -4,7 +4,7 @@ import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt, FaCheck,FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/HeaderContext';
 
 const Services = () => {
     const { setHeaderData } = useHeader();

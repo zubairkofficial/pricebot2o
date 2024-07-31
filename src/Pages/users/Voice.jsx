@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Select from "react-dropdown-select";
-import Helpers from "../../Config/Helpers";
 import axios from "axios";
+import Helpers from "../../Config/Helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMicrophone, faStopCircle } from "@fortawesome/free-solid-svg-icons";
+import { useHeader } from "../../Components/HeaderContext";
 
 const Voice = () => {
+  const { setHeaderData } = useHeader();
+  useEffect(() => {
+    setHeaderData({ title: "Voice", desc: "" });
+  }, [setHeaderData]);
+
   const [isListening, setIsListening] = useState(false);
   const [listeningText, setListeningText] = useState("");
   const [interimTranscript, setInterimTranscript] = useState("");
@@ -17,10 +24,12 @@ const Voice = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [summaryError, setSummaryError] = useState("");
   const [isEmailButtonVisible, setIsEmailButtonVisible] = useState(false);
-  const [isGenerateSummaryButtonVisible, setIsGenerateSummaryButtonVisible] = useState(false);
+  const [isGenerateSummaryButtonVisible, setIsGenerateSummaryButtonVisible] =
+    useState(false);
   const [isSummaryGenerating, setIsSummaryGenerating] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
-  const [showTranscriptionSummary, setShowTranscriptionSummary] = useState(false);
+  const [showTranscriptionSummary, setShowTranscriptionSummary] =
+    useState(false);
   const [hasHistory, setHasHistory] = useState(false);
   const navigate = useNavigate();
 
@@ -29,20 +38,24 @@ const Voice = () => {
   }, []);
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.lang = "de-DE";
       recognition.continuous = true;
       recognition.interimResults = true;
 
-      recognition.onstart = () => console.log("Spracherkennung aktiviert. Bitte sprechen.");
+      recognition.onstart = () =>
+        console.log("Spracherkennung aktiviert. Bitte sprechen.");
 
       recognition.onresult = (event) => {
-        let interimTranscript = '';
+        let interimTranscript = "";
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
-            setListeningText((prevText) => prevText + event.results[i][0].transcript);
+            setListeningText(
+              (prevText) => prevText + event.results[i][0].transcript
+            );
           } else {
             interimTranscript += event.results[i][0].transcript;
           }
@@ -50,7 +63,8 @@ const Voice = () => {
         setInterimTranscript(interimTranscript);
       };
 
-      recognition.onerror = (event) => console.error("Fehler bei der Erkennung:", event.error);
+      recognition.onerror = (event) =>
+        console.error("Fehler bei der Erkennung:", event.error);
 
       if (isListening) {
         recognition.start();
@@ -58,10 +72,9 @@ const Voice = () => {
         recognition.stop();
       }
 
-      // return () => recognition.stop();
+      return () => recognition.stop();
     }
   }, [isListening]);
-
 
   const handleTranscribeClick = async () => {
     if (file) {
@@ -73,16 +86,20 @@ const Voice = () => {
         setErrorMessage("");
 
         const response = await axios.post(
-          `${Helpers.apiUrl}transcribe`, formData, Helpers.authFileHeaders
+          `${Helpers.apiUrl}transcribe`,
+          formData,
+          Helpers.authFileHeaders
         );
 
-        if (response.status != 200) {
-          throw new Error(response.message || "Netzwerkantwort war nicht erfolgreich.");
+        if (response.status !== 200) {
+          throw new Error(
+            response.message || "Netzwerkantwort war nicht erfolgreich."
+          );
         }
 
-
         setTranscriptionText(
-          response.data.transcription.results.channels[0].alternatives[0].transcript
+          response.data.transcription.results.channels[0].alternatives[0]
+            .transcript
         );
         setIsGenerateSummaryButtonVisible(true);
       } catch (error) {
@@ -111,11 +128,15 @@ const Voice = () => {
     try {
       setIsSummaryGenerating(true);
 
-      const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
-        recordedText: listeningText,
-      }, Helpers.authHeaders);
+      const response = await axios.post(
+        `${Helpers.apiUrl}generateSummary`,
+        {
+          recordedText: listeningText,
+        },
+        Helpers.authHeaders
+      );
 
-      if (response.status != 200) {
+      if (response.status !== 200) {
         throw new Error(response.message || "Failed to generate summary.");
       }
 
@@ -134,11 +155,15 @@ const Voice = () => {
     try {
       setIsSummaryGenerating(true);
 
-      const response = await axios.post(`${Helpers.apiUrl}generateSummary`, {
-        recordedText: transcriptionText
-      }, Helpers.authHeaders);
+      const response = await axios.post(
+        `${Helpers.apiUrl}generateSummary`,
+        {
+          recordedText: transcriptionText,
+        },
+        Helpers.authHeaders
+      );
 
-      if (response.status != 200) {
+      if (response.status !== 200) {
         throw new Error(response.message || "Failed to generate summary.");
       }
 
@@ -159,7 +184,7 @@ const Voice = () => {
     navigate("/transcription", {
       state: {
         text: transcriptionText,
-        summary: transcriptionSummary
+        summary: transcriptionSummary,
       },
     });
   };
@@ -168,8 +193,8 @@ const Voice = () => {
     navigate("/transcription", {
       state: {
         text: listeningText,
-        summary: summary
-      }
+        summary: summary,
+      },
     });
   };
 
@@ -183,82 +208,76 @@ const Voice = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        <div className="col-2">
-          {/* Sidebar Placeholder */}
-        </div>
-        <div className="col-10" >
-          <h2 className="text-center mb-4">Protokoll</h2>
-          <div className="row justify-content-center m-3">
-            <div className="col-md-6">
-              <div className="container d-flex flex-column flex-sm-row justify-content-end">
-                <Link to={"/"} className="button btn-secondary mb-3 mb-sm-0">
+    <section className="bg-white ">
+      <div className="flex flex-col lg:flex-row justify-between">
+        <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
+          <div className="max-w-4xl mx-auto pt-24 pb-16">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-bold  mb-6">Voice Recording</h2>
+              <div className="flex flex-col md:flex-row md:space-x-4 mb-4 space-x-2">
+                <Link
+                  to={"/"}
+                  className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
+                >
                   Werkzeuge
                 </Link>
-                <Link to={"/sent-emails"} className="button btn-secondary ms-0 ms-sm-2 mb-3 mb-sm-0">
+                <Link
+                  to={"/sent-emails"}
+                  className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
+                >
                   Vorherige Historie
                 </Link>
-                <button
-                  onClick={forword}
-                  className="button btn-primary ms-0 ms-sm-2 mb-3 mb-sm-0"
-                  disabled={!hasHistory}
-                >
-                  Siehe vorherige Daten
-                </button>
+                {hasHistory && (
+                  <button
+                    onClick={forword}
+                    className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
+                  >
+                    Zurück
+                  </button>
+                )}
               </div>
-            </div>
-          </div>
-          <div className="row justify-content-center pt-3">
-            <div className="col-md-2"></div>
-            <div className="col-md-10">
-              {/* Voice Recording Section */}
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">Nehmen Sie Ihre Stimme auf</h5>
-                  {isListening || listeningText !== "" ? (
-                    <textarea
-                      className="form-control"
-                      style={{ minHeight: "100px" }}
-                      readOnly={isListening}
-                      value={listeningText + interimTranscript}
-                      onChange={(e) => setListeningText(e.target.value)}
-                      placeholder="Beginnen Sie zu sprechen oder laden Sie Ihre Sprache hoch, um sie hier zu transkribieren."
-                    />
-                  ) : null}
+              <div className="relative mb-4">
+                <textarea
+                  className=" text-base border border-blackgray-600  h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
+                  readOnly={isListening}
+                  value={listeningText + interimTranscript}
+                  onChange={(e) => setListeningText(e.target.value)}
+                  placeholder="Beginnen Sie zu sprechen oder laden Sie Ihre Sprache hoch, um sie hier zu transkribieren."
+                />
+              </div>
 
-                  {summaryError && (
-                    <div style={{ color: "red", marginTop: "5px", fontSize: "14px" }}>
-                      {summaryError}
-                    </div>
-                  )}
-                  {showSummary && (
-                    <div>
-                      <h5 className="mt-3">Zusammenfassung:</h5>
-                      <p className="card-text" style={{ whiteSpace: 'break-spaces' }}>{summary}</p>
-                    </div>
-                  )}
-                  {!isListening && isGenerateSummaryButtonVisible && (
-                    <div>
-                      <button
-                        onClick={handleGenerateSummaryVoice}
-                        className="button btn-secondary mt-3 me-1"
-                        disabled={isSummaryGenerating}
-                      >
-                        {isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
-                      </button>
-                      {isEmailButtonVisible && (
-                        <button
-                          onClick={handleNextPageClickListening}
-                          className="button btn-outline-secondary mt-3"
-                        >
-                          Per E-Mail senden
-                        </button>
-                      )}
-                    </div>
+              {summaryError && (
+                <div className="text-red-500 mb-4 text-sm">{summaryError}</div>
+              )}
+
+              {showSummary && (
+                <div className="mb-4">
+                  <h5 className="text-lg font-semibold ">Zusammenfassung:</h5>
+                  <p className="">{summary}</p>
+                </div>
+              )}
+
+              {!isListening && isGenerateSummaryButtonVisible && (
+                <div className="mb-4">
+                  <button
+                    onClick={handleGenerateSummaryVoice}
+                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    disabled={isSummaryGenerating}
+                  >
+                    {isSummaryGenerating
+                      ? "Zusammenfassung wird generiert..."
+                      : "Zusammenfassung generieren"}
+                  </button>
+                  {isEmailButtonVisible && (
+                    <button
+                      onClick={handleNextPageClickListening}
+                      className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    >
+                      Per E-Mail senden
+                    </button>
                   )}
                 </div>
-              </div>
+              )}
 
               <button
                 disabled={isSummaryGenerating}
@@ -272,76 +291,84 @@ const Voice = () => {
                     setShowSummary(false);
                   }
                 }}
-                className={`button ${isListening ? "btn-danger" : "btn-success"} btn-block my-2`}
+                className={`h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300${isListening
+                    ? "bg-warning-100 hover:bg-warning-300"
+                    : "bg-success-300 hover:bg-success-300"
+                  } mt-2 mb-3`}
               >
-                {isListening ? "Spracherkennung stoppen" : "Spracherkennung starten"}
+                {isListening ? (
+                  <span className="flex items-center">
+                    {" "}
+                    <FontAwesomeIcon icon={faStopCircle} className="mr-2" />
+                    Stop
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    <FontAwesomeIcon icon={faMicrophone} className="mr-2" />
+                    Record
+                  </span>
+                )}
               </button>
 
-              <h4 className="text-center p-3">Sprachaufzeichnung hochladen</h4>
-              <input
-                type="file"
-                onChange={handleFileChange}
-                className="form-control mb-3"
-                required
-              />
-              <div style={{ color: "red", marginTop: "5px", fontSize: "14px" }}>
-                {errorMessage}
+              {transcribing && (
+                <div className="text-gray-600 mt-4">Transcribing...</div>
+              )}
+
+              {errorMessage && (
+                <div className="text-red-500 mt-4">{errorMessage}</div>
+              )}
+
+              <div className="mb-4">
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className=" text-base border border-blackgray-600  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                />
+                <button
+                  onClick={handleTranscribeClick}
+                  className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
+                  disabled={transcribing}
+                >
+                  {transcribing ? "Transcribing..." : "Transcribe File"}
+                </button>
               </div>
-              <button
-                onClick={handleTranscribeClick}
-                className="button btn-primary btn-block mb-3"
-                disabled={transcribing}
-              >
-                {transcribing ? "Bitte warten..." : "Transkribieren"}
-              </button>
 
               {transcriptionText && (
-                <div className="card mt-3">
-                  <div className="card-body">
-                    <h5 className="card-title">Transkription</h5>
-                    <textarea
-                      className="form-control"
-                      style={{ height: "200px" }}
-                      value={transcriptionText}
-                      onChange={(e) => setTranscriptionText(e.target.value)}
-                    ></textarea>
-
-                    {showTranscriptionSummary && (
-                      <div>
-                        <h5 className="mt-3">Zusammenfassung:</h5>
-                        <p className="card-text" style={{ whiteSpace: 'break-spaces' }}>{transcriptionSummary}</p>
-                      </div>
-                    )}
-                    {isGenerateSummaryButtonVisible && (
-                      <div>
-                        <button
-                          onClick={handleGenerateSummaryTranscription}
-                          className="button btn-secondary mt-3 me-1"
-                          disabled={isSummaryGenerating}
-                        >
-                          {isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
-                        </button>
-                        {isEmailButtonVisible && (
-                          <button
-                            onClick={handleNextPageClickTranscription}
-                            className="button btn-outline-secondary mt-3"
-                          >
-                            Per E-Mail senden
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                  </div>
+                <div className="mb-4">
+                  <h5 className="text-lg font-semibold  ">Transcription:</h5>
+                  <p className=" ">{transcriptionText}</p>
+                  <button
+                    onClick={handleGenerateSummaryTranscription}
+                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300
+"
+                    disabled={isSummaryGenerating}
+                  >
+                    {isSummaryGenerating
+                      ? "Zusammenfassung wird generiert..."
+                      : "Zusammenfassung generieren"}
+                  </button>
                 </div>
               )}
 
+              {showTranscriptionSummary && (
+                <div className="mb-4">
+                  <h5 className="text-lg font-semibold ">Zusammenfassung:</h5>
+                  <p className="">{transcriptionSummary}</p>
+                  <button
+                    onClick={handleNextPageClickTranscription}
+                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300
+"
+                  >
+                    Per E-Mail senden
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
 
 export default Voice;

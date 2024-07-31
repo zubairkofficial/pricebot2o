@@ -1,9 +1,17 @@
-import React, { useState, useRef } from "react";
-import { Container, Row, Col, Button, ListGroup } from "react-bootstrap";
-import Helpers from "../../Config/Helpers";
+import React, { useState, useRef,useEffect } from "react";
 import axios from "axios";
+import Helpers from "../../Config/Helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
+import { useHeader } from '../../Components/HeaderContext';
 
 function FileUpload() {
+
+  const { setHeaderData } = useHeader();
+  useEffect(() => {
+    setHeaderData({ title: 'File Upload', desc: '' });
+  }, [setHeaderData]);
+
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [fileResponses, setFileResponses] = useState({});
@@ -30,9 +38,9 @@ function FileUpload() {
       formData.append("fileName", file.name);
       
       try {
-        const response = await axios.post(`${Helpers.apiUrl}uploadFile`, formData,Helpers.authFileHeaders);
+        const response = await axios.post(`${Helpers.apiUrl}uploadFile`, formData, Helpers.authFileHeaders);
 
-        if (response.status == 200) {
+        if (response.status === 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");
           newFileResponses[file.name] = { status: "Success", data: response.data }; 
         } else {
@@ -51,54 +59,56 @@ function FileUpload() {
 
   const formatDataAsPlainText = (data) => {
     return Object.entries(data).map(([key, value], index) => (
-      // Convert value to a string if it's an object or array
       <p key={index}>{`${key}: ${typeof value === 'object' ? JSON.stringify(value, null, 2) : value}`}</p>
     ));
   };
 
   return (
-    <Container className="mt-5">
-      <h2 className="text-center mb-4 text-white">Daten hochladen</h2>
-      <Row className="justify-content-center">
-        <Col md={2}></Col>
-        <Col md={10} className="mt-5">
-          <div className="mb-3">
-            <input
-              type="file"
-              className="form-control mb-2"
-             
-              accept="application/pdf"
-              required
-              multiple
-              ref={fileInputRef}
-              onChange={handleFileChange}
-            />
-            <Button
-              variant="primary"
-              className="text-white text-center mt-2"
-              onClick={handleFileUpload}
-              disabled={uploading}
-              style={{ width: '15%' }}
-            >
-              {uploading ? "Hochladen..." : "Hochladen"}
-            </Button>
-          </div>
-          <ListGroup className="mt-4">
+    <section className="bg-white p-5">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-center text-2xl font-semibold  mb-8">
+          Daten hochladen
+        </h2>
+        <div className="flex flex-col items-center">
+          <input
+            type="file"
+            className="form-control mb-4 border border-bgray-300    rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
+            accept="application/pdf"
+            required
+            multiple
+            ref={fileInputRef}
+            onChange={handleFileChange}
+          />
+          <button
+            onClick={handleFileUpload}
+            disabled={uploading}
+            className="flex items-center justify-center py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+          >
+            {uploading ? (
+              <span className="flex items-center">Hochladen... <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2 animate-spin" /></span>
+            ) : (
+              <span>Hochladen <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" /></span>
+            )}
+          </button>
+        </div>
+        <div className="mt-8">
+          <ul className="space-y-4">
             {selectedFiles.map((file, index) => (
-              <ListGroup.Item key={index} style={{ backgroundColor: "#fff" }}>
-                {file.name} ({file.size} bytes)
-                {fileResponses[file.name] && (
-                  <div style={{ marginTop: '10px' }}>
-                    
-                    {fileResponses[file.name].data && formatDataAsPlainText(fileResponses[file.name].data)}
-                  </div>
-                )}
-              </ListGroup.Item>
+              <li key={index} className="bg-white  p-4 rounded-lg shadow-sm">
+                <div className="flex justify-between items-center">
+                  <span className="">{file.name} ({file.size} bytes)</span>
+                  {fileResponses[file.name] && (
+                    <div className="mt-2 text-sm text-white">
+                      {fileResponses[file.name].data && formatDataAsPlainText(fileResponses[file.name].data)}
+                    </div>
+                  )}
+                </div>
+              </li>
             ))}
-          </ListGroup>
-        </Col>
-      </Row>
-    </Container>
+          </ul>
+        </div>
+      </div>
+    </section>
   );
 }
 

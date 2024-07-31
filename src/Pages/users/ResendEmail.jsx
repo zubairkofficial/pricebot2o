@@ -3,8 +3,13 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import Helpers from "../../Config/Helpers";
+import { useHeader } from "../../Components/HeaderContext";
 
 function ResendEmail() {
+  const { setHeaderData } = useHeader();
+  useEffect(() => {
+    setHeaderData({ title: "Resend Email", desc: "" });
+  }, [setHeaderData]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
@@ -30,7 +35,8 @@ function ResendEmail() {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${Helpers.apiUrl}getemailId/${userId}`,Helpers.authHeaders
+          `${Helpers.apiUrl}getemailId/${userId}`,
+          Helpers.authHeaders
         );
         const emailData = response.data.emails[0];
         setName(emailData.name || "");
@@ -62,7 +68,10 @@ function ResendEmail() {
   useEffect(() => {
     const fetchPartnerNumbers = async () => {
       try {
-        const response = await axios.get(`${Helpers.apiUrl}getData`,Helpers.authHeaders);
+        const response = await axios.get(
+          `${Helpers.apiUrl}getData`,
+          Helpers.authHeaders
+        );
         if (Array.isArray(response.data)) {
           setPartnerNumbers(response.data);
         } else {
@@ -83,17 +92,21 @@ function ResendEmail() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(`${Helpers.apiUrl}sendEmail`, {
-        email,
-        transcriptionText: text,
-        summary,
-        date,
-        theme,
-        partnerNumber: partner?.value.number,
-        branchManager,
-        participants,
-        author,
-      },Helpers.authHeaders);
+      const response = await axios.post(
+        `${Helpers.apiUrl}sendEmail`,
+        {
+          email,
+          transcriptionText: text,
+          summary,
+          date,
+          theme,
+          partnerNumber: partner?.value.number,
+          branchManager,
+          participants,
+          author,
+        },
+        Helpers.authHeaders
+      );
       setSuccess("Transkription erfolgreich gesendet!");
       setError("");
     } catch (err) {
@@ -106,7 +119,11 @@ function ResendEmail() {
   };
 
   const options = partnerNumbers.map((partner) => ({
-    value: { number: partner.number, name: partner.name, street: partner.street },
+    value: {
+      number: partner.number,
+      name: partner.name,
+      street: partner.street,
+    },
     label: `${partner.number} / ${partner.name} / ${partner.street}`,
   }));
 
@@ -118,133 +135,124 @@ function ResendEmail() {
   const back = () => navigate("/voice");
 
   return (
-    <div className="container mt-3">
-      <div className="row justify-content-center">
-        <div className="col-md-2 col-2"></div>
-        <div className="col-md-7 col-10">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="text-center mb-4">Transkriptionsdetails</h2>
-              {success ? (
-                <p className="text-center">
-                  Transkription erfolgreich an {email} gesendet!
-                </p>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <label>Datum:</label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Thema:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={theme}
-                      onChange={(e) => setTheme(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Gesellschafternummer:</label>
-                    <Select
-                      className="form-control"
-                      value={options.find(option => option.value.number === partnerNumber)}
-                      onChange={handleChange}
-                      options={options}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Niederlassungsleiter:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={branchManager}
-                      onChange={(e) => setBranchManager(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Teilnehmer:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={participants}
-                      onChange={(e) => setParticipants(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Verfasser:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={author}
-                      onChange={(e) => setAuthor(e.target.value)}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="email" className="form-label">
-                      E-Mail:
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="form-control"
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="transcription" className="form-label">
-                      Transkriptionstext:
-                    </label>
-                    <textarea
-                      id="transcription"
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      className="form-control"
-                      rows={10}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="summary" className="form-label">
-                      Zusammenfassung:
-                    </label>
-                    <textarea
-                      id="summary"
-                      value={summary}
-                      onChange={(e) => setSummary(e.target.value)}
-                      className="form-control"
-                      rows={10}
-                    />
-                  </div>
-                  <div className="d-flex justify-content-start">
+    <section className="bg-white p-5">
+      <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
+        <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
+          <div className="max-w-[614px] m-auto pt-10 pb-16">
+            <div className="bg-white  p-6 rounded-lg shadow-md">
+              <h2 className="text-center text-2xl font-semibold  mb-8">
+                Transkriptionsdetails
+              </h2>
+              <div className="flex flex-col items-center">
+                {success ? (
+                  <p className="text-center  mb-4">
+                    Transkription erfolgreich an {email} gesendet!
+                  </p>
+                ) : (
+                  <form onSubmit={handleSubmit} className="w-full">
+                    <div className="mb-4">
+                      <label className="">Datum:</label>
+                      <input
+                        type="date"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Thema:</label>
+                      <input
+                        type="text"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Gesellschafternummer:</label>
+                      <Select
+                        className=" border border-bgray-300  rounded-lg px-4 py-3.5"
+                        value={options.find(
+                          (option) => option.value.number === partnerNumber
+                        )}
+                        onChange={handleChange}
+                        options={options}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Verfasser:</label>
+                      <input
+                        type="text"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={branchManager}
+                        onChange={(e) => setBranchManager(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Teilnehmer:</label>
+                      <input
+                        type="text"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={participants}
+                        onChange={(e) => setParticipants(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Niederlassungsleiter:</label>
+                      <input
+                        type="text"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Transkription:</label>
+                      <textarea
+                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">Zusammenfassung:</label>
+                      <textarea
+                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={summary}
+                        onChange={(e) => setSummary(e.target.value)}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="">E-Mail:</label>
+                      <input
+                        type="email"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
                     <button
                       type="submit"
-                      className="button text-white btn-primary mb-3 mb-sm-0"
-                      style={{ marginRight: '10px', width: "30%" }}
+                      className="mt-6 py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                       disabled={loading}
                     >
-                      {loading ? "Bitte warten..." : "Transkription senden"}
+                      {loading ? "Senden..." : "Transkription senden"}
                     </button>
                     <button
-                      className="button text-white btn-danger mb-3 mb-sm-0"
-                      style={{ width: "30%" }}
+                      type="button"
+                      className="mt-4 py-3.5 flex items-center justify-center bg-gray-300   rounded-lg w-full hover:bg-gray-400 "
                       onClick={back}
                     >
-                      Abbrechen
+                      Zurück
                     </button>
-                  </div>
-                </form>
-              )}
+                  </form>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/HeaderContext';
 
 
 const AddUserForm = () => {

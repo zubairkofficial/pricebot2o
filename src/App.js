@@ -1,15 +1,14 @@
 import React from "react";
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import Sidebar from "./Components/Admin/Sidebar";
-import Header from "./Components/Admin/Header";
-import { HeaderProvider } from './Components/Admin/HeaderContext';
-import Home from "./Pages/Admin/User/Users";
+import AdminLayout from "./Pages/Admin/Layout";
+import { HeaderProvider } from './Components/HeaderContext';
+import Users from "./Pages/Admin/User/Users";
 import Helpers from "./Config/Helpers";
 import Login from "./Pages/Auth/Login";
 import Adduser from "./Pages/Admin/User/Adduser";
 import Edituser from "./Pages/Admin/User/Edituser";
-import UserHome from "./Pages/users/Home";
-import UserSidebar from "./Pages/users/Sidebar";
+import UserDashboard from "./Pages/users/Home";
+import UserLayout from "./Pages/users/Layout";
 import FileUpload from "./Pages/users/Fileupload";
 import ChangePass from "./Pages/users/ChangePass";
 import Voice from "./Pages/users/Voice";
@@ -17,7 +16,6 @@ import TestVoice from "./Pages/users/TestVoice";
 import SentEmails from "./Pages/users/SentEmails";
 import Transcription from "./Pages/users/Transcription";
 import ResendEmail from "./Pages/users/ResendEmail";
-import "./App.css";
 import Services from "./Pages/Admin/Service/Services";
 import AddService from "./Pages/Admin/Service/AddService";
 import EditService from "./Pages/Admin/Service/EditService";
@@ -48,7 +46,7 @@ const Auth = ({ children, isAuth = true, isAdmin = false }) => {
     // Ensure only admins can access admin routes
     if (isAdmin && parseInt(user.user_type) !== 1) {
       Helpers.toast("error", "Access denied. Only admin allowed.");
-      return <Navigate to="/home" />;
+      return <Navigate to="/" />;
     }
 
     // Ensure admins cannot access user routes
@@ -57,7 +55,7 @@ const Auth = ({ children, isAuth = true, isAdmin = false }) => {
         "error",
         "Access denied. Admins cannot access user routes."
       );
-      return <Navigate to="/admin/home" />;
+      return <Navigate to="/admin/dashboard" />;
     }
 
     return children;
@@ -66,9 +64,9 @@ const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   else {
     if (user && token) {
       if (user.user_type === 1) {
-        return <Navigate to="/admin/home" />;
+        return <Navigate to="/admin/dashboard" />;
       } else {
-        return <Navigate to="/home" />;
+        return <Navigate to="/" />;
       }
     }
     return children;
@@ -81,46 +79,28 @@ const App = () => {
       <HeaderProvider>
         <Routes>
           <Route path="/login" element={<Auth isAuth={false}><Login /></Auth>} />
-          <Route path="/*"
-            element={
-              <div className="container d-flex" style={{ height: "100vh" }}>
-                <UserSidebar />
-                <div className="flex-grow-1">
-                  <Routes>
-                    <Route path="/" element={<Auth><UserHome /> </Auth>} />
-                    <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
-                    <Route path="/voice" element={<Auth><Voice /></Auth>} />
-                    <Route path="/testvoice" element={<Auth><TestVoice /></Auth>} />
-                    <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
-                    <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
-                    <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
-                    <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
-                  </Routes>
-                </div>
-              </div>
-            }
-          />
-          <Route path="/admin/*"
-            element={
-              <div className="container d-flex" style={{ height: "100vh" }}>
-                <Sidebar />
-                <Header />
-                <div className="flex-grow-1">
-                  <Routes>
-                    <Route path="home" element={<Auth isAdmin={true}> <Home /> </Auth>} />
-                    <Route path="add-user" element={<Auth isAdmin={true}><Adduser /> </Auth>} />
-                    <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /> </Auth>} />
-                    <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
-                    {/* <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} /> */}
-                    <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
-                    <Route path="orgs" element={<Auth isAdmin={true}><Orgs /> </Auth>} />
-                    <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /> </Auth>} />
-                    <Route path="edit-org/:id" element={<Auth isAdmin={true}><EditOrg /> </Auth>} />
-                  </Routes>
-                </div>
-              </div>
-            }
-          />
+          <Route path="/" element={<UserLayout />}>
+            <Route path="/" element={<Auth><UserDashboard /></Auth>} />
+            <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
+            <Route path="/voice" element={<Auth><Voice /></Auth>} />
+            <Route path="/testvoice" element={<Auth><TestVoice /></Auth>} />
+            <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
+            <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
+            <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
+            <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
+          </Route>
+
+          <Route path="/admin/" element={<AdminLayout />}>
+            <Route path="dashboard" element={<Auth isAdmin={true}> <Users /> </Auth>} />
+            <Route path="add-user" element={<Auth isAdmin={true}><Adduser /> </Auth>} />
+            <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /> </Auth>} />
+            <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
+            {/* <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} /> */}
+            <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
+            <Route path="orgs" element={<Auth isAdmin={true}><Orgs /> </Auth>} />
+            <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /> </Auth>} />
+            <Route path="edit-org/:id" element={<Auth isAdmin={true}><EditOrg /> </Auth>} />
+          </Route>
         </Routes>
       </HeaderProvider>
     </BrowserRouter>

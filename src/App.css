@@ -37,16 +37,3 @@
     transform: rotate(360deg);
   }
 }
-
-.button {
-  background-color: #0d6efd;
-  color: white;
-  padding: 10px;
-  border: none;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 15px;
-}

@@ -2,7 +2,7 @@ import React, { useEffect,useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../../Components/Admin/HeaderContext';
+import { useHeader } from '../../../Components/HeaderContext';
 
 const AddOrg = () => {
 
