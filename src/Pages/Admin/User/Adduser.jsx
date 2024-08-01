@@ -20,7 +20,7 @@ const AddUser = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
     fetchServices();
     fetchOrgs();
   }, []);
@@ -68,7 +68,7 @@ const AddUser = () => {
         <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 pt-10">
           <div className="max-w-2xl mx-auto pt-10 pb-16">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-center text-2xl font-semibold mb-8">Add New User</h2>
+              <h2 className="text-center text-2xl font-semibold mb-8">Benutzer hinzufügen</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
@@ -103,7 +103,7 @@ const AddUser = () => {
                   onChange={(e) => handleChange('password')(e.target.value)}
                 />
 
-                <label htmlFor="services" className="block text-sm font-medium text-gray-700">Services</label>
+                <label htmlFor="services" className="block text-sm font-medium text-gray-700">Dienstleistungen</label>
                 <Select
                   options={services.map(service => ({ label: service.name, value: service.id }))}
                   multi
@@ -111,15 +111,15 @@ const AddUser = () => {
                   className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                 />
 
-                {user.services.includes(2) && 
-                <>
-                  <label htmlFor="org" className="block text-sm font-medium text-gray-700">Organization</label>
-                  <Select
-                    options={orgs.map(org => ({ label: org.name, value: org.id }))}
-                    onChange={(value) => handleChange('org_id')(value.value)}
-                    className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
-                  />
-                </>
+                {user.services.includes(2) &&
+                  <>
+                    <label htmlFor="org" className="block text-sm font-medium text-gray-700">Organization</label>
+                    <Select
+                      options={orgs.map(org => ({ label: org.name, value: org.id }))}
+                      onChange={(value) => handleChange('org_id')(value.value)}
+                      className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                    />
+                  </>
                 }
 
                 <div className="flex justify-end mt-4">
@@ -127,7 +127,7 @@ const AddUser = () => {
                     type="submit"
                     className="py-2 px-4 bg-success-300 hover:bg-success-400 rounded-lg hover:bg-blue-600"
                   >
-                    Add User
+                    Benutzer hinzufügen
                   </button>
                 </div>
               </form>

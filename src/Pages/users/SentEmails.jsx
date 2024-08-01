@@ -5,10 +5,10 @@ import Helpers from "../../Config/Helpers";
 import { useHeader } from "../../Components/HeaderContext";
 
 const SentEmails = () => {
-  
+
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: "Sent Emails", desc: "" });
+    setHeaderData({ title: "Gesendete E-Mails", desc: "" });
   }, [setHeaderData]);
   const [emails, setEmails] = useState([]);
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -57,7 +57,7 @@ const SentEmails = () => {
           <div className="mb-3">
             <div className="flex justify-between items-center flex-wrap mb-4">
               <h2 className="text-2xl font-bold  mb-4 sm:mb-0">Gesendete E-Mails</h2>
-              <div className="flex flex-col sm:flex-row sm:items-center">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                 <input
                   type="text"
                   className="py-2 px-3  mr-2 border rounded w-full sm:w-auto focus:outline-none focus:border-success-300"
@@ -88,7 +88,7 @@ const SentEmails = () => {
               ) : error ? (
                 <div className="p-4 bg-red-100 text-blue-700 rounded">{error}</div>
               ) : (
-                <ul className="divide-y divide-gray-200">
+                <ul className="divide-y divide-gray-200 text-wrap">
                   {filteredEmails.map((email, index) => (
                     <li
                       key={index}

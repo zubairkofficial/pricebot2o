@@ -8,7 +8,7 @@ const AddService = () => {
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
-      setHeaderData({ title: 'Dienstleistungen', desc: 'Verwalten Sie hier Ihre Dienste' });
+        setHeaderData({ title: 'Dienstleistungen', desc: 'Verwalten Sie hier Ihre Dienste' });
     }, [setHeaderData]);
 
     const [service, setService] = useState({
@@ -28,7 +28,7 @@ const AddService = () => {
         e.preventDefault();
 
         if (!service.name || !service.description || !service.link) {
-            Helpers.toast("error", "Name, Description, and Link are required.");
+            Helpers.toast("error", "Name, Beschreibung und Link sind erforderlich.");
             return;
         }
 
@@ -69,7 +69,7 @@ const AddService = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="link" className="block text-sm font-medium text-gray-700">Link</label>
+                            <label htmlFor="link" className="block text-sm font-medium text-gray-700">Verknüpfung</label>
                             <input
                                 type="url"
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -80,7 +80,7 @@ const AddService = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Beschreibung</label>
                             <textarea
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 id="description"

@@ -98,7 +98,7 @@ body {
 }
 .progess-bar .bonus-per svg circle {
   fill: none;
-  stroke: #22c55e;
+  stroke: #567BD9;
   stroke-width: 9px;
   stroke-dasharray: 215;
 }
@@ -227,7 +227,7 @@ body {
   .flatpickr-days
   .dayContainer
   .flatpickr-day.today.selected {
-  background: #22c55e;
+  background: #567BD9;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -240,7 +240,7 @@ body {
   .dayContainer
   .flatpickr-day.selected {
   background: none;
-  border: 1px solid #22c55e;
+  border: 1px solid #567BD9;
   border-radius: 8px;
 }
 .dark .fc-daygrid-dot-event .fc-event-title{
@@ -284,7 +284,7 @@ body.modal-open {
   color: white;
 }
 .tab.active .tab-icon {
-  background-color: #22c55e;
+  background-color: #567BD9;
   color: white;
 }
 .tab-pane {
@@ -361,7 +361,7 @@ body.modal-open {
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
-  color: #22c55e;
+  color: #567BD9;
 }
 
 .fc-day-sun .fc-col-header-cell-cushion,
@@ -535,8 +535,8 @@ button.fc-button.fc-button-primary.fc-prev-button {
   .item-wrapper
   ul
   li.item:hover {
-  fill: #22c55e;
-  color: #22c55e;
+  fill: #567BD9;
+  color: #567BD9;
 }
 :is(.sidebar-wrapper, .sidebar-wrapper-collapse)
   .sidebar-body

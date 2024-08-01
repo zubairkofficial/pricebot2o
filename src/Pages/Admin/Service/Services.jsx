@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
@@ -57,7 +57,7 @@ const Services = () => {
         try {
             const response = await axios.post(`${Helpers.apiUrl}update-service-status/${id}`, {}, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error("Failed to change service status");
+                throw new Error("Der Dienststatus konnte nicht geändert werden");
             }
             // Re-fetch or adjust the state to reflect status change
             fetchServices();
@@ -74,14 +74,14 @@ const Services = () => {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">Wird geladen...</span>
                 </div>
             </div>
         );
     }
 
     if (error) {
-        return <div className="text-red-500 text-center">Error: {error}</div>;
+        return <div className="text-red-500 text-center">Fehler: {error}</div>;
     }
 
     return (
@@ -134,9 +134,9 @@ const Services = () => {
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Link</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Beschreibung</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verknüpfung</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">

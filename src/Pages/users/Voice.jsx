@@ -27,9 +27,9 @@ const Voice = () => {
     isGenerateSummaryBtnVisible: false,
     userTranscript: "",
   });
-  
+
   useEffect(() => {
-    setHeaderData({ title: "Voice", desc: "" });
+    setHeaderData({ title: "Stimme", desc: "" });
     setState(prevState => ({ ...prevState, hasHistory: window.history.length > 1 }));
   }, [setHeaderData]);
 
@@ -119,8 +119,8 @@ const Voice = () => {
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
           <div className="max-w-4xl mx-auto pt-10 pb-10">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold mb-6">Voice Recording</h2>
-              <div className="flex flex-col md:flex-row md:space-x-4 mb-4 space-x-2">
+              <h2 className="text-2xl font-bold mb-6">Stimmaufnahme</h2>
+              <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2">
                 <Link to="/" className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                   Werkzeuge
                 </Link>
@@ -155,7 +155,7 @@ const Voice = () => {
                 <div className="mb-4 space-x-2">
                   <button
                     onClick={() => handleGenerateSummary(state.userTranscript, 'voice')}
-                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    className="h-12 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     disabled={state.isSummaryGenerating}
                   >
                     {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
@@ -177,17 +177,17 @@ const Voice = () => {
                 {listening ? (
                   <span className="flex items-center">
                     <FontAwesomeIcon icon={faStopCircle} className="mr-2" />
-                    Stop
+                    Stoppen
                   </span>
                 ) : (
                   <span className="flex items-center">
                     <FontAwesomeIcon icon={faMicrophone} className="mr-2" />
-                    Record
+                    Aufzeichnen
                   </span>
                 )}
               </button>
               {state.transcribing && (
-                <div className="text-gray-600 mt-4">Transcribing...</div>
+                <div className="text-gray-600 mt-4">Transkribieren...</div>
               )}
               <div className="mb-4">
                 <input
@@ -200,12 +200,12 @@ const Voice = () => {
                   className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
                   disabled={state.transcribing}
                 >
-                  {state.transcribing ? "Transcribing..." : "Transcribe File"}
+                  {state.transcribing ? "Transkribieren..." : "Datei transkribieren"}
                 </button>
               </div>
               {state.transcriptionText && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold">Transcription:</h5>
+                  <h5 className="text-lg font-semibold">Transkription:</h5>
                   <p>{state.transcriptionText}</p>
                   <button
                     onClick={() => handleGenerateSummary(state.transcriptionText, 'transcription')}

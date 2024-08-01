@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +9,7 @@ function FileUpload() {
 
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: 'File Upload', desc: '' });
+    setHeaderData({ title: 'Datei-Upload', desc: '' });
   }, [setHeaderData]);
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -36,13 +36,13 @@ function FileUpload() {
       const formData = new FormData();
       formData.append("document", file);
       formData.append("fileName", file.name);
-      
+
       try {
         const response = await axios.post(`${Helpers.apiUrl}uploadFile`, formData, Helpers.authFileHeaders);
 
         if (response.status === 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");
-          newFileResponses[file.name] = { status: "Success", data: response.data.data }; 
+          newFileResponses[file.name] = { status: "Success", data: response.data.data };
         } else {
           throw new Error(response.message || "Fehler beim Hochladen der Datei");
         }
@@ -64,49 +64,49 @@ function FileUpload() {
   };
 
   return (
-      <div className=" w-full bg-white py-5 mx-auto">
-        <h2 className="text-center text-2xl font-semibold  mb-8">
-          Daten hochladen
-        </h2>
-        <div className="flex flex-col items-center">
-          <input
-            type="file"
-            className="form-control mb-4 border border-bgray-300    rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
-            accept="application/pdf"
-            required
-            multiple
-            ref={fileInputRef}
-            onChange={handleFileChange}
-          />
-          <button
-            onClick={handleFileUpload}
-            disabled={uploading}
-            className="flex items-center justify-center py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
-          >
-            {uploading ? (
-              <span className="flex items-center">Hochladen... <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2 animate-spin" /></span>
-            ) : (
-              <span>Hochladen <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" /></span>
-            )}
-          </button>
-        </div>
-        <div className="mt-8">
-          <ul className="space-y-4">
-            {selectedFiles.map((file, index) => (
-              <li key={index} className="bg-white  p-4 rounded-lg shadow-sm">
-                <div className="flex justify-between items-center space-x-2">
-                  <span className="hidden md:block">{file.name} ({file.size} bytes)</span>  
-                  {fileResponses[file.name] && (
-                    <div className="mt-2 text-md">
-                      {fileResponses[file.name].data && formatDataAsPlainText(fileResponses[file.name].data)}
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className=" w-full bg-white py-5 mx-auto">
+      <h2 className="text-center text-2xl font-semibold  mb-8">
+        Daten hochladen
+      </h2>
+      <div className="flex flex-col items-center">
+        <input
+          type="file"
+          className="form-control mb-4 border border-bgray-300    rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
+          accept="application/pdf"
+          required
+          multiple
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+        <button
+          onClick={handleFileUpload}
+          disabled={uploading}
+          className="flex items-center justify-center py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+        >
+          {uploading ? (
+            <span className="flex items-center">Hochladen... <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2 animate-spin" /></span>
+          ) : (
+            <span>Hochladen <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" /></span>
+          )}
+        </button>
       </div>
+      <div className="mt-8">
+        <ul className="space-y-4">
+          {selectedFiles.map((file, index) => (
+            <li key={index} className="bg-white  p-4 rounded-lg shadow-sm">
+              <div className="flex justify-between items-center space-x-2">
+                <span className="hidden md:block">{file.name} ({file.size} bytes)</span>
+                {fileResponses[file.name] && (
+                  <div className="mt-2 text-md">
+                    {fileResponses[file.name].data && formatDataAsPlainText(fileResponses[file.name].data)}
+                  </div>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }
 

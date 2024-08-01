@@ -59,7 +59,7 @@ const Layout = () => {
                 >
                   <path
                     d="M0 10C0 4.47715 4.47715 0 10 0H16V40H10C4.47715 40 0 35.5228 0 30V10Z"
-                    fill="#22C55E"
+                    fill="#567BD9"
                   />
                   <path
                     d="M10 15L6 20.0049L10 25.0098"
@@ -76,7 +76,7 @@ const Layout = () => {
             <div className="nav-wrapper pr-[50px] mb-[36px]">
               <div className="item-wrapper mb-5">
                 <h4 className="text-sm font-medium text-black border-b border-bgray-200 leading-7">
-                  Menu
+                  Speisekarte
                 </h4>
                 <ul className="mt-2.5">
                   <li className="item py-[11px] text-black ">
@@ -99,12 +99,12 @@ const Layout = () => {
                               <path
                                 className="path-2"
                                 d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                               />
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none">
-                            Dashboard
+                            Armaturenbrett
                           </span>
                         </div>
                       </div>
@@ -131,26 +131,26 @@ const Layout = () => {
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                             </svg>
@@ -181,12 +181,12 @@ const Layout = () => {
                               />
                               <path
                                 d="M14 9C12.8954 9 12 9.89543 12 11L12 13C12 14.1046 12.8954 15 14 15C15.1046 15 16 14.1046 16 13V11C16 9.89543 15.1046 9 14 9Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 d="M6 5C4.89543 5 4 5.89543 4 7L4 13C4 14.1046 4.89543 15 6 15C7.10457 15 8 14.1046 8 13L8 7C8 5.89543 7.10457 5 6 5Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                             </svg>
@@ -214,7 +214,7 @@ const Layout = () => {
                                 fillRule="evenodd"
                                 clipRule="evenodd"
                                 d="M17.1464 10.4394C16.8536 10.7323 16.8536 11.2072 17.1464 11.5001C17.4393 11.7929 17.9142 11.7929 18.2071 11.5001L19.5 10.2072C20.1834 9.52375 20.1834 8.41571 19.5 7.73229L18.2071 6.4394C17.9142 6.1465 17.4393 6.1465 17.1464 6.4394C16.8536 6.73229 16.8536 7.20716 17.1464 7.50006L17.8661 8.21973H11.75C11.3358 8.21973 11 8.55551 11 8.96973C11 9.38394 11.3358 9.71973 11.75 9.71973H17.8661L17.1464 10.4394Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 className="path-2"
                               />
                               <path
@@ -234,7 +234,7 @@ const Layout = () => {
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none">
-                            Logout
+                            Ausloggen
                           </span>
                         </div>
                       </div>
@@ -283,7 +283,7 @@ const Layout = () => {
                               <path
                                 className="path-2"
                                 d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                               />
                             </svg>
                           </span>
@@ -308,26 +308,26 @@ const Layout = () => {
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                             </svg>
@@ -351,12 +351,12 @@ const Layout = () => {
                               />
                               <path
                                 d="M14 9C12.8954 9 12 9.89543 12 11L12 13C12 14.1046 12.8954 15 14 15C15.1046 15 16 14.1046 16 13V11C16 9.89543 15.1046 9 14 9Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                               <path
                                 d="M6 5C4.89543 5 4 5.89543 4 7L4 13C4 14.1046 4.89543 15 6 15C7.10457 15 8 14.1046 8 13L8 7C8 5.89543 7.10457 5 6 5Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 class="path-2"
                               />
                             </svg>
@@ -377,7 +377,7 @@ const Layout = () => {
                                 fillRule="evenodd"
                                 clipRule="evenodd"
                                 d="M17.1464 10.4394C16.8536 10.7323 16.8536 11.2072 17.1464 11.5001C17.4393 11.7929 17.9142 11.7929 18.2071 11.5001L19.5 10.2072C20.1834 9.52375 20.1834 8.41571 19.5 7.73229L18.2071 6.4394C17.9142 6.1465 17.4393 6.1465 17.1464 6.4394C16.8536 6.73229 16.8536 7.20716 17.1464 7.50006L17.8661 8.21973H11.75C11.3358 8.21973 11 8.55551 11 8.96973C11 9.38394 11.3358 9.71973 11.75 9.71973H17.8661L17.1464 10.4394Z"
-                                fill="#22C55E"
+                                fill="#567BD9"
                                 className="path-2"
                               />
                               <path
@@ -423,7 +423,7 @@ const Layout = () => {
                   >
                     <path
                       d="M0 10C0 4.47715 4.47715 0 10 0H16V40H10C4.47715 40 0 35.5228 0 30V10Z"
-                      fill="#22C55E"
+                      fill="#567BD9"
                     />
                     <path
                       d="M10 15L6 20.0049L10 25.0098"
@@ -462,7 +462,7 @@ const Layout = () => {
                     >
                       <path
                         d="M0 10C0 4.47715 4.47715 0 10 0H16V40H10C4.47715 40 0 35.5228 0 30V10Z"
-                        fill="#22C55E"
+                        fill="#567BD9"
                       />
                       <path
                         d="M10 15L6 20.0049L10 25.0098"
@@ -487,7 +487,7 @@ const Layout = () => {
             </div>
           </header>
           <main className="w-full xl:px-12 px-6 pb-6 xl:pb-12 sm:pt-[156px] pt-[100px]">
-          {/* <main className="w-full"> */}
+            {/* <main className="w-full"> */}
             <div className="2xl:flex 2xl:space-x-[48px]">
               <section className="2xl:flex-1 2xl:mb-0 mb-6">
                 <Outlet />

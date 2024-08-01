@@ -12,7 +12,7 @@ const ChangePassword = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: 'Change Password', desc: '' });
+    setHeaderData({ title: 'Kennwort ändern', desc: '' });
   }, [setHeaderData]);
   const [credentials, setCredentials] = useState({
     old_password: "",
@@ -48,12 +48,12 @@ const ChangePassword = () => {
     e.preventDefault();
 
     if (!credentials.old_password || !credentials.password || !credentials.password_confirmation) {
-      Helpers.toast('error', "All fields are required.");
+      Helpers.toast('error', "Alle Felder sind erforderlich.");
       return;
     }
 
     if (credentials.password !== credentials.password_confirmation) {
-      Helpers.toast('error', "Passwords do not match.");
+      Helpers.toast('error', "Passwörter stimmen nicht überein");
       return;
     }
 
@@ -74,7 +74,7 @@ const ChangePassword = () => {
         showOldPassword: false,
       });
 
-      Helpers.toast('success', "Password changed successfully!");
+      Helpers.toast('success', "das Passwort wurde erfolgreich geändert!");
       navigate("/");
     } catch (error) {
       setErrors(error.response.data.errors || {});
@@ -88,7 +88,7 @@ const ChangePassword = () => {
         <div className="w-full px-5 xl:pl-12">
           <div className="max-w-[450px] m-auto py-6">
             <div className="bg-white rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold mb-6">Change Password</h2>
+              <h2 className="text-2xl font-bold mb-6">Kennwort ändern</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4 relative">
                   <input
@@ -98,7 +98,7 @@ const ChangePassword = () => {
                     name="old_password"
                     value={credentials.old_password}
                     onChange={handleChange}
-                    placeholder="Current Password"
+                    placeholder="Aktuelles Passwort"
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"
@@ -121,7 +121,7 @@ const ChangePassword = () => {
                     name="password"
                     value={credentials.password}
                     onChange={handleChange}
-                    placeholder="New Password"
+                    placeholder="Neues Kennwort"
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"
@@ -144,7 +144,7 @@ const ChangePassword = () => {
                     name="password_confirmation"
                     value={credentials.password_confirmation}
                     onChange={handleChange}
-                    placeholder="Confirm Password"
+                    placeholder="Bestätige das Passwort"
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"
@@ -163,7 +163,7 @@ const ChangePassword = () => {
                   type="submit"
                   className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                 >
-                  Change
+                  Kennwort ändern
                 </button>
               </form>
             </div>

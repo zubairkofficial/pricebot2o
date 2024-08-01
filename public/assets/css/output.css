@@ -2488,22 +2488,22 @@ select{
 
 .bg-success-200{
   --tw-bg-opacity: 1;
-  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .bg-success-300{
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .bg-success-400{
   --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .bg-success-50{
   --tw-bg-opacity: 1;
-  background-color: rgb(217 251 230 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .bg-transparent{
@@ -3420,7 +3420,7 @@ select{
 
 .switch-btn.active{
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .switch-btn span{
@@ -3551,17 +3551,17 @@ select{
 
 .hover\:bg-success-300:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .hover\:bg-success-400:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .hover\:bg-success-50:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(217 251 230 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .hover\:bg-warning-200:hover{
@@ -3661,7 +3661,7 @@ select{
 }
 
 .focus\:accent-success-300:focus{
-  accent-color: #22C55E;
+  accent-color: #567BD9;
 }
 
 .focus\:outline-none:focus{
@@ -3720,7 +3720,7 @@ select{
 
 .group:hover .group-hover\:bg-success-300{
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 .group:hover .group-hover\:stroke-white{
@@ -3814,7 +3814,7 @@ select{
 
 :is(.dark .dark\:bg-success-300){
   --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+  background-color: #567BD9;
 }
 
 :is(.dark .dark\:bg-transparent){

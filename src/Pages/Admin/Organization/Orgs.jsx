@@ -37,7 +37,7 @@ const Orgs = () => {
         try {
             const response = await axios.get(`${Helpers.apiUrl}all-orgs`, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error("Failed to fetch Organizations");
+                throw new Error("Organisationen konnten nicht abgerufen werden");
             }
             setOrgs(response.data);
             setFilteredOrgs(response.data);
@@ -59,7 +59,7 @@ const Orgs = () => {
                 throw new Error("Failed to change Organization status");
             }
             fetchOrgs();
-            Helpers.toast("success", "Organization status changed successfully");
+            Helpers.toast("success", "Der Organisationsstatus wurde erfolgreich geändert");
         } catch (error) {
             setError(error.message);
         }
@@ -69,14 +69,14 @@ const Orgs = () => {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">Wird geladen...</span>
                 </div>
             </div>
         );
     }
 
     if (error) {
-        return <div className="text-red-500 text-center">Error: {error}</div>;
+        return <div className="text-red-500 text-center">Fehler: {error}</div>;
     }
 
     const indexOfLastOrg = (currentPage + 1) * itemsPerPage;
@@ -139,9 +139,9 @@ const Orgs = () => {
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Number</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Street</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nummer</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Straße</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">

@@ -11,7 +11,7 @@ const UserList = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
   }, [setHeaderData]);
 
   const [users, setUsers] = useState([]);
@@ -92,7 +92,7 @@ const UserList = () => {
   }
 
   if (error) {
-    return <div className="text-blue-500">Error: {error}</div>;
+    return <div className="text-blue-500">Fehler: {error}</div>;
   }
 
   return (

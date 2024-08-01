@@ -10,10 +10,10 @@ import axios from "axios";
 import { useHeader } from '../../Components/HeaderContext';
 
 const Dashboard = () => {
-  
+
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: 'Dashboard', desc: 'Let’s check your update today' });
+    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
   }, [setHeaderData]);
 
   const [services, setServices] = useState([]);

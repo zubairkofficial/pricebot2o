@@ -8,7 +8,7 @@ import { useHeader } from "../../Components/HeaderContext";
 function ResendEmail() {
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: "Resend Email", desc: "" });
+    setHeaderData({ title: "E-Mail zurücksenden", desc: "" });
   }, [setHeaderData]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

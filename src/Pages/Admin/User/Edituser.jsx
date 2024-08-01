@@ -26,7 +26,7 @@ const EditUser = () => {
 
   useEffect(() => {
     setHeaderData({
-      title: "Dashboard",
+      title: "Armaturenbrett",
       desc: "Lassen Sie uns noch heute Ihr Update überprüfen",
     });
     fetchUser();
@@ -95,7 +95,7 @@ const EditUser = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-        Loading...
+        Wird geladen...
       </div>
     );
 
@@ -103,12 +103,12 @@ const EditUser = () => {
     return <div className="text-center text-red-500 mt-5">{error}</div>;
 
   if (!user)
-    return <div className="text-center text-red-500 mt-5">User not found</div>;
+    return <div className="text-center text-red-500 mt-5">Benutzer nicht gefunden</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 py-5">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Edit User</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Benutzer bearbeiten</h2>
         <div className="bg-white shadow sm:rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             {isEditing ? (
@@ -151,7 +151,7 @@ const EditUser = () => {
                       htmlFor="services"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Services
+                      Dienstleistungen
                     </label>
                     <Select
                       options={services.map((service) => ({
@@ -198,13 +198,13 @@ const EditUser = () => {
                       className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       onClick={() => setIsEditing(false)}
                     >
-                      Cancel
+                      Stornieren
                     </button>
                     <button
                       type="submit"
                       className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      Save Changes
+                      Änderungen speichern
                     </button>
                   </div>
                 </div>
@@ -215,7 +215,7 @@ const EditUser = () => {
                   <Avatar name={user.name} src={userAvatar} round size="100" />
                 </div>
                 <h6 className="text-center text-lg font-medium text-gray-900 mt-4">
-                  User Information
+                  Nutzerinformation
                 </h6>
                 <div className="border-t border-gray-200 mt-5">
                   <dl>
@@ -237,7 +237,7 @@ const EditUser = () => {
                     </div>
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                        Services
+                        Dienstleistungen
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {services

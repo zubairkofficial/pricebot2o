@@ -8,10 +8,10 @@ import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
 
 function Transcription() {
-    
+
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: "Transcription", desc: "" });
+    setHeaderData({ title: "Transkription", desc: "" });
   }, [setHeaderData]);
 
   const location = useLocation();

@@ -131,13 +131,13 @@ const EditService = () => {
                                         className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         onClick={() => setIsEditing(false)}
                                     >
-                                        Cancel
+                                        Stornieren
                                     </button>
                                     <button
                                         type="submit"
                                         className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Save Changes
+                                        Änderungen speichern
                                     </button>
                                 </div>
                             </form>

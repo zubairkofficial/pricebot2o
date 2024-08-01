@@ -29,7 +29,7 @@ const AddOrg = () => {
         e.preventDefault();
 
         if (!org.name || !org.street || !org.number) {
-            Helpers.toast("error", "Name, Street, and Number are required.");
+            Helpers.toast("error", "Name, Straße und Nummer sind erforderlich.");
             return;
         }
 
@@ -37,7 +37,7 @@ const AddOrg = () => {
             const response = await axios.post(`${Helpers.apiUrl}add-org`, org, Helpers.authHeaders);
 
             if (response.status !== 200) {
-                throw new Error("Failed to Add Organization");
+                throw new Error("Organisation konnte nicht hinzugefügt werde");
             }
 
             setOrg({
@@ -47,7 +47,7 @@ const AddOrg = () => {
                 prompt: "",
             });
 
-            Helpers.toast("success", "Organization added successfully");
+            Helpers.toast("success", "Organisation erfolgreich hinzugefügt");
             navigate("/admin/orgs");
         } catch (error) {
             Helpers.toast('error', error.message);
@@ -57,7 +57,7 @@ const AddOrg = () => {
     return (
         <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-center">
             <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
-                <h5 className="text-xl font-semibold mb-4">Add Organization</h5>
+                <h5 className="text-xl font-semibold mb-4">Organisation hinzufügen</h5>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                     <div>
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -71,7 +71,7 @@ const AddOrg = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="number" className="block text-sm font-medium text-gray-700">Number</label>
+                        <label htmlFor="number" className="block text-sm font-medium text-gray-700">Nummer</label>
                         <input
                             type="text"
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -82,7 +82,7 @@ const AddOrg = () => {
                         />
                     </div>
                     <div className="col-span-2">
-                        <label htmlFor="street" className="block text-sm font-medium text-gray-700">Street</label>
+                        <label htmlFor="street" className="block text-sm font-medium text-gray-700">Straße</label>
                         <textarea
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="street"
@@ -105,7 +105,7 @@ const AddOrg = () => {
                     </div>
                     <div className="col-span-2 flex justify-end">
                         <button type="submit" className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Add Organization
+                            Organisation hinzufügen
                         </button>
                     </div>
                 </form>

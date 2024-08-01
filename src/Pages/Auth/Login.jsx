@@ -49,7 +49,7 @@ const Login = () => {
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <h2 className="text-2xl font-bold  mb-6 text-center">Login</h2>
+            <h2 className="text-2xl font-bold  mb-6 text-center">Anmeldung</h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
@@ -60,7 +60,7 @@ const Login = () => {
                     setUser({ ...user, email: e.target.value })
                   }
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                  placeholder="Username or email"
+                  placeholder="Email"
                 />
                 <small className="text-danger">
                   {errors.email ? errors.email[0] : ""}
@@ -68,22 +68,22 @@ const Login = () => {
               </div>
               <div className="mb-6 relative">
                 <input
-                  type={showPassword ? "text" : "password"} // Toggle input type based on state
+                  type={showPassword ? "text" : "password"}
                   value={user.password}
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                  placeholder="Password"
+                  placeholder="Passwort"
                 />
                 <div
                   className="absolute top-4 right-4 bottom-4 cursor-pointer"
                   onClick={togglePasswordVisibility}
                 >
-                <FontAwesomeIcon
-                      icon={showPassword ? faEyeSlash : faEye}
-                      className="text-gray-500"
-                    />
+                  <FontAwesomeIcon
+                    icon={showPassword ? faEyeSlash : faEye}
+                    className="text-gray-500"
+                  />
                 </div>
                 <small className="text-danger">
                   {errors.password ? errors.password[0] : ""}
@@ -95,7 +95,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
-                {isLoading ? "Loading..." : "Login"}
+                {isLoading ? "Wird geladen..." : "Anmeldung"}
               </button>
             </form>
           </div>
