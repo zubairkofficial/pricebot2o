@@ -85,14 +85,50 @@ const Orgs = () => {
 
 
     return (
-        <section className="bg-white p-5">
+        <section className="bg-white">
             <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
-                <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
-                    <div className="m-auto pt-10 pb-16">
+                <div className="w-full px-5 xl:pl-12">
+                    <div className="m-auto">
                         <div className="bg-white p-6 rounded-lg shadow-md">
-                            <div className="flex justify-end mb-4">
+                            <div className="flex  justify-between space-x-2 mb-4">
+                                <div className="mb-4 ">
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                                            id="search"
+                                            placeholder="Nach Name suchen"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                        <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                                            <svg
+                                                width={20}
+                                                height={20}
+                                                viewBox="0 0 20 20"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <circle
+                                                    cx="9.7859"
+                                                    cy="9.78614"
+                                                    r="8.23951"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M15.5166 15.9448L18.747 19.1668"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
                                 <Link to="/admin/add-org"
-                                    className="h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
+                                    className=" h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
                                     Organisation hinzufügen
                                 </Link>
@@ -134,13 +170,13 @@ const Orgs = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <Pagination
-                                currentPage={currentPage}
-                                totalItems={filteredOrgs.length}
-                                itemsPerPage={itemsPerPage}
-                                onPageChange={(page) => setCurrentPage(page)}
-                            />
                         </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalItems={filteredOrgs.length}
+                            itemsPerPage={itemsPerPage}
+                            onPageChange={(page) => setCurrentPage(page)}
+                        />
                     </div>
                 </div>
             </div>

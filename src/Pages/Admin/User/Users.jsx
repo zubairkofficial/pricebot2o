@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate,Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
@@ -96,17 +96,10 @@ const UserList = () => {
   }
 
   return (
-    <section className="w-full h-full p-4">
-      <div className="shadow-lg rounded-lg p-4">
-        <div className="flex justify-end mb-4">
-          <Link to="/admin/add-user"
-            className="h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
-          >
-            Benutzer hinzufügen
-          </Link>
-        </div>
-        <div className="shadow-lg rounded-lg p-4">
-          <div className="mb-4">
+    <section className="w-full h-full">
+      <div className="bg-white p-4 rounded-lg shadow-md">
+        <div className="flex  justify-between space-x-2 mb-4">
+          <div className="mb-4 ">
             <div className="relative">
               <input
                 type="text"
@@ -142,7 +135,13 @@ const UserList = () => {
               </div>
             </div>
           </div>
-
+          <Link to="/admin/add-user"
+            className="h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
+          >
+            Benutzer hinzufügen
+          </Link>
+        </div>
+        <div className="rounded-lg">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-darkblack-200">
               <thead className="bg-white-100">

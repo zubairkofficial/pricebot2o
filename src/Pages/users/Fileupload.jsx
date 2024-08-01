@@ -64,8 +64,7 @@ function FileUpload() {
   };
 
   return (
-    <section className="bg-white p-5">
-      <div className="max-w-4xl mx-auto">
+      <div className=" w-full bg-white py-5 mx-auto">
         <h2 className="text-center text-2xl font-semibold  mb-8">
           Daten hochladen
         </h2>
@@ -108,7 +107,6 @@ function FileUpload() {
           </ul>
         </div>
       </div>
-    </section>
   );
 }
 

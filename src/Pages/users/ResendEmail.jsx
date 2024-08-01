@@ -136,12 +136,12 @@ function ResendEmail() {
 
   return (
     <section className="bg-white p-5">
-      <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
-        <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
-          <div className="max-w-[614px] m-auto pt-10 pb-16">
-            <div className="bg-white  p-6 rounded-lg shadow-md">
+      <div className="flex flex-col lg:flex-row justify-between lg:px-12">
+        <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
+          <div className="max-w-[614px] m-auto py-6">
+            <div className="bg-white  p-4 rounded-lg shadow-md">
               <h2 className="text-center text-2xl font-semibold  mb-8">
-                Transkriptionsdetails
+                Transkriptions details
               </h2>
               <div className="flex flex-col items-center">
                 {success ? (

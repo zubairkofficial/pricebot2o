@@ -126,7 +126,7 @@ const EditOrg = () => {
                                 />
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>Cancel</button>
-                                    <button type="submit" className="bg-blue-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-400 focus:outline-none">Save</button>
+                                    <button type="submit" className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Save</button>
                                 </div>
                             </form>
                         ) : (
@@ -138,7 +138,7 @@ const EditOrg = () => {
                                     <p><strong>Prompt:</strong> {org.prompt}</p>
                                     <div className="flex justify-end space-x-3">
                                         <Link to="/admin/orgs" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">Back</Link>
-                                        <button onClick={() => setIsEditing(true)} className="bg-blue-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-400 focus:outline-none">Edit</button>
+                                        <button onClick={() => setIsEditing(true)} className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Edit</button>
                                     </div>
                                 </div>
                             </>

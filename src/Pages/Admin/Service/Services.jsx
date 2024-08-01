@@ -4,7 +4,7 @@ import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
-import Pagination from '../../../Components/Pagination'; 
+import Pagination from '../../../Components/Pagination';
 
 const Services = () => {
     const { setHeaderData } = useHeader();
@@ -86,11 +86,48 @@ const Services = () => {
 
     return (
         <section className="bg-white p-5">
-            {/* <div className="flex justify-end mb-4">
-                <Link to="/admin/add-service" className="btn btn-success mb-2 bg-success-300 hover:bg-success-400 text-white py-2 px-4 rounded">
+            <div className="flex  justify-between mb-4">
+                <div className="mb-4 ">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                            id="search"
+                            placeholder="Nach Name suchen"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                            <svg
+                                width={20}
+                                height={20}
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <circle
+                                    cx="9.7859"
+                                    cy="9.78614"
+                                    r="8.23951"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                                <path
+                                    d="M15.5166 15.9448L18.747 19.1668"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                {/* <Link to="/admin/add-service" className="btn btn-success mb-2 bg-success-300 hover:bg-success-400 text-white py-2 px-4 rounded">
                     Dienst hinzufügen
                 </Link>
-            </div> */}
+            */}
+            </div>
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-100">

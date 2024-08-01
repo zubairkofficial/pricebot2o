@@ -1,89 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faStopCircle } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Voice = () => {
   const { setHeaderData } = useHeader();
+  const navigate = useNavigate();
+  const { listening, resetTranscript, transcript } = useSpeechRecognition();
+  const [state, setState] = useState({
+    transcriptionText: "",
+    transcriptionSummary: "",
+    summary: "",
+    file: null,
+    transcribing: false,
+    errorMessage: "",
+    summaryError: "",
+    isEmailButtonVisible: false,
+    isSummaryGenerating: false,
+    showSummary: false,
+    showTranscriptionSummary: false,
+    hasHistory: false,
+    isGenerateSummaryBtnVisible: false,
+    userTranscript: "",
+  });
+  
   useEffect(() => {
     setHeaderData({ title: "Voice", desc: "" });
+    setState(prevState => ({ ...prevState, hasHistory: window.history.length > 1 }));
   }, [setHeaderData]);
 
-  const [isListening, setIsListening] = useState(false);
-  const [listeningText, setListeningText] = useState("");
-  const [interimTranscript, setInterimTranscript] = useState("");
-  const [transcriptionText, setTranscriptionText] = useState("");
-  const [transcriptionSummary, setTranscriptionSummary] = useState("");
-  const [summary, setSummary] = useState("");
-  const [file, setFile] = useState(null);
-  const [transcribing, setTranscribing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [summaryError, setSummaryError] = useState("");
-  const [isEmailButtonVisible, setIsEmailButtonVisible] = useState(false);
-  const [isGenerateSummaryButtonVisible, setIsGenerateSummaryButtonVisible] =
-    useState(false);
-  const [isSummaryGenerating, setIsSummaryGenerating] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
-  const [showTranscriptionSummary, setShowTranscriptionSummary] =
-    useState(false);
-  const [hasHistory, setHasHistory] = useState(false);
-  const navigate = useNavigate();
-
   useEffect(() => {
-    setHasHistory(window.history.length > 1);
-  }, []);
-
-  useEffect(() => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.lang = "de-DE";
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
-      recognition.onstart = () =>
-        console.log("Spracherkennung aktiviert. Bitte sprechen.");
-
-      recognition.onresult = (event) => {
-        let interimTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            setListeningText(
-              (prevText) => prevText + event.results[i][0].transcript
-            );
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-          }
-        }
-        setInterimTranscript(interimTranscript);
-      };
-
-      recognition.onerror = (event) =>
-        console.error("Fehler bei der Erkennung:", event.error);
-
-      if (isListening) {
-        recognition.start();
-      } else {
-        recognition.stop();
-      }
-
-      return () => recognition.stop();
-    }
-  }, [isListening]);
+    setState(prevState => ({ ...prevState, userTranscript: transcript }));
+  }, [transcript]);
 
   const handleTranscribeClick = async () => {
-    if (file) {
+    if (state.file) {
       const formData = new FormData();
-      formData.append("audio", file);
+      formData.append("audio", state.file);
 
       try {
-        setTranscribing(true);
-        setErrorMessage("");
+        setState(prevState => ({ ...prevState, transcribing: true, errorMessage: "" }));
 
         const response = await axios.post(
           `${Helpers.apiUrl}transcribe`,
@@ -92,47 +52,31 @@ const Voice = () => {
         );
 
         if (response.status !== 200) {
-          throw new Error(
-            response.message || "Netzwerkantwort war nicht erfolgreich."
-          );
+          throw new Error(response.message || "Netzwerkantwort war nicht erfolgreich.");
         }
 
-        setTranscriptionText(
-          response.data.transcription.results.channels[0].alternatives[0]
-            .transcript
-        );
-        setIsGenerateSummaryButtonVisible(true);
+        setState(prevState => ({
+          ...prevState,
+          transcriptionText: response.data.transcription.results.channels[0].alternatives[0].transcript
+        }));
       } catch (error) {
-        console.error("Fehler beim Transkribieren der Datei:", error);
-
-        let errorMessage = "Fehler beim Transkribieren der Datei.";
-        try {
-          const errorJson = JSON.parse(error.message);
-          if (errorJson.error) {
-            errorMessage = errorJson.error;
-          }
-        } catch (jsonError) {
-          errorMessage = error.message || errorMessage;
-        }
-
-        setErrorMessage(errorMessage);
+        const errorMessage = error.message || "Fehler beim Transkribieren der Datei.";
+        setState(prevState => ({ ...prevState, errorMessage }));
       } finally {
-        setTranscribing(false);
+        setState(prevState => ({ ...prevState, transcribing: false }));
       }
     } else {
-      setErrorMessage("Bitte wählen Sie zuerst eine Datei aus.");
+      setState(prevState => ({ ...prevState, errorMessage: "Bitte wählen Sie zuerst eine Datei aus." }));
     }
   };
 
-  const handleGenerateSummaryVoice = async () => {
+  const handleGenerateSummary = async (text, type) => {
     try {
-      setIsSummaryGenerating(true);
+      setState(prevState => ({ ...prevState, isSummaryGenerating: true }));
 
       const response = await axios.post(
         `${Helpers.apiUrl}generateSummary`,
-        {
-          recordedText: listeningText,
-        },
+        { recordedText: text },
         Helpers.authHeaders
       );
 
@@ -140,165 +84,98 @@ const Voice = () => {
         throw new Error(response.message || "Failed to generate summary.");
       }
 
-      setSummary(response.data.summary);
-      setShowSummary(true);
-      setIsEmailButtonVisible(true);
+      setState(prevState => ({
+        ...prevState,
+        [type === 'voice' ? 'summary' : 'transcriptionSummary']: response.data.summary,
+        [type === 'voice' ? 'showSummary' : 'showTranscriptionSummary']: true,
+        isEmailButtonVisible: true,
+      }));
     } catch (error) {
-      console.error("Error generating summary:", error);
-      setSummaryError(error.message || "Error generating summary.");
+      setState(prevState => ({ ...prevState, summaryError: error.message || "Error generating summary." }));
     } finally {
-      setIsSummaryGenerating(false);
+      setState(prevState => ({ ...prevState, isSummaryGenerating: false }));
     }
   };
 
-  const handleGenerateSummaryTranscription = async () => {
-    try {
-      setIsSummaryGenerating(true);
+  const handleFileChange = (event) => setState(prevState => ({ ...prevState, file: event.target.files[0] }));
 
-      const response = await axios.post(
-        `${Helpers.apiUrl}generateSummary`,
-        {
-          recordedText: transcriptionText,
-        },
-        Helpers.authHeaders
-      );
-
-      if (response.status !== 200) {
-        throw new Error(response.message || "Failed to generate summary.");
-      }
-
-      setTranscriptionSummary(response.data.summary);
-      setShowTranscriptionSummary(true);
-      setIsEmailButtonVisible(true);
-    } catch (error) {
-      console.error("Error generating summary:", error);
-      setSummaryError(error.message || "Error generating summary.");
-    } finally {
-      setIsSummaryGenerating(false);
-    }
+  const handleNextPageClick = (text, summary) => {
+    navigate("/transcription", { state: { text, summary } });
   };
 
-  const handleFileChange = (event) => setFile(event.target.files[0]);
-
-  const handleNextPageClickTranscription = () => {
-    navigate("/transcription", {
-      state: {
-        text: transcriptionText,
-        summary: transcriptionSummary,
-      },
-    });
+  const handleStartListening = () => {
+    setState(prevState => ({ ...prevState, isGenerateSummaryBtnVisible: true }));
+    resetTranscript();
+    SpeechRecognition.startListening({ continuous: true, language: 'de-DE' });
   };
 
-  const handleNextPageClickListening = () => {
-    navigate("/transcription", {
-      state: {
-        text: listeningText,
-        summary: summary,
-      },
-    });
-  };
-
-  const handleStopListening = () => {
-    setIsListening(false);
-    setIsGenerateSummaryButtonVisible(true);
-  };
-
-  const forword = () => {
-    window.history.forward();
+  const handleTranscriptChange = (e) => {
+    setState(prevState => ({ ...prevState, userTranscript: e.target.value }));
   };
 
   return (
-    <section className="bg-white ">
+    <section className="bg-white">
       <div className="flex flex-col lg:flex-row justify-between">
-        <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
-          <div className="max-w-4xl mx-auto pt-24 pb-16">
+        <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
+          <div className="max-w-4xl mx-auto pt-10 pb-10">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold  mb-6">Voice Recording</h2>
+              <h2 className="text-2xl font-bold mb-6">Voice Recording</h2>
               <div className="flex flex-col md:flex-row md:space-x-4 mb-4 space-x-2">
-                <Link
-                  to={"/"}
-                  className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
-                >
+                <Link to="/" className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                   Werkzeuge
                 </Link>
-                <Link
-                  to={"/sent-emails"}
-                  className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
-                >
+                <Link to="/sent-emails" className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                   Vorherige Historie
                 </Link>
-                {hasHistory && (
-                  <button
-                    onClick={forword}
-                    className="h-10 px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
-                  >
+                {state.hasHistory && (
+                  <button onClick={() => window.history.forward()} className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                     Zurück
                   </button>
                 )}
               </div>
               <div className="relative mb-4">
                 <textarea
-                  className=" text-base border border-blackgray-600  h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
-                  readOnly={isListening}
-                  value={listeningText + interimTranscript}
-                  onChange={(e) => setListeningText(e.target.value)}
+                  className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
+                  readOnly={listening}
+                  value={state.userTranscript}
+                  onChange={handleTranscriptChange}
                   placeholder="Beginnen Sie zu sprechen oder laden Sie Ihre Sprache hoch, um sie hier zu transkribieren."
                 />
               </div>
-
-              {summaryError && (
-                <div className="text-blue-500 mb-4 text-sm">{summaryError}</div>
+              {state.errorMessage && (
+                <div className="text-blue-500 mb-4 text-sm">{state.errorMessage}</div>
               )}
-
-              {showSummary && (
+              {state.showSummary && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold ">Zusammenfassung:</h5>
-                  <p className="">{summary}</p>
+                  <h5 className="text-lg font-semibold">Zusammenfassung:</h5>
+                  <p>{state.summary}</p>
                 </div>
               )}
-
-              {!isListening && isGenerateSummaryButtonVisible && (
-                <div className="mb-4">
+              {!listening && state.isGenerateSummaryBtnVisible && (
+                <div className="mb-4 space-x-2">
                   <button
-                    onClick={handleGenerateSummaryVoice}
-                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
-                    disabled={isSummaryGenerating}
+                    onClick={() => handleGenerateSummary(state.userTranscript, 'voice')}
+                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    disabled={state.isSummaryGenerating}
                   >
-                    {isSummaryGenerating
-                      ? "Zusammenfassung wird generiert..."
-                      : "Zusammenfassung generieren"}
+                    {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
                   </button>
-                  {isEmailButtonVisible && (
+                  {state.isEmailButtonVisible && (
                     <button
-                      onClick={handleNextPageClickListening}
-                      className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                      onClick={() => handleNextPageClick(state.userTranscript, state.summary)}
+                      className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     >
                       Per E-Mail senden
                     </button>
                   )}
                 </div>
               )}
-
               <button
-                disabled={isSummaryGenerating}
-                onClick={() => {
-                  if (isListening) {
-                    handleStopListening();
-                  } else {
-                    setIsListening(true);
-                    setIsEmailButtonVisible(false);
-                    setIsGenerateSummaryButtonVisible(false);
-                    setShowSummary(false);
-                  }
-                }}
-                className={`h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300${isListening
-                    ? "bg-warning-100 hover:bg-warning-300"
-                    : "bg-success-300 hover:bg-success-300"
-                  } mt-2 mb-3`}
+                onClick={listening ? SpeechRecognition.stopListening : handleStartListening}
+                className={`h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-2 mb-3 ${listening ? "bg-warning-100 hover:bg-warning-300" : "bg-success-300 hover:bg-success-300"}`}
               >
-                {isListening ? (
+                {listening ? (
                   <span className="flex items-center">
-                    {" "}
                     <FontAwesomeIcon icon={faStopCircle} className="mr-2" />
                     Stop
                   </span>
@@ -309,55 +186,43 @@ const Voice = () => {
                   </span>
                 )}
               </button>
-
-              {transcribing && (
+              {state.transcribing && (
                 <div className="text-gray-600 mt-4">Transcribing...</div>
               )}
-
-              {errorMessage && (
-                <div className="text-blue-500 mt-4">{errorMessage}</div>
-              )}
-
               <div className="mb-4">
                 <input
                   type="file"
                   onChange={handleFileChange}
-                  className=" text-base border border-blackgray-600  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                  className="text-base border border-blackgray-600 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <button
                   onClick={handleTranscribeClick}
-                  className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
-                  disabled={transcribing}
+                  className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
+                  disabled={state.transcribing}
                 >
-                  {transcribing ? "Transcribing..." : "Transcribe File"}
+                  {state.transcribing ? "Transcribing..." : "Transcribe File"}
                 </button>
               </div>
-
-              {transcriptionText && (
+              {state.transcriptionText && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold  ">Transcription:</h5>
-                  <p className=" ">{transcriptionText}</p>
+                  <h5 className="text-lg font-semibold">Transcription:</h5>
+                  <p>{state.transcriptionText}</p>
                   <button
-                    onClick={handleGenerateSummaryTranscription}
-                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300
-"
-                    disabled={isSummaryGenerating}
+                    onClick={() => handleGenerateSummary(state.transcriptionText, 'transcription')}
+                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    disabled={state.isSummaryGenerating}
                   >
-                    {isSummaryGenerating
-                      ? "Zusammenfassung wird generiert..."
-                      : "Zusammenfassung generieren"}
+                    {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
                   </button>
                 </div>
               )}
-
-              {showTranscriptionSummary && (
+              {state.showTranscriptionSummary && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold ">Zusammenfassung:</h5>
-                  <p className="">{transcriptionSummary}</p>
+                  <h5 className="text-lg font-semibold">Zusammenfassung:</h5>
+                  <p>{state.transcriptionSummary}</p>
                   <button
-                    onClick={handleNextPageClickTranscription}
-                    className="h-10 px-5  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300
-"
+                    onClick={() => handleNextPageClick(state.transcriptionText, state.transcriptionSummary)}
+                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                   >
                     Per E-Mail senden
                   </button>
