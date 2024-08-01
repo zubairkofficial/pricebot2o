@@ -84,10 +84,10 @@ const ChangePassword = () => {
 
   return (
     <section className="bg-white ">
-      <div className="flex flex-col lg:flex-row justify-between min-h-screen">
-        <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
-          <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <div className="bg-white  p-6 rounded-lg shadow-md">
+      <div className="flex flex-col lg:flex-row justify-between">
+        <div className="w-full px-5 xl:pl-12">
+          <div className="max-w-[450px] m-auto py-6">
+            <div className="bg-white rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-6">Change Password</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4 relative">
