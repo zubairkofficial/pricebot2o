@@ -27,7 +27,7 @@ const Login = () => {
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
         if (response.data.user.user_type == 1) {
-          window.location.href = "/admin/home";
+          window.location.href = "/admin/dashboard";
         } else {
           window.location.href = "/";
         }
@@ -49,7 +49,7 @@ const Login = () => {
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
+            <h2 className="text-2xl font-bold  mb-6 text-center">Login</h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
@@ -59,7 +59,7 @@ const Login = () => {
                   onChange={(e) =>
                     setUser({ ...user, email: e.target.value })
                   }
-                  className="text-white text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-white placeholder:text-base"
+                  className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                   placeholder="Username or email"
                 />
                 <small className="text-danger">
@@ -73,7 +73,7 @@ const Login = () => {
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
-                  className="text-white text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-white placeholder:text-base"
+                  className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                   placeholder="Password"
                 />
                 <div
@@ -93,7 +93,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
                 {isLoading ? "Loading..." : "Login"}
               </button>

@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
-import { Spinner } from "react-bootstrap";
-import Helpers from "../../../Config/Helpers";
 import Avatar from "react-avatar";
-import userAvatar from "../../../Components/Admin/user.png";
 import axios from "axios";
-import { useHeader } from '../../../Components/HeaderContext';
+import userAvatar from "./user.png";
+import Helpers from "../../../Config/Helpers";
+import { useHeader } from "../../../Components/HeaderContext";
+
 const EditUser = () => {
-
   const { setHeaderData } = useHeader();
-
-  useEffect(() => {
-    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
-  }, [setHeaderData]);
-
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [services, setServices] = useState([]);
@@ -31,15 +25,20 @@ const EditUser = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setHeaderData({
+      title: "Dashboard",
+      desc: "Lassen Sie uns noch heute Ihr Update überprüfen",
+    });
     fetchUser();
   }, [id]);
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`${Helpers.apiUrl}getuser/${id}`, Helpers.authHeaders);
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch user");
-      }
+      const response = await axios.get(
+        `${Helpers.apiUrl}getuser/${id}`,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) throw new Error("Failed to fetch user");
       setUser(response.data.user);
       setServices(response.data.services);
       setOrgs(response.data.orgs);
@@ -58,58 +57,30 @@ const EditUser = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleServiceChange = (values) => {
-    const selectedValues = values.map((option) => option.value);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      services: selectedValues,
+    setFormData((prev) => ({
+      ...prev,
+      services: values.map((v) => v.value),
     }));
   };
-
-  const servicesOptions = services.map((service) => ({
-    value: service.id,
-    label: service.name,
-  }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${Helpers.apiUrl}updateUser/${id}`, {
-        ...formData,
-        services: formData.services,
-      }, Helpers.authHeaders);
-      if (response.status !== 200) {
-        throw new Error("Failed to update user");
-      }
-      setUser(response.data);
-      setIsEditing(false);
-
-      window.location.reload();
-      Helpers.toast("success", "User updated Successfully");
+      const response = await axios.post(
+        `${Helpers.apiUrl}updateUser/${id}`,
+        formData,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) throw new Error("Failed to update user");
+      Helpers.toast("success", "User updated successfully");
+      navigate("/admin/home");
     } catch (error) {
       setError(error.message);
     }
-  };
-
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100 ">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden"></span>
-        </Spinner>
-      </div>
-    );
-  }
-  const getServiceName = (id) => {
-    if (!id) return '';
-    const service = services.find((service) => service.id === id);
-    return service ? service.name : '';
   };
 
   const OrgsOptions = orgs.map((org) => ({
@@ -117,186 +88,184 @@ const EditUser = () => {
     label: org.name,
   }));
 
-  const selectedOrg = OrgsOptions.find((option) => option.value == formData.org_id);
-  
-  if (error) {
-    return <div className="text-white text-center mt-5">Error: {error}</div>;
-  }
+  const selectedOrg = OrgsOptions.find(
+    (option) => option.value == formData.org_id
+  );
 
-  if (!user) {
-    return <div className="text-white text-center mt-5">User not found</div>;
-  }
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+
+  if (error)
+    return <div className="text-center text-red-500 mt-5">{error}</div>;
+
+  if (!user)
+    return <div className="text-center text-red-500 mt-5">User not found</div>;
 
   return (
-    <div className="container-fluid vh-100 mt-5">
-      <div className="row h-100">
-        <div className="col-2"></div>
-        <div
-          className="col-9 d-flex flex-column align-items-center"
-          style={{ paddingTop: "40px", overflow: "hidden" }}
-        >
-          <h2 className="text-center my-5" style={{ color: "black" }}>
-            Benutzer bearbeiten
-          </h2>
-          <div
-            className="card bg-light shadow-lg"
-            style={{
-              borderRadius: "20px",
-              width: "90%",
-              maxWidth: "700px",
-              color: "black",
-            }}
-          >
-            <div className="card-body m-3">
-              {isEditing ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="text-center">
-                    <Avatar
-                      name={user.name}
-                      src={userAvatar}
-                      round
-                      size="100"
-                      className="my-3"
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label" style={{ color: "black" }}>
+    <div className="min-h-screen bg-gray-100 py-5">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Edit User</h2>
+        <div className="bg-white shadow sm:rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            {isEditing ? (
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
                       Name
                     </label>
                     <input
                       type="text"
-                      className="form-control bg-light border-0"
                       name="name"
+                      id="name"
                       value={formData.name}
                       onChange={handleChange}
-                      required
-                      style={{ color: "black" }}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                   </div>
-                  <div className="mb-3">
-                    <label className="form-label" style={{ color: "black" }}>
-                      E-Mail
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Email
                     </label>
                     <input
                       type="email"
-                      className="form-control bg-light border-0"
                       name="email"
+                      id="email"
                       value={formData.email}
                       onChange={handleChange}
-                      required
-                      style={{ color: "black" }}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                   </div>
-                  <div className="mb-3">
-                    <label className="form-label" style={{ color: "black" }}>
-                      Dienstleistungen
+                  <div>
+                    <label
+                      htmlFor="services"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Services
                     </label>
                     <Select
-                      options={servicesOptions}
-                      onChange={handleServiceChange}
-                      values={formData.services?.map((service) => ({
-                        label: getServiceName(service),
-                        value: service,
+                      options={services.map((service) => ({
+                        label: service.name,
+                        value: service.id,
                       }))}
+                      values={services
+                        .filter(service => formData.services.includes(service.id))
+                        .map(service => ({
+                          label: service.name,
+                          value: service.id
+                        }))
+                      }
+                      onChange={(selectedOptions) => handleServiceChange(selectedOptions)}
                       multi
-                      placeholder="Dienstleistungen auswählen"
-                      className="custom-select"
-                      classNamePrefix="select"
+                      className="text-base"
                     />
                   </div>
-                  {formData.services.includes(2) &&
-                    <div className="mb-3">
-                      <label className="form-label" style={{ color: "black" }}>
-                        Organisation
+                  {formData.services.includes(2) && (
+                    <div>
+                      <label
+                        htmlFor="org"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Organization
                       </label>
                       <Select
                         values={selectedOrg ? [selectedOrg] : []}
                         options={OrgsOptions}
-                        onChange={(selectedOption) => setFormData({ ...formData, org_id: selectedOption[0].value })}
+                        onChange={(selectedOption) =>
+                          setFormData({
+                            ...formData,
+                            org_id: selectedOption[0].value,
+                          })
+                        }
                         placeholder="Organisation  auswählen"
-                        className="custom-select"
-                        classNamePrefix="select"
+                        className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                       />
                     </div>
-                  }
-                  <div className="d-flex justify-content-end gap-2">
+                  )}
+                  <div className="flex justify-end space-x-3">
                     <button
                       type="button"
-                      className="btn btn-secondary btn-sm text-center"
-                      style={{ width: "30%", borderRadius: "10px" }}
+                      className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       onClick={() => setIsEditing(false)}
                     >
-                      Abbrechen
+                      Cancel
                     </button>
                     <button
                       type="submit"
-                      className="btn btn-one btn-sm text-center text-white"
-                      style={{ width: "30%" }}
+                      className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      Speichern
+                      Save Changes
                     </button>
                   </div>
-                </form>
-              ) : (
-                <>
-                  <div className="text-center">
-                    <Avatar
-                      name={user.name}
-                      src={userAvatar}
-                      round
-                      size="100"
-                      className="my-3"
-                    />
-                  </div>
-                  <h6 style={{ color: "black" }}>Informationen</h6>
-                  <hr className="mt-0 mb-4" />
-                  <div className="row pt-1">
-                    <div className="col-6 mb-3">
-                      <h6 style={{ color: "black" }}>Name</h6>
-                      <p className="text-muted" style={{ color: "black" }}>
+                </div>
+              </form>
+            ) : (
+              <div>
+                <div className="text-center">
+                  <Avatar name={user.name} src={userAvatar} round size="100" />
+                </div>
+                <h6 className="text-center text-lg font-medium text-gray-900 mt-4">
+                  User Information
+                </h6>
+                <div className="border-t border-gray-200 mt-5">
+                  <dl>
+                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Name
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {user.name}
-                      </p>
+                      </dd>
                     </div>
-                    <div className="col-6 mb-3">
-                      <h6 style={{ color: "black" }}>E-Mail</h6>
-                      <p className="text-muted" style={{ color: "black" }}>
+                    <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Email
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {user.email}
-                      </p>
+                      </dd>
                     </div>
-                  </div>
-                  <div className="row pt-1">
-                    <div className="col-6 mb-3">
-                      <h6 style={{ color: "black" }}>Dienstleistungen</h6>
-                      <p className="text-muted" style={{ color: "black" }}>
-                      {user.service_names ? user.service_names.join(", ") : ""}
-                      </p>
+                    <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-500">
+                        Services
+                      </dt>
+                      <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                        {services
+                          .filter((s) => user.services.includes(s.id))
+                          .map((s) => s.name)
+                          .join(", ")}
+                      </dd>
                     </div>
-                    <div className="col-6 mb-3">
-                      <h6 style={{ color: "black" }}>Organisation</h6>
-                      <p className="text-muted" style={{ color: "black" }}>
-                        {user.organization.name}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-end gap-2 p-2">
-                    <Link
-                      to="/admin/home"
-                      className="btn btn-secondary btn-sm text-center"
-                      style={{ width: "30%", borderRadius: "10px" }}
-                    >
-                      Zurück
-                    </Link>
-                    <button
-                      className="btn btn-one btn-sm text-center text-light"
-                      onClick={() => setIsEditing(true)}
-                      style={{ width: "30%" }}
-                    >
-                      Bearbeiten
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+                  </dl>
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <Link
+                    to="/admin/dashboard"
+                    className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Zurück
+                  </Link>
+                  <button
+                    type="submit"
+                    onClick={() => setIsEditing(true)}
+                    className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Bearbeiten
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,17 +1,16 @@
-import React, { useEffect,useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 
 const AddOrg = () => {
-
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
         setHeaderData({ title: 'Organisationen', desc: 'Verwalten Sie hier Ihre Organisationen' });
-      }, [setHeaderData]);
-      
+    }, [setHeaderData]);
+
     const [org, setOrg] = useState({
         name: "",
         street: "",
@@ -22,7 +21,6 @@ const AddOrg = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        
         const { name, value } = e.target;
         setOrg({ ...org, [name]: value });
     };
@@ -36,15 +34,9 @@ const AddOrg = () => {
         }
 
         try {
-            const response = await axios.post(`${Helpers.apiUrl}add-org`, {
-                name: org.name,
-                street: org.street,
-                number: org.number,
-                prompt: org.prompt,
-            },Helpers.authHeaders
-        );
+            const response = await axios.post(`${Helpers.apiUrl}add-org`, org, Helpers.authHeaders);
 
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error("Failed to Add Organization");
             }
 
@@ -55,90 +47,70 @@ const AddOrg = () => {
                 prompt: "",
             });
 
-            Helpers.toast("success", response.data.message);
+            Helpers.toast("success", "Organization added successfully");
             navigate("/admin/orgs");
         } catch (error) {
-            Helpers.toast('error', "Failed to Add Organization.");
+            Helpers.toast('error', error.message);
         }
     };
 
-
-
     return (
-        <div className="container-fluid vh-100  text-white " style={{ paddingTop: '2rem', boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}  >
-            <div className="row h-100">
-                <div className="col-2 ">
-
-                </div>
-                <div className="col-9 d-flex justify-content-center align-items-center">
-                    <div className="row justify-content-center w-100">
-                        <div className="col-md-8">
-                            <div className="card bg-dark text-white border-0">
-                                <div className="card-body">
-                                    <div className="modal-content " style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-                                        <div className="modal-header">
-                                            <h5 className="modal-title ms-3">Dienst hinzufügen</h5>
-                                        </div>
-                                        <div className="modal-body modal-body-two">
-                                            <div className="from-main">
-                                                <form className="row g-3" onSubmit={handleSubmit}>
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="name" className="form-label">
-                                                            Name
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="name"
-                                                            name="name"
-                                                            value={org.name}
-                                                            onChange={handleChange}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="number" className="form-label">
-                                                            Number
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="number"
-                                                            name="number"
-                                                            value={org.number}
-                                                            onChange={handleChange}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="street" className="form-label">
-                                                            Street
-                                                        </label>
-                                                        <textarea class="form-control" id="street"
-                                                            onChange={handleChange} name="street" rows={7}>{org.street}</textarea>
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="prompt" className="form-label">
-                                                            Prompt
-                                                        </label>
-                                                        <textarea class="form-control" id="prompt"
-                                                            onChange={handleChange} name="prompt" rows={7}>{org.prompt}</textarea>
-                                                    </div>
-                                                    <div className="d-flex justify-content-end   ">
-                                                        <button type="submit" className="btn-one text-white" style={{ width: '30%' }} >
-                                                            Dienst hinzufügen
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-center">
+            <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+                <h5 className="text-xl font-semibold mb-4">Add Organization</h5>
+                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+                    <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                        <input
+                            type="text"
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            id="name"
+                            name="name"
+                            value={org.name}
+                            onChange={handleChange}
+                        />
                     </div>
-                </div>
+                    <div>
+                        <label htmlFor="number" className="block text-sm font-medium text-gray-700">Number</label>
+                        <input
+                            type="text"
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            id="number"
+                            name="number"
+                            value={org.number}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="col-span-2">
+                        <label htmlFor="street" className="block text-sm font-medium text-gray-700">Street</label>
+                        <textarea
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            id="street"
+                            name="street"
+                            rows={3}
+                            value={org.street}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="col-span-2">
+                        <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">Prompt</label>
+                        <textarea
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            id="prompt"
+                            name="prompt"
+                            rows={3}
+                            value={org.prompt}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="col-span-2 flex justify-end">
+                        <button type="submit" className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Add Organization
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-
     );
 };
 

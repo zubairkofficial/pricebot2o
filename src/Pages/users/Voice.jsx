@@ -247,7 +247,7 @@ const Voice = () => {
               </div>
 
               {summaryError && (
-                <div className="text-red-500 mb-4 text-sm">{summaryError}</div>
+                <div className="text-blue-500 mb-4 text-sm">{summaryError}</div>
               )}
 
               {showSummary && (
@@ -315,14 +315,14 @@ const Voice = () => {
               )}
 
               {errorMessage && (
-                <div className="text-red-500 mt-4">{errorMessage}</div>
+                <div className="text-blue-500 mt-4">{errorMessage}</div>
               )}
 
               <div className="mb-4">
                 <input
                   type="file"
                   onChange={handleFileChange}
-                  className=" text-base border border-blackgray-600  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                  className=" text-base border border-blackgray-600  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <button
                   onClick={handleTranscribeClick}

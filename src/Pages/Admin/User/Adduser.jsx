@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import Helpers from "../../../Config/Helpers";
 import axios from "axios";
+import Helpers from "../../../Config/Helpers";
 import { useHeader } from '../../../Components/HeaderContext';
 
-
-const AddUserForm = () => {
+const AddUser = () => {
   const { setHeaderData } = useHeader();
-
-  useEffect(() => {
-    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
-  }, [setHeaderData]);
-
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -23,213 +15,127 @@ const AddUserForm = () => {
     services: [],
     showPassword: false,
   });
-
   const [services, setServices] = useState([]);
   const [orgs, setOrgs] = useState([]);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
-  };
+  useEffect(() => {
+    setHeaderData({ title: 'Dashboard', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    fetchServices();
+    fetchOrgs();
+  }, []);
+
   const fetchServices = async () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}active-services`, Helpers.authHeaders);
-      if (response.status != 200) {
-        throw new Error("Failed to fetch services");
-      }
       setServices(response.data);
     } catch (error) {
       Helpers.toast('error', error.message);
     }
   };
-  const fetchPartnerNumbers = async () => {
+
+  const fetchOrgs = async () => {
     try {
-      const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
+      const response = await axios.get(`${Helpers.apiUrl}all-orgs`, Helpers.authHeaders);
       setOrgs(response.data);
     } catch (error) {
       Helpers.toast('error', error.message);
     }
   };
 
-  useEffect(() => {
-    fetchPartnerNumbers();
-    fetchServices();
-  }, []);
-  const handleServiceChange = (values) => {
-    const selectedValues = values.map((option) => option.value);
-    setUser({ ...user, services: selectedValues });
-  };
-  const handleOrgChange = (id) => {
-    setUser({ ...user, org_id: id });
-  };
-
-  const togglePasswordVisibility = () => {
-    setUser({ ...user, showPassword: !user.showPassword });
+  const handleChange = (name) => (value) => {
+    setUser({ ...user, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!user.name || !user.email || !user.password) {
-      Helpers.toast("error", "Name, email, and password are required.");
-      return;
-    }
-
     try {
-      const response = await axios.post(`${Helpers.apiUrl}auth/register`, {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        org_id: user.org_id,
-        services: user.services,
-      });
-
-      if (response.status != 200) {
-        throw new Error("Failed to register user");
+      const response = await axios.post(`${Helpers.apiUrl}auth/register`, user, Helpers.authHeaders);
+      if (response.status === 201) {
+        Helpers.toast('success', 'User registered successfully!');
+        navigate("/admin/home");
+      } else {
+        throw new Error('Failed to register user');
       }
-
-      setUser({
-        name: "",
-        email: "",
-        password: "",
-        org_id: "",
-        services: [],
-        showPassword: false,
-      });
-
-      Helpers.toast("success", "User registered successfully!");
-      navigate("/admin/home");
     } catch (error) {
-      Helpers.toast('error', "Failed to register user.");
+      Helpers.toast('error', error.message);
     }
   };
-
-  const getServiceName = (id) => {
-    if (!id) return '';
-    const service = services.find((service) => service.id === id);
-    return service ? service.name : '';
-  };
-
-  const servicesOptions = services.map((service) => ({
-    value: service.id,
-    label: service.name,
-  }));
-
-  const OrgsOptions = orgs.map((org) => ({
-    value: org.id,
-    label: org.name,
-  }));
 
   return (
-    <div className="modal-content " style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-      <div className="modal-header">
-        <h5 className="modal-title ms-3">Benutzer hinzufügen</h5>
-      </div>
-      <div className="modal-body modal-body-two">
-        <div className="from-main">
-          <form className="row g-3" onSubmit={handleSubmit}>
-            <div className="col-md-6">
-              <label htmlFor="name" className="form-label">
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name"
-                name="name"
-                value={user.name}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="email" className="form-label">
-                Email
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                id="email"
-                name="email"
-                value={user.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="password" className="form-label">
-                Passwort
-              </label>
-              <div className="input-group">
+    <section className="bg-white p-5">
+      <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
+        <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 pt-10">
+          <div className="max-w-2xl mx-auto pt-10 pb-16">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-center text-2xl font-semibold mb-8">Add New User</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
-                  type={user.showPassword}
-                  className="form-control"
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={user.name}
+                  onChange={(e) => handleChange('name')(e.target.value)}
+                />
+
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  value={user.email}
+                  onChange={(e) => handleChange('email')(e.target.value)}
+                />
+
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <input
                   id="password"
                   name="password"
+                  type="password"
+                  required
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={user.password}
-                  onChange={handleChange}
+                  onChange={(e) => handleChange('password')(e.target.value)}
                 />
-              </div>
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="services" className="form-label">
-                Dienstleistungen
-              </label>
-              <Select
-                options={servicesOptions}
-                multi
-                onChange={handleServiceChange}
-                values={user.services.map((service) => ({
-                  label: getServiceName(service),
-                  value: service,
-                }))}
-                className="custom-select p-2"
-              />
-            </div>
-            {user.services.includes(2) &&
-              <div className="col-md-12">
-                <label htmlFor="services" className="form-label">
-                  Organisation
-                </label>
+
+                <label htmlFor="services" className="block text-sm font-medium text-gray-700">Services</label>
                 <Select
-                  style={{ color: "#000000" }}
-                  options={OrgsOptions}
-                  value={user.org_id}
-                  className="custom-select p-2"
+                  options={services.map(service => ({ label: service.name, value: service.id }))}
+                  multi
+                  onChange={(values) => handleChange('services')(values.map(v => v.value))}
+                  className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                 />
-              </div>}
-            <div className="d-flex justify-content-end   ">
-              <button type="submit" className="btn-one text-white" style={{ width: '30%' }} >
-                Registrieren
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const AddUser = () => {
-  return (
-    <div className="container-fluid vh-100  text-white " style={{ paddingTop: '2rem', boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}  >
-      <div className="row h-100">
-        <div className="col-2 ">
+                {user.services.includes(2) && 
+                <>
+                  <label htmlFor="org" className="block text-sm font-medium text-gray-700">Organization</label>
+                  <Select
+                    options={orgs.map(org => ({ label: org.name, value: org.id }))}
+                    onChange={(value) => handleChange('org_id')(value.value)}
+                    className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                  />
+                </>
+                }
 
-        </div>
-        <div className="col-9 d-flex justify-content-center align-items-center">
-          <div className="row justify-content-center w-100">
-            <div className="col-md-8">
-              <div className="card bg-dark text-white border-0">
-                <div className="card-body">
-                  <AddUserForm />
+                <div className="flex justify-end mt-4">
+                  <button
+                    type="submit"
+                    className="py-2 px-4 bg-success-300 hover:bg-success-400 rounded-lg hover:bg-blue-600"
+                  >
+                    Add User
+                  </button>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
+    </section>
   );
 };
 

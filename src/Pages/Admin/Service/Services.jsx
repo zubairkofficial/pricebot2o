@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Modal, Button, Spinner } from "react-bootstrap";
-import { FaPencilAlt, FaTrashAlt, FaCheck,FaTimes } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
+import Pagination from '../../../Components/Pagination'; 
 
 const Services = () => {
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
         setHeaderData({ title: 'Dienstleistungen', desc: 'Verwalten Sie hier Ihre Dienste' });
-    }, [setHeaderData]);
+    }, []);
 
     const [services, setServices] = useState([]);
     const [filteredServices, setFilteredServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
-    const location = useLocation();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const navigate = useNavigate();
-    const successMessage = location.state?.successMessage;
-
-    useEffect(() => {
-        if (successMessage) {
-            Helpers.toast("success", successMessage);
-            // Clear the state after displaying the message
-            navigate(location.pathname, { replace: true, state: {} });
-        }
-    }, [successMessage, navigate, location.pathname]);
 
     useEffect(() => {
         fetchServices();
@@ -36,7 +28,7 @@ const Services = () => {
 
     useEffect(() => {
         setFilteredServices(
-            services.filter((service) =>
+            services.filter(service =>
                 service.name.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
@@ -45,181 +37,97 @@ const Services = () => {
     const fetchServices = async () => {
         try {
             const response = await axios.get(`${Helpers.apiUrl}all-services`, Helpers.authHeaders);
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error("Failed to fetch services");
             }
             setServices(response.data);
             setFilteredServices(response.data);
-            setLoading(false);
         } catch (error) {
             setError(error.message);
+        } finally {
             setLoading(false);
         }
     };
 
-    const handleEdit = (serviceId) => {
-        navigate(`/admin/edit-service/${serviceId}`);
+    const handleEdit = (id) => {
+        navigate(`/admin/edit-service/${id}`);
     };
 
     const handleServiceStatus = async (id) => {
         try {
             const response = await axios.post(`${Helpers.apiUrl}update-service-status/${id}`, {}, Helpers.authHeaders);
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error("Failed to change service status");
             }
-            setServices(response.data);
-            setFilteredServices(response.data);
-            Helpers.toast("success", "service status changed successfully");
+            // Re-fetch or adjust the state to reflect status change
+            fetchServices();
         } catch (error) {
             setError(error.message);
         }
     };
 
+    const indexOfFirstService = (currentPage - 1) * itemsPerPage;
+    const indexOfLastService = indexOfFirstService + itemsPerPage;
+    const currentServices = filteredServices.slice(indexOfFirstService, indexOfLastService);
+
     if (loading) {
         return (
-            <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ height: "100vh" }}
-            >
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>
+            <div className="flex justify-center items-center h-screen">
+                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
             </div>
         );
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div className="text-red-500 text-center">Error: {error}</div>;
     }
 
-    const handleAddservice = () => {
-        navigate("/admin/add-service");
-    };
-
     return (
-        <section className="nftmax-adashboard nftmax-show w-100 h-100 "  >
-            <div className="nftmax-adashboard-left">
-                {/* <div className="d-flex justify-content-end align-items-center ">
-                    <button className="btn-one text-white" onClick={handleAddservice}>
-                        Dienst hinzufügen
-                    </button>
-                </div> */}
-                <div className="row tabel-main-box" style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-
-                    <div className="col-lg-12 col-padding-0" >
-
-                        <div className="tabel-search-box">
-                            <div className="tabel-search-box-item">
-                                <div className="tabel-search-box-inner">
-                                    <div className="search-icon">
-                                        <span>
-                                            <svg
-                                                width={20}
-                                                height={20}
-                                                viewBox="0 0 20 20"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <circle
-                                                    cx="9.7859"
-                                                    cy="9.78614"
-                                                    r="8.23951"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                                <path
-                                                    d="M15.5166 15.9448L18.747 19.1668"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        </span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        className="form-control "
-                                        id="search"
-                                        placeholder="Nach Name suchen"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-lg-12">
-                        <div className="tabel-main">
-                            <table
-                                id="expendable-data-table"
-                                className="table display nowrap w-100"
-                            >
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Link</th>
-                                        <th>Aktionen</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredServices.map((service, index) => (
-                                        <tr key={service.id}>
-                                            <td>{index + 1}</td>
-                                            <td>{service.name}</td>
-                                            <td>{service.description}</td>
-                                            <td>{service.link}</td>
-                                            <td>
-                                                <button
-                                                    style={{
-                                                        backgroundColor: "#007bff",
-                                                        border: "none",
-                                                        color: "white",
-                                                        padding: "5px 10px",
-                                                        textAlign: "center",
-                                                        textDecoration: "none",
-                                                        display: "inline-block",
-                                                        fontSize: "16px",
-                                                        margin: "4px 2px",
-                                                        cursor: "pointer",
-                                                        borderRadius: "10px",
-                                                    }}
-                                                    onClick={() => handleEdit(service.id)}
-                                                >
-                                                    <FaPencilAlt />
-                                                </button>
-                                                <button
-                                                    style={{
-                                                        backgroundColor: service.status ? "#dc3545" : "#28a745",
-                                                        border: "none",
-                                                        color: "white",
-                                                        padding: "5px 10px",
-                                                        textAlign: "center",
-                                                        textDecoration: "none",
-                                                        display: "inline-block",
-                                                        fontSize: "16px",
-                                                        margin: "4px 2px",
-                                                        cursor: "pointer",
-                                                        borderRadius: "10px",
-                                                    }}
-                                                    onClick={() => {
-                                                        handleServiceStatus(service.id);
-                                                    }}
-                                                >
-                                                    {service.status ? <FaTimes /> : <FaCheck />}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <section className="bg-white p-5">
+            {/* <div className="flex justify-end mb-4">
+                <Link to="/admin/add-service" className="btn btn-success mb-2 bg-success-300 hover:bg-success-400 text-white py-2 px-4 rounded">
+                    Dienst hinzufügen
+                </Link>
+            </div> */}
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Link</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {currentServices.map((service, index) => (
+                            <tr key={service.id}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstService + index + 1}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.name}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.description}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.link}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                    <button className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 p-2" onClick={() => handleEdit(service.id)}>
+                                        <FaPencilAlt />
+                                    </button>
+                                    <button className={`p-2 rounded-lg text-white ${service.status ? 'bg-gray-500 hover:bg-gray-600' : 'bg-success-300 hover:bg-success-400'}`} onClick={() => handleServiceStatus(service.id)}>
+                                        {service.status ? <FaTimes /> : <FaCheck />}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={filteredServices.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={(page) => setCurrentPage(page)}
+            />
         </section>
     );
 };

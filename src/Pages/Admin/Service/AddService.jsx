@@ -1,11 +1,10 @@
-import React, { useEffect,useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 
 const AddService = () => {
-
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
@@ -21,7 +20,6 @@ const AddService = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        
         const { name, value } = e.target;
         setService({ ...service, [name]: value });
     };
@@ -35,14 +33,8 @@ const AddService = () => {
         }
 
         try {
-            const response = await axios.post(`${Helpers.apiUrl}add-service`, {
-                name: service.name,
-                description: service.description,
-                link: service.link,
-            },Helpers.authHeaders
-        );
-
-            if (response.status != 200) {
+            const response = await axios.post(`${Helpers.apiUrl}add-service`, service, Helpers.authHeaders);
+            if (response.status !== 200) {
                 throw new Error("Failed to Add Service");
             }
 
@@ -55,80 +47,61 @@ const AddService = () => {
             Helpers.toast("success", response.data.message);
             navigate("/admin/services");
         } catch (error) {
-            Helpers.toast('error', "Failed to Add Service.");
+            Helpers.toast('error', error.message);
         }
     };
 
-
-
     return (
-        <div className="container-fluid vh-100  text-white " style={{ paddingTop: '2rem', boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}  >
-            <div className="row h-100">
-                <div className="col-2 ">
-
-                </div>
-                <div className="col-9 d-flex justify-content-center align-items-center">
-                    <div className="row justify-content-center w-100">
-                        <div className="col-md-8">
-                            <div className="card bg-dark text-white border-0">
-                                <div className="card-body">
-                                    <div className="modal-content " style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-                                        <div className="modal-header">
-                                            <h5 className="modal-title ms-3">Dienst hinzufügen</h5>
-                                        </div>
-                                        <div className="modal-body modal-body-two">
-                                            <div className="from-main">
-                                                <form className="row g-3" onSubmit={handleSubmit}>
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="name" className="form-label">
-                                                            Name
-                                                        </label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            id="name"
-                                                            name="name"
-                                                            value={service.name}
-                                                            onChange={handleChange}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="link" className="form-label">
-                                                            Link
-                                                        </label>
-                                                        <input
-                                                            type="link"
-                                                            className="form-control"
-                                                            id="link"
-                                                            name="link"
-                                                            value={service.link}
-                                                            onChange={handleChange}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-12">
-                                                        <label htmlFor="link" className="form-label">
-                                                            Description
-                                                        </label>
-                                                        <textarea class="form-control" id="description"
-                                                            onChange={handleChange} name="description" rows={7}>{service.description}</textarea>
-                                                    </div>
-                                                    <div className="d-flex justify-content-end   ">
-                                                        <button type="submit" className="btn-one text-white" style={{ width: '30%' }} >
-                                                            Dienst hinzufügen
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <div className="min-h-screen bg-gray-100 py-5">
+            <div className="flex justify-center items-center">
+                <div className="bg-white shadow-md rounded-lg p-6 max-w-2xl w-full">
+                    <h5 className="text-xl font-semibold mb-4">Dienst hinzufügen</h5>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                            <input
+                                type="text"
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                id="name"
+                                name="name"
+                                value={service.name}
+                                onChange={handleChange}
+                            />
                         </div>
-                    </div>
+                        <div>
+                            <label htmlFor="link" className="block text-sm font-medium text-gray-700">Link</label>
+                            <input
+                                type="url"
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                id="link"
+                                name="link"
+                                value={service.link}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                id="description"
+                                name="description"
+                                rows="4"
+                                value={service.description}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                type="submit"
+                                className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Dienst hinzufügen
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
     );
 };
 

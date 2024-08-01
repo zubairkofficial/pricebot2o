@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 
 const EditOrg = () => {
-       
     const { setHeaderData } = useHeader();
-
-    useEffect(() => {
-      setHeaderData({ title: 'Organisationen', desc: 'Verwalten Sie hier Ihre Organisationen' });
-    }, [setHeaderData]);
-
     const { id } = useParams();
     const [org, setOrg] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -27,13 +20,14 @@ const EditOrg = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        setHeaderData({ title: 'Organisationen', desc: 'Verwalten Sie hier Ihre Organisationen' });
         fetchOrg();
     }, [id]);
 
     const fetchOrg = async () => {
         try {
             const response = await axios.get(`${Helpers.apiUrl}get-org/${id}`, Helpers.authHeaders);
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error("Failed to fetch Organization");
             }
             setOrg(response.data);
@@ -52,25 +46,21 @@ const EditOrg = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevFormData) => ({
+        setFormData(prevFormData => ({
             ...prevFormData,
             [name]: value,
         }));
     };
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(`${Helpers.apiUrl}update-org/${id}`, formData, Helpers.authHeaders);
-            if (response.status != 200) {
+            if (response.status !== 200) {
                 throw new Error("Failed to update Organization");
             }
-            setOrg(response.data);
-            setIsEditing(false);
-
-            window.location.reload();
-            Helpers.toast("success", response.data.message);
+            Helpers.toast("success", "Organization updated successfully");
+            navigate("/admin/orgs");
         } catch (error) {
             setError(error.message);
         }
@@ -78,164 +68,85 @@ const EditOrg = () => {
 
     if (loading) {
         return (
-            <div className="d-flex justify-content-center align-items-center vh-100 ">
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden"></span>
-                </Spinner>
+            <div className="flex justify-center items-center h-screen">
+                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
             </div>
         );
     }
 
     if (error) {
-        return <div className="text-white text-center mt-5">Error: {error}</div>;
+        return <div className="text-center text-red-500 mt-5">{error}</div>;
     }
 
     if (!org) {
-        return <div className="text-white text-center mt-5">Organization not found</div>;
+        return <div className="text-center text-red-500 mt-5">Organization not found</div>;
     }
 
     return (
-        <div className="container-fluid vh-100 mt-5">
-            <div className="row h-100">
-                <div className="col-2"></div>
-                <div
-                    className="col-9 d-flex flex-column align-items-center"
-                    style={{ paddingTop: "40px", overflow: "hidden" }}
-                >
-                    <h2 className="text-center my-5" style={{ color: "black" }}>
-                        Organisation bearbeiten
-                    </h2>
-                    <div
-                        className="card bg-light shadow-lg"
-                        style={{
-                            borderRadius: "20px",
-                            width: "90%",
-                            maxWidth: "700px",
-                            color: "black",
-                        }}
-                    >
-                        <div className="card-body m-3">
-                            {isEditing ? (
-                                <form onSubmit={handleSubmit}>
-                                    <div className="mb-3">
-                                        <label className="form-label" style={{ color: "black" }}>
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control bg-light border-0"
-                                            name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                            required
-                                            style={{ color: "black" }}
-                                        />
+        <div className="min-h-screen bg-gray-100 py-10">
+            <div className="max-w-4xl mx-auto px-4">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{isEditing ? 'Edit Organization' : 'Organization Details'}</h2>
+                <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                        {isEditing ? (
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Organization Name"
+                                />
+                                <input
+                                    type="text"
+                                    name="number"
+                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
+                                    value={formData.number}
+                                    onChange={handleChange}
+                                    placeholder="Number"
+                                />
+                                <textarea
+                                    name="street"
+                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
+                                    value={formData.street}
+                                    onChange={handleChange}
+                                    placeholder="Street"
+                                    rows="3"
+                                />
+                                <textarea
+                                    name="prompt"
+                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
+                                    value={formData.prompt}
+                                    onChange={handleChange}
+                                    placeholder="Prompt"
+                                    rows="3"
+                                />
+                                <div className="flex justify-end space-x-3">
+                                    <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>Cancel</button>
+                                    <button type="submit" className="bg-blue-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-400 focus:outline-none">Save</button>
+                                </div>
+                            </form>
+                        ) : (
+                            <>
+                                <div className="space-y-4">
+                                    <p><strong>Name:</strong> {org.name}</p>
+                                    <p><strong>Number:</strong> {org.number}</p>
+                                    <p><strong>Street:</strong> {org.street}</p>
+                                    <p><strong>Prompt:</strong> {org.prompt}</p>
+                                    <div className="flex justify-end space-x-3">
+                                        <Link to="/admin/orgs" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">Back</Link>
+                                        <button onClick={() => setIsEditing(true)} className="bg-blue-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-400 focus:outline-none">Edit</button>
                                     </div>
-                                    <div className="mb-3">
-                                        <label className="form-label" style={{ color: "black" }}>
-                                            Number
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="number"
-                                            name="number"
-                                            value={formData.number}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label" style={{ color: "black" }}>
-                                            Street
-                                        </label><textarea class="form-control" id="street"
-                                            onChange={handleChange} name="street" rows={7}>{formData.street}</textarea>
-
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label" style={{ color: "black" }}>
-                                            Prompt
-                                        </label><textarea class="form-control" id="prompt"
-                                            onChange={handleChange} name="prompt" rows={7}>{formData.prompt}</textarea>
-
-                                    </div>
-                                    <div className="d-flex justify-content-end gap-2">
-                                        <button
-                                            type="button"
-                                            className="btn btn-secondary btn-sm text-center"
-                                            style={{ width: "30%", borderRadius: "10px" }}
-                                            onClick={() => setIsEditing(false)}
-                                        >
-                                            Abbrechen
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="btn btn-one btn-sm text-center text-white"
-                                            style={{ width: "30%" }}
-                                        >
-                                            Speichern
-                                        </button>
-                                    </div>
-                                </form>
-                            ) : (
-                                <>
-                                    <h6 style={{ color: "black" }}>Informationen</h6>
-                                    <hr className="mt-0 mb-4" />
-                                    <div className="row pt-1">
-                                        <div className="col-6 mb-3">
-                                            <h6 style={{ color: "black" }}>Name</h6>
-                                            <p className="text-muted" style={{ color: "black" }}>
-                                                {org.name}
-                                            </p>
-                                        </div>
-                                        <div className="col-6 mb-3">
-                                            <h6 style={{ color: "black" }}>Number</h6>
-                                            <p className="text-muted" style={{ color: "black" }}>
-                                                {org.number}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h6 style={{ color: "black" }}>Street</h6>
-                                    <hr className="mt-0 mb-4" />
-                                    <div className="row pt-1">
-                                        <div className="col-12 mb-3">
-                                            <p className="text-muted" style={{ color: "black" }}>
-                                                {org.street}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h6 style={{ color: "black" }}>Prompt</h6>
-                                    <hr className="mt-0 mb-4" />
-                                    <div className="row pt-1">
-                                        <div className="col-12 mb-3">
-                                            <p className="text-muted" style={{ color: "black" }}>
-                                                {org.prompt}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="d-flex justify-content-end gap-2 p-2">
-                                        <Link
-                                            to="/admin/orgs"
-                                            className="btn btn-secondary btn-sm text-center"
-                                            style={{ width: "30%", borderRadius: "10px" }}
-                                        >
-                                            Zurück
-                                        </Link>
-                                        <button
-                                            className="btn btn-one btn-sm text-center text-light"
-                                            onClick={() => setIsEditing(true)}
-                                            style={{ width: "30%" }}
-                                        >
-                                            Bearbeiten
-                                        </button>
-                                    </div>
-                                </>
-                            )}
-                        </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
         </div>
-
     );
 };
 

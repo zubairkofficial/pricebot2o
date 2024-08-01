@@ -42,7 +42,7 @@ function FileUpload() {
 
         if (response.status === 200) {
           Helpers.toast("success", "Datei erfolgreich hochgeladen.");
-          newFileResponses[file.name] = { status: "Success", data: response.data }; 
+          newFileResponses[file.name] = { status: "Success", data: response.data.data }; 
         } else {
           throw new Error(response.message || "Fehler beim Hochladen der Datei");
         }
@@ -95,10 +95,10 @@ function FileUpload() {
           <ul className="space-y-4">
             {selectedFiles.map((file, index) => (
               <li key={index} className="bg-white  p-4 rounded-lg shadow-sm">
-                <div className="flex justify-between items-center">
-                  <span className="">{file.name} ({file.size} bytes)</span>
+                <div className="flex justify-between items-center space-x-2">
+                  <span className="hidden md:block">{file.name} ({file.size} bytes)</span>  
                   {fileResponses[file.name] && (
-                    <div className="mt-2 text-sm text-white">
+                    <div className="mt-2 text-md">
                       {fileResponses[file.name].data && formatDataAsPlainText(fileResponses[file.name].data)}
                     </div>
                   )}

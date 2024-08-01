@@ -5,7 +5,7 @@ import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
-import Pagination from '../../../Components/Pagination'; // Adjust the path to your Pagination component
+import Pagination from '../../../Components/Pagination';
 
 const UserList = () => {
   const { setHeaderData } = useHeader();
@@ -19,7 +19,7 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const location = useLocation();
   const navigate = useNavigate();
@@ -77,8 +77,8 @@ const UserList = () => {
     }
   };
 
-  const indexOfLastUser = currentPage * itemsPerPage;
-  const indexOfFirstUser = indexOfLastUser - itemsPerPage;
+  const indexOfLastUser = (currentPage + 1) * itemsPerPage;
+  const indexOfFirstUser = currentPage * itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   if (loading) {
@@ -92,7 +92,7 @@ const UserList = () => {
   }
 
   if (error) {
-    return <div className="text-red-500">Error: {error}</div>;
+    return <div className="text-blue-500">Error: {error}</div>;
   }
 
   return (

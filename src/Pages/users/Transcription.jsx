@@ -171,7 +171,7 @@ function Transcription() {
                       <label className="">Datum:</label>
                       <input
                         type="date"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
                       />
@@ -180,7 +180,7 @@ function Transcription() {
                       <label className="">Thema:</label>
                       <input
                         type="text"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={theme}
                         onChange={(e) => setTheme(e.target.value)}
                       />
@@ -200,7 +200,7 @@ function Transcription() {
                       <label className="">Verfasser:</label>
                       <input
                         type="text"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={branchManager}
                         onChange={(e) => setBranchManager(e.target.value)}
                       />
@@ -209,7 +209,7 @@ function Transcription() {
                       <label className="">Teilnehmer:</label>
                       <input
                         type="text"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={participants}
                         onChange={(e) => setParticipants(e.target.value)}
                       />
@@ -218,7 +218,7 @@ function Transcription() {
                       <label className="">Niederlassungsleiter:</label>
                       <input
                         type="text"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={author}
                         onChange={(e) => setAuthor(e.target.value)}
                       />
@@ -226,7 +226,7 @@ function Transcription() {
                     <div className="mb-4">
                       <label className="">Transkription:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                       />
@@ -234,7 +234,7 @@ function Transcription() {
                     <div className="mb-4">
                       <label className="">Zusammenfassung:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={summary}
                         onChange={(e) => setSummary(e.target.value)}
                       />
@@ -243,7 +243,7 @@ function Transcription() {
                       <label className="">E-Mail:</label>
                       <input
                         type="email"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder: placeholder:text-base"
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />

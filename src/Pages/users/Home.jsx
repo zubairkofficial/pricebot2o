@@ -89,7 +89,7 @@ const Dashboard = () => {
                   </div>
                 )}
                 <div className="flex flex-col justify-end h-full">
-                  <h3 className="text-white text-lg font-semibold mb-2">
+                  <h3 className=" text-lg text-white font-semibold mb-2">
                     {service.name}
                   </h3>
                   <p className="text-white text-base">{service.description}</p>

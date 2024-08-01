@@ -1,47 +1,52 @@
-// Pagination.js
 import React from "react";
 
 const Pagination = ({
   currentPage,
-  totalPage,
+  itemsPerPage,
+  totalItems,
   onPageChange,
-  onPreviousPage,
-  onNextPage,
 }) => {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const visiblePages = 4;
+
+  // Calculate page numbers to show
+  let startPage = Math.max(0, currentPage - Math.floor(visiblePages / 2));
+  let endPage = startPage + visiblePages;
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(0, endPage - visiblePages);
+  }
+
+  const pageNumbers = Array.from({ length: endPage - startPage }, (_, i) => startPage + i);
+
+  // Navigation handlers
+  const onFirstPage = () => onPageChange(0);
+  const onLastPage = () => onPageChange(totalPages - 1);
+  const onPreviousPage = () => onPageChange(Math.max(0, currentPage - 1));
+  const onNextPage = () => onPageChange(Math.min(totalPages - 1, currentPage + 1));
+
   return (
-    <ul
-      className="flex justify-center items-center gap-x-[10px] z-30"
-      role="navigation"
-      aria-label="Pagination"
-    >
-      <li
-        className={`prev-btn flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
-          currentPage === 0 ? "bg-[#cccccc] pointer-events-none" : "cursor-pointer"
-        }`}
-        onClick={onPreviousPage}
-      >
-        <img src="https://www.tailwindtap.com/assets/travelagency-admin/leftarrow.svg" />
-      </li>
-      {Array.from({ length: totalPage }).map((_, index) => (
-        <li
-          className={`flex items-center justify-center w-[36px] rounded-[6px] h-[34px] border-[1px] border-solid border-[2px] bg-[#FFFFFF] cursor-pointer ${
-            currentPage === index ? "text-blue-600 border-sky-500" : "border-[#E4E4EB]"
-          }`}
-          onClick={() => onPageChange(index)}
-          key={index}
-        >
-          {index + 1}
-        </li>
-      ))}
-      <li
-        className={`flex items-center justify-center w-[36px] rounded-[6px] h-[36px] border-[1px] border-solid border-[#E4E4EB] ${
-          currentPage === totalPage - 1 ? "bg-[#cccccc] pointer-events-none" : "cursor-pointer"
-        }`}
-        onClick={onNextPage}
-      >
-        <img src="https://www.tailwindtap.com/assets/travelagency-admin/rightarrow.svg" />
-      </li>
-    </ul>
+    <div className="flex justify-between items-center p-4">
+      <div className="text-lg">
+        Showing {Math.min(currentPage * itemsPerPage + 1, totalItems)} to{" "}
+        {Math.min((currentPage + 1) * itemsPerPage, totalItems)} of {totalItems} entries
+      </div>
+      <ul className="flex list-none gap-2">
+        <li className="p-2 cursor-pointer" onClick={onFirstPage}>&laquo;</li>
+        <li className={`p-2 cursor-pointer ${currentPage === 0 ? "text-gray-400" : "text-blue-600"}`}
+            onClick={onPreviousPage}>&lt;</li>
+        {pageNumbers.map(number => (
+          <li key={number}
+              className={`p-2 cursor-pointer ${number === currentPage ? "text-blue-600 font-bold" : "text-gray-700"}`}
+              onClick={() => onPageChange(number)}>
+            {number + 1}
+          </li>
+        ))}
+        <li className={`p-2 cursor-pointer ${currentPage === totalPages - 1 ? "text-gray-400" : "text-blue-600"}`}
+            onClick={onNextPage}>&gt;</li>
+        <li className="p-2 cursor-pointer" onClick={onLastPage}>&raquo;</li>
+      </ul>
+    </div>
   );
 };
 

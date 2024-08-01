@@ -93,7 +93,7 @@ const ChangePassword = () => {
                 <div className="mb-4 relative">
                   <input
                     type={credentials.showOldPassword ? "text" : "password"}
-                    className="text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-white placeholder:text-base"
+                    className="text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                     id="old_password"
                     name="old_password"
                     value={credentials.old_password}
@@ -116,7 +116,7 @@ const ChangePassword = () => {
                 <div className="mb-4 relative">
                   <input
                     type={credentials.showPassword ? "text" : "password"}
-                    className="text-white text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-white placeholder:text-base"
+                    className=" text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                     id="password"
                     name="password"
                     value={credentials.password}
@@ -139,7 +139,7 @@ const ChangePassword = () => {
                 <div className="mb-6 relative">
                   <input
                     type={credentials.showconfirmPassword ? "text" : "password"}
-                    className="text-white text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-white placeholder:text-base"
+                    className=" text-base border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                     id="password_confirmation"
                     name="password_confirmation"
                     value={credentials.password_confirmation}
@@ -161,7 +161,7 @@ const ChangePassword = () => {
                 </div>
                 <button
                   type="submit"
-                  className="py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                  className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                 >
                   Change
                 </button>
