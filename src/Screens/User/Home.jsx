@@ -58,7 +58,7 @@ const Dashboard = () => {
         {services.map((service) => (
           <div
             key={service.id}
-            className="w-full p-2" // Responsive column sizes
+            className="w-full p-2" 
           >
             <Link
               to={isServiceEnabled(service.id) ? `/${service.link}` : "#"}
@@ -72,7 +72,7 @@ const Dashboard = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   cursor: "pointer",
-                  height: "200px", // Set a fixed height for all cards
+                  height: "200px", 
                 }}
               >
                 {!isServiceEnabled(service.id) && (

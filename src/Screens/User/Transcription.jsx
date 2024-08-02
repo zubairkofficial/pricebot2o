@@ -35,7 +35,6 @@ function Transcription() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Initialize form fields with values from location state
   useEffect(() => {
     if (location.state) {
       setEmail(location.state.email || "");
@@ -44,12 +43,10 @@ function Transcription() {
     }
   }, [location.state]);
 
-  // Combine text and summary into one field
   useEffect(() => {
     setCombinedText(`${text}\n\nZusammenfassung:\n${summary}`);
   }, [text, summary]);
 
-  // Fetch partner numbers when the component mounts
   useEffect(() => {
     const fetchPartnerNumbers = async () => {
       try {
@@ -80,7 +77,6 @@ function Transcription() {
 
         setPartnerNumber(number);
 
-        // Convert the date format from "DD-MM-YY" to "YYYY-MM-DD"
         let parsedDate = '';
         if (dateStr) {
           const parts = dateStr.split("-");
@@ -93,9 +89,8 @@ function Transcription() {
         setTheme(theme);
         setAuthor(author);
         setBranchManager(branchManager);
-        setParticipants(participants); // Set the participants
+        setParticipants(participants);
 
-        // console.log(participants);
       } catch (error) {
         console.log(error);
         Helpers.toast('error', error.message);

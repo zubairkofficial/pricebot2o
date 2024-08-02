@@ -46,7 +46,7 @@ function ResendEmail() {
         setSummary(emailData.summary || "");
         setDate(emailData.date || "");
         setTheme(emailData.theme || "");
-        setPartnerNumber(emailData.partnerNumber || ""); // Ensure this is a string
+        setPartnerNumber(emailData.partnerNumber || "");
         setBranchManager(emailData.branchManager || "");
         setParticipants(emailData.participants || "");
         setAuthor(emailData.author || "");
@@ -75,12 +75,12 @@ function ResendEmail() {
         if (Array.isArray(response.data)) {
           setPartnerNumbers(response.data);
         } else {
-          setPartnerNumbers([]); // Ensure partnerNumbers is an array
+          setPartnerNumbers([]); 
           console.error("Fetched data is not an array:", response);
         }
       } catch (error) {
         setError(error.message);
-        setPartnerNumbers([]); // Ensure partnerNumbers is an array in case of error
+        setPartnerNumbers([]); 
         console.error("Error fetching partner numbers:", error);
       }
     };

@@ -59,7 +59,6 @@ const Services = () => {
             if (response.status !== 200) {
                 throw new Error("Der Dienststatus konnte nicht geändert werden");
             }
-            // Re-fetch or adjust the state to reflect status change
             fetchServices();
         } catch (error) {
             setError(error.message);
