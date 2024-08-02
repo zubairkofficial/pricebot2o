@@ -10,15 +10,11 @@ function ResendEmail() {
   useEffect(() => {
     setHeaderData({ title: "E-Mail zurücksenden", desc: "" });
   }, [setHeaderData]);
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
   const [partner, setPartner] = useState(null);
@@ -39,8 +35,6 @@ function ResendEmail() {
           Helpers.authHeaders
         );
         const emailData = response.data.emails[0];
-        setName(emailData.name || "");
-        setTitle(emailData.title || "");
         setEmail(emailData.email || "");
         setText(emailData.transcriptionText || "");
         setSummary(emailData.summary || "");
@@ -50,10 +44,9 @@ function ResendEmail() {
         setBranchManager(emailData.branchManager || "");
         setParticipants(emailData.participants || "");
         setAuthor(emailData.author || "");
-        setError("");
         setSuccess("");
       } catch (err) {
-        setError("Fehler beim Abrufen der E-Mail-Daten");
+        Helpers.toast("error", "Fehler beim Abrufen der E-Mail-Daten");
         console.error(err);
       } finally {
         setLoading(false);
@@ -79,7 +72,7 @@ function ResendEmail() {
           console.error("Fetched data is not an array:", response);
         }
       } catch (error) {
-        setError(error.message);
+        Helpers.toast("error", error.message);
         setPartnerNumbers([]); 
         console.error("Error fetching partner numbers:", error);
       }
@@ -92,7 +85,7 @@ function ResendEmail() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(
+      await axios.post(
         `${Helpers.apiUrl}sendEmail`,
         {
           email,
@@ -108,9 +101,8 @@ function ResendEmail() {
         Helpers.authHeaders
       );
       setSuccess("Transkription erfolgreich gesendet!");
-      setError("");
     } catch (err) {
-      setError("Senden der Transkription fehlgeschlagen");
+      Helpers.toast("error", "Senden der Transkription fehlgeschlagen");
       setSuccess("");
       console.error(err);
     } finally {

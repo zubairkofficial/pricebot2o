@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { Modal, Button, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
@@ -20,7 +20,7 @@ const UserList = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPage = useState(10);
   const location = useLocation();
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;

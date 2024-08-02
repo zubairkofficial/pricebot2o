@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
 import Helpers from "../../Config/Helpers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudUploadAlt } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
 
 function Transcription() {
@@ -18,21 +16,15 @@ function Transcription() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [combinedText, setCombinedText] = useState("");
   const [text, setText] = useState("");
   const [summary, setSummary] = useState("");
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
-  const [partner, setPartner] = useState(null);
   const [branchManager, setBranchManager] = useState("");
   const [participants, setParticipants] = useState("");
   const [author, setAuthor] = useState("");
   const [partnerNumbers, setPartnerNumbers] = useState([]);
   const [partnerNumber, setPartnerNumber] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [fileResponses, setFileResponses] = useState({});
-  const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,10 +34,6 @@ function Transcription() {
       setSummary(location.state.summary || "");
     }
   }, [location.state]);
-
-  useEffect(() => {
-    setCombinedText(`${text}\n\nZusammenfassung:\n${summary}`);
-  }, [text, summary]);
 
   useEffect(() => {
     const fetchPartnerNumbers = async () => {
@@ -135,15 +123,7 @@ function Transcription() {
   }));
 
   const handleChange = (selectedOption) => {
-    setPartner(selectedOption);
-  };
-
-  const handleFileChange = (e) => {
-    setSelectedFiles(Array.from(e.target.files));
-  };
-
-  const formatDataAsPlainText = (data) => {
-    return JSON.stringify(data, null, 2);
+    setPartnerNumber(selectedOption);
   };
 
   return (

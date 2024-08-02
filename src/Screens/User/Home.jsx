@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import img from "./44.jpeg";
@@ -32,7 +31,7 @@ const Dashboard = () => {
         `${Helpers.apiUrl}active-services`,
         Helpers.authHeaders
       );
-      if (response.status != 200) {
+      if (response.status !== 200) {
         throw new Error("Failed to fetch services");
       }
       setServices(response.data);

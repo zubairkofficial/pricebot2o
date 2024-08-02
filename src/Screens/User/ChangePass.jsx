@@ -58,7 +58,7 @@ const ChangePassword = () => {
     }
 
     try {
-      const response = await axios.post(`${Helpers.apiUrl}change-password`, {
+      await axios.post(`${Helpers.apiUrl}change-password`, {
         old_password: credentials.old_password,
         password: credentials.password,
         password_confirmation: credentials.password_confirmation
