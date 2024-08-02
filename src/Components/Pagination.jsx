@@ -32,7 +32,8 @@ const Pagination = ({
         {Math.min((currentPage + 1) * itemsPerPage, totalItems)} of {totalItems} entries
       </div>
       <ul className="flex list-none gap-2">
-        <li className="p-2 cursor-pointer" onClick={onFirstPage}>&laquo;</li>
+        <li className={`p-2 cursor-pointer ${currentPage === 0 ? "text-gray-400" : "text-blue-600"}`}
+            onClick={onFirstPage}>&laquo;</li>
         <li className={`p-2 cursor-pointer ${currentPage === 0 ? "text-gray-400" : "text-blue-600"}`}
             onClick={onPreviousPage}>&lt;</li>
         {pageNumbers.map(number => (
@@ -44,7 +45,8 @@ const Pagination = ({
         ))}
         <li className={`p-2 cursor-pointer ${currentPage === totalPages - 1 ? "text-gray-400" : "text-blue-600"}`}
             onClick={onNextPage}>&gt;</li>
-        <li className="p-2 cursor-pointer" onClick={onLastPage}>&raquo;</li>
+        <li className={`p-2 cursor-pointer ${currentPage === totalPages - 1 ? "text-gray-400" : "text-blue-600"}`}
+            onClick={onLastPage}>&raquo;</li>
       </ul>
     </div>
   );

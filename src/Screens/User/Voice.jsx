@@ -121,14 +121,14 @@ const Voice = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-6">Stimmaufnahme</h2>
               <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2">
-                <Link to="/" className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
+                <Link to="/" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                   Werkzeuge
                 </Link>
-                <Link to="/sent-emails" className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
+                <Link to="/sent-emails" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                   Vorherige Historie
                 </Link>
                 {state.hasHistory && (
-                  <button onClick={() => window.history.forward()} className="h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
+                  <button onClick={() => window.history.forward()} className="text-white  h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
                     Zurück
                   </button>
                 )}
@@ -155,7 +155,7 @@ const Voice = () => {
                 <div className="mb-4 space-x-2">
                   <button
                     onClick={() => handleGenerateSummary(state.userTranscript, 'voice')}
-                    className="h-12 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    className="h-12 px-5 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     disabled={state.isSummaryGenerating}
                   >
                     {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
@@ -163,7 +163,7 @@ const Voice = () => {
                   {state.isEmailButtonVisible && (
                     <button
                       onClick={() => handleNextPageClick(state.userTranscript, state.summary)}
-                      className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                      className="h-10 px-5 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     >
                       Per E-Mail senden
                     </button>
@@ -172,7 +172,7 @@ const Voice = () => {
               )}
               <button
                 onClick={listening ? SpeechRecognition.stopListening : handleStartListening}
-                className={`h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-2 mb-3 ${listening ? "bg-warning-100 hover:bg-warning-300" : "bg-success-300 hover:bg-success-300"}`}
+                className={`h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-2 mb-3 ${listening ? "bg-warning-100 hover:bg-warning-300" : "bg-success-300 hover:bg-success-300"}`}
               >
                 {listening ? (
                   <span className="flex items-center">
@@ -197,7 +197,7 @@ const Voice = () => {
                 />
                 <button
                   onClick={handleTranscribeClick}
-                  className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
+                  className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
                   disabled={state.transcribing}
                 >
                   {state.transcribing ? "Transkribieren..." : "Datei transkribieren"}
@@ -209,7 +209,7 @@ const Voice = () => {
                   <p>{state.transcriptionText}</p>
                   <button
                     onClick={() => handleGenerateSummary(state.transcriptionText, 'transcription')}
-                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     disabled={state.isSummaryGenerating}
                   >
                     {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
@@ -222,7 +222,7 @@ const Voice = () => {
                   <p>{state.transcriptionSummary}</p>
                   <button
                     onClick={() => handleNextPageClick(state.transcriptionText, state.transcriptionSummary)}
-                    className="h-10 px-5 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
+                    className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                   >
                     Per E-Mail senden
                   </button>

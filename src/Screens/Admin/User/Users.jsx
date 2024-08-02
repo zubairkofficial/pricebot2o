@@ -7,7 +7,7 @@ import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 import Pagination from '../../../Components/Pagination';
 
-const UserList = () => {
+const Users = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const UserList = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = useState(10);
+  const itemsPerPage = 10;
   const location = useLocation();
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;
@@ -136,7 +136,7 @@ const UserList = () => {
             </div>
           </div>
           <Link to="/admin/add-user"
-            className="h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
+            className="h-10 px-5 mb-2 text-white transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
           >
             Benutzer hinzufügen
           </Link>
@@ -198,4 +198,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default Users;

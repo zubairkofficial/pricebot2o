@@ -93,7 +93,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                className="py-3.5 flex  text-white items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
                 {isLoading ? "Wird geladen..." : "Anmeldung"}
               </button>

@@ -125,7 +125,7 @@ const AddUser = () => {
                 <div className="flex justify-end mt-4">
                   <button
                     type="submit"
-                    className="py-2 px-4 bg-success-300 hover:bg-success-400 rounded-lg hover:bg-blue-600"
+                    className="py-2 px-4 text-white bg-success-300 hover:bg-success-400 rounded-lg hover:bg-blue-600"
                   >
                     Benutzer hinzufügen
                   </button>

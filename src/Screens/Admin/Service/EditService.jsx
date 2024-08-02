@@ -148,7 +148,7 @@ const EditService = () => {
                                         <h3 className="text-lg leading-6 font-medium text-gray-900">{service.name}</h3>
                                         <p className="mt-1 max-w-2xl text-sm text-gray-500">{service.description}</p>
                                     </div>
-                                    <Link to="/admin/services" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200">
+                                    <Link to="/admin/services" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300">
                                         Back
                                     </Link>
                                     <button

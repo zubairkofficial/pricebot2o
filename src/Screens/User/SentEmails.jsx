@@ -66,7 +66,7 @@ const SentEmails = () => {
                 />
                 <Link
                   to="/voice"
-                  className="h-10  px-5 mb-2  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
+                  className="h-10  px-5 mb-2 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
                 >
                   Sprachassistent
                 </Link>

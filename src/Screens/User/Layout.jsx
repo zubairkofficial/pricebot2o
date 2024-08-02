@@ -341,7 +341,7 @@ const Layout = () => {
           <header className="md:hidden block mobile-wrapper w-full fixed z-20">
             <div className="w-full h-[80px] bg-white flex justify-between items-center">
               <div className="w-full h-full flex items-center space-x-5">
-                <button type="button" className="drawer-btn transform rotate-180">
+                <button type="button" className="text-white drawer-btn transform rotate-180">
                   <span>
                     <svg
                       width="16"

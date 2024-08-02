@@ -126,7 +126,7 @@ const EditOrg = () => {
                                 />
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>Stornieren</button>
-                                    <button type="submit" className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Änderungen speichern</button>
+                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Änderungen speichern</button>
                                 </div>
                             </form>
                         ) : (
@@ -137,8 +137,8 @@ const EditOrg = () => {
                                     <p><strong>Straße:</strong> {org.street}</p>
                                     <p><strong>Prompt:</strong> {org.prompt}</p>
                                     <div className="flex justify-end space-x-3">
-                                        <Link to="/admin/orgs" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">Zurück</Link>
-                                        <button onClick={() => setIsEditing(true)} className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Bearbeiten</button>
+                                        <Link to="/admin/orgs" className=" bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">Zurück</Link>
+                                        <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">Bearbeiten</button>
                                     </div>
                                 </div>
                             </>

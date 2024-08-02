@@ -225,7 +225,7 @@ function Transcription() {
                     </div>
                     <button
                       type="submit"
-                      className="mt-6 py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                      className="mt-6 py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                       disabled={loading}
                     >
                       {loading ? "Senden..." : "Transkription senden"}

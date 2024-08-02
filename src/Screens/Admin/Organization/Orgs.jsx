@@ -128,7 +128,7 @@ const Orgs = () => {
                                     </div>
                                 </div>
                                 <Link to="/admin/add-org"
-                                    className=" h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
+                                    className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
                                     Organisation hinzufügen
                                 </Link>

@@ -161,7 +161,7 @@ const ChangePassword = () => {
                 </div>
                 <button
                   type="submit"
-                  className="py-3.5 flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                  className="py-3.5 text-white flex items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                 >
                   Kennwort ändern
                 </button>

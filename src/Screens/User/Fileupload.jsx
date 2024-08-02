@@ -81,7 +81,7 @@ function FileUpload() {
         <button
           onClick={handleFileUpload}
           disabled={uploading}
-          className="flex items-center justify-center py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+          className="flex items-center justify-center text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
         >
           {uploading ? (
             <span className="flex items-center">Hochladen... <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2 animate-spin" /></span>

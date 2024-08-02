@@ -46,7 +46,7 @@ const Layout = () => {
             </Link>
             <button
               type="button"
-              className="drawer-btn absolute right-0 top-auto"
+              className="drawer-btn absolute right-0 top-auto text-white"
               title="Ctrl+b"
             >
               <span>
