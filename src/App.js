@@ -7,14 +7,14 @@ import Helpers from "./Config/Helpers";
 import Login from "./Pages/Auth/Login";
 import Adduser from "./Pages/Admin/User/Adduser";
 import Edituser from "./Pages/Admin/User/Edituser";
-import UserDashboard from "./Pages/users/Home";
-import UserLayout from "./Pages/users/Layout";
-import FileUpload from "./Pages/users/Fileupload";
-import ChangePass from "./Pages/users/ChangePass";
-import Voice from "./Pages/users/Voice";
-import SentEmails from "./Pages/users/SentEmails";
-import Transcription from "./Pages/users/Transcription";
-import ResendEmail from "./Pages/users/ResendEmail";
+import UserDashboard from "./Pages/User/Home";
+import UserLayout from "./Pages/User/Layout";
+import FileUpload from "./Pages/User/Fileupload";
+import ChangePass from "./Pages/User/ChangePass";
+import Voice from "./Pages/User/Voice";
+import SentEmails from "./Pages/User/SentEmails";
+import Transcription from "./Pages/User/Transcription";
+import ResendEmail from "./Pages/User/ResendEmail";
 import Services from "./Pages/Admin/Service/Services";
 import AddService from "./Pages/Admin/Service/AddService";
 import EditService from "./Pages/Admin/Service/EditService";
@@ -93,7 +93,7 @@ const App = () => {
             <Route path="add-user" element={<Auth isAdmin={true}><Adduser /> </Auth>} />
             <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /> </Auth>} />
             <Route path="services" element={<Auth isAdmin={true}><Services /> </Auth>} />
-            {/* <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} /> */}
+            <Route path="add-service" element={<Auth isAdmin={true}><AddService /> </Auth>} />
             <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /> </Auth>} />
             <Route path="orgs" element={<Auth isAdmin={true}><Orgs /> </Auth>} />
             <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /> </Auth>} />

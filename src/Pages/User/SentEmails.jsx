@@ -103,8 +103,8 @@ const SentEmails = () => {
                         {email.transcriptionText && email.transcriptionText.length > 70 && (
                           <div className="text-sm ">Vollständige E-Mail anzeigen</div>
                         )}
+                        <small className="">{email.email}</small>
                       </div>
-                      <small className="">{email.email}</small>
                     </li>
                   ))}
                 </ul>

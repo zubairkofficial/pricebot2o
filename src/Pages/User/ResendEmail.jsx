@@ -135,7 +135,7 @@ function ResendEmail() {
   const back = () => navigate("/voice");
 
   return (
-    <section className="bg-white p-5">
+    <section className="bg-white">
       <div className="flex flex-col lg:flex-row justify-between lg:px-12">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
           <div className="max-w-[614px] m-auto py-6">
