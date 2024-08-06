@@ -20,7 +20,7 @@ const AddUser = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    setHeaderData({ title: Helpers.getTranslationValue('Dashboard'), desc: Helpers.getTranslationValue('Dashboard_Desc') });
     fetchServices();
     fetchOrgs();
   }, []);
@@ -52,10 +52,10 @@ const AddUser = () => {
     try {
       const response = await axios.post(`${Helpers.apiUrl}auth/register`, user, Helpers.authHeaders);
       if (response.status === 201) {
-        Helpers.toast('success', 'User registered successfully!');
+        Helpers.toast('success', Helpers.getTranslationValue('user_save_msg'));
         navigate("/admin/home");
       } else {
-        throw new Error('Failed to register user');
+        throw new Error(Helpers.getTranslationValue('user_save_error'));
       }
     } catch (error) {
       Helpers.toast('error', error.message);
@@ -68,9 +68,9 @@ const AddUser = () => {
         <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 pt-10">
           <div className="max-w-2xl mx-auto pt-10 pb-16">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-center text-2xl font-semibold mb-8">Benutzer hinzufügen</h2>
+              <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('Add user')}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Name')}</label>
                 <input
                   id="name"
                   name="name"
@@ -81,7 +81,7 @@ const AddUser = () => {
                   onChange={(e) => handleChange('name')(e.target.value)}
                 />
 
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Email')}</label>
                 <input
                   id="email"
                   name="email"
@@ -92,7 +92,7 @@ const AddUser = () => {
                   onChange={(e) => handleChange('email')(e.target.value)}
                 />
 
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Password')}</label>
                 <input
                   id="password"
                   name="password"
@@ -103,7 +103,8 @@ const AddUser = () => {
                   onChange={(e) => handleChange('password')(e.target.value)}
                 />
 
-                <label htmlFor="services" className="block text-sm font-medium text-gray-700">Dienstleistungen</label>
+                <label htmlFor="services" className="block text-sm font-medium text-gray-700">
+                {Helpers.getTranslationValue('Servies')}</label>
                 <Select
                   options={services.map(service => ({ label: service.name, value: service.id }))}
                   multi
@@ -113,7 +114,8 @@ const AddUser = () => {
 
                 {user.services.includes(2) &&
                   <>
-                    <label htmlFor="org" className="block text-sm font-medium text-gray-700">Organization</label>
+                    <label htmlFor="org" className="block text-sm font-medium text-gray-700">
+                    {Helpers.getTranslationValue('Organization')}</label>
                     <Select
                       options={orgs.map(org => ({ label: org.name, value: org.id }))}
                       onChange={(value) => handleChange('org_id')(value.value)}
@@ -127,7 +129,7 @@ const AddUser = () => {
                     type="submit"
                     className="py-2 px-4 text-white bg-success-300 hover:bg-success-400 rounded-lg hover:bg-blue-600"
                   >
-                    Benutzer hinzufügen
+                    {Helpers.getTranslationValue('Add user')}
                   </button>
                 </div>
               </form>

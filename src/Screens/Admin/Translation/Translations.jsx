@@ -1,49 +1,49 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaPencilAlt, FaCheck, FaTimes } from "react-icons/fa";
+import { FaPencilAlt, FaTrash, FaTimes } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 import Pagination from '../../../Components/Pagination';
 
-const Orgs = () => {
+const Translations = () => {
     const { setHeaderData } = useHeader();
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Organizations'), desc: Helpers.getTranslationValue('org_desc') });
+        setHeaderData({ title: Helpers.getTranslationValue("Translations"), desc: 'Verwalten Sie hier Ihre Organisationen' });
     }, [setHeaderData]);
 
-    const [orgs, setOrgs] = useState([]);
-    const [filteredOrgs, setFilteredOrgs] = useState([]);
+    const [trans, setTrans] = useState([]);
+    const [filteredTrans, setFilteredTrans] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchOrgs();
+        fetchTrans();
     }, []);
 
     useEffect(() => {
-        setFilteredOrgs(
-            orgs.filter((org) =>
-                org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                org.street.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                org.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                org.prompt.toLowerCase().includes(searchTerm.toLowerCase())
+        setFilteredTrans(
+            trans.filter((item) =>
+                item.key.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.value.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
-    }, [searchTerm, orgs]);
+    }, [searchTerm, trans]);
 
-    const fetchOrgs = async () => {
+    const fetchTrans = async () => {
         try {
-            const response = await axios.get(`${Helpers.apiUrl}all-orgs`, Helpers.authHeaders);
+            const response = await axios.get(`${Helpers.apiUrl}all-trans`, Helpers.authHeaders);
+            localStorage.removeItem('translationData');
             if (response.status !== 200) {
-                throw new Error(Helpers.getTranslationValue('orgs_retrieve_error'));
+                throw new Error("Organisationen konnten nicht abgerufen werden");
             }
-            setOrgs(response.data);
-            setFilteredOrgs(response.data);
+            Helpers.setItem("translationData", response.data, true);
+            setTrans(response.data);
+            setFilteredTrans(response.data);
             setLoading(false);
         } catch (error) {
             setError(error.message);
@@ -52,20 +52,7 @@ const Orgs = () => {
     };
 
     const handleEdit = (id) => {
-        navigate(`/admin/edit-org/${id}`);
-    };
-
-    const handleServiceStatus = async (id) => {
-        try {
-            const response = await axios.post(`${Helpers.apiUrl}update-org-status/${id}`, {}, Helpers.authHeaders);
-            if (response.status !== 200) {
-                throw new Error(Helpers.getTranslationValue('org_update_error'));
-            }
-            fetchOrgs();
-            Helpers.toast("success", Helpers.getTranslationValue('org_update_msg'));
-        } catch (error) {
-            setError(error.message);
-        }
+        navigate(`/admin/edit-trans/${id}`);
     };
 
     if (loading) {
@@ -82,9 +69,9 @@ const Orgs = () => {
         return <div className="text-red-500 text-center">{Helpers.getTranslationValue('error')}: {error}</div>;
     }
 
-    const indexOfLastOrg = (currentPage + 1) * itemsPerPage;
-    const indexOfFirstOrg = currentPage * itemsPerPage;
-    const currentOrgs = filteredOrgs.slice(indexOfFirstOrg, indexOfLastOrg);
+    const indexOfLastTrans = (currentPage + 1) * itemsPerPage;
+    const indexOfFirstTrans = currentPage * itemsPerPage;
+    const currentTrans = filteredTrans.slice(indexOfFirstTrans, indexOfLastTrans);
 
 
     return (
@@ -130,10 +117,10 @@ const Orgs = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Link to="/admin/add-org"
+                                <Link to="/admin/add-trans"
                                     className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
-                                    {Helpers.getTranslationValue('add_org')}
+                                    Organisation hinzufügen
                                 </Link>
                             </div>
                             <div className="overflow-x-auto">
@@ -141,31 +128,23 @@ const Orgs = () => {
                                     <thead className="bg-gray-100">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Name')}</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Number')}</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('street')}</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {currentOrgs.map((org, index) => (
-                                            <tr key={org.id}>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstOrg + index + 1}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.number}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.street}</td>
+                                        {currentTrans.map((trans, index) => (
+                                            <tr key={trans.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstTrans + index + 1}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trans.key}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trans.value}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                                     <button
                                                         className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
-                                                        onClick={() => handleEdit(org.id)}
+                                                        onClick={() => handleEdit(trans.id)}
                                                     >
                                                         <FaPencilAlt />
-                                                    </button>
-                                                    <button
-                                                        className={`p-2 rounded-lg text-white ${org.status ? 'bg-gray-500 hover:bg-gray-600' : 'bg-success-300 hover:bg-success-400'}`}
-                                                        onClick={() => handleServiceStatus(org.id)}
-                                                    >
-                                                        {org.status ? <FaTimes /> : <FaCheck />}
                                                     </button>
                                                 </td>
                                             </tr>
@@ -176,7 +155,7 @@ const Orgs = () => {
                         </div>
                         <Pagination
                             currentPage={currentPage}
-                            totalItems={filteredOrgs.length}
+                            totalItems={filteredTrans.length}
                             itemsPerPage={itemsPerPage}
                             onPageChange={(page) => setCurrentPage(page)}
                         />
@@ -187,4 +166,4 @@ const Orgs = () => {
     );
 };
 
-export default Orgs;
+export default Translations;

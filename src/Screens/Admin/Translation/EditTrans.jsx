@@ -4,38 +4,34 @@ import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 
-const EditOrg = () => {
+const EditTrans = () => {
     const { setHeaderData } = useHeader();
     const { id } = useParams();
-    const [org, setOrg] = useState(null);
+    const [trans, setTrans] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
-        name: "",
-        street: "",
-        number: "",
-        prompt: "",
+        key: "",
+        value: "",
     });
     const navigate = useNavigate();
 
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Organizations'), desc: Helpers.getTranslationValue('org_desc') });
-        fetchOrg();
+        setHeaderData({ title: 'Organisationen', desc: 'Verwalten Sie hier Ihre Organisationen' });
+        fetchTrans();
     }, [id]);
 
-    const fetchOrg = async () => {
+    const fetchTrans = async () => {
         try {
-            const response = await axios.get(`${Helpers.apiUrl}get-org/${id}`, Helpers.authHeaders);
+            const response = await axios.get(`${Helpers.apiUrl}get-trans/${id}`, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error(Helpers.getTranslationValue('org_fetch_error'));
+                throw new Error("Failed to fetch Organization");
             }
-            setOrg(response.data);
+            setTrans(response.data);
             setFormData({
-                name: response.data.name,
-                street: response.data.street,
-                number: response.data.number,
-                prompt: response.data.prompt,
+                key: response.data.key,
+                value: response.data.value,
             });
             setLoading(false);
         } catch (error) {
@@ -55,12 +51,12 @@ const EditOrg = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${Helpers.apiUrl}update-org/${id}`, formData, Helpers.authHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}update-trans/${id}`, formData, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error(Helpers.getTranslationValue('org_update_error'));
+                throw new Error("Organisation konnte nicht aktualisiert werden");
             }
-            Helpers.toast("success", Helpers.getTranslationValue('org_update_msg'));
-            navigate("/admin/orgs");
+            Helpers.toast("success", "Organisation erfolgreich aktualisiert");
+            navigate("/admin/translations");
         } catch (error) {
             setError(error.message);
         }
@@ -80,8 +76,8 @@ const EditOrg = () => {
         return <div className="text-center text-red-500 mt-5">{error}</div>;
     }
 
-    if (!org) {
-        return <div className="text-center text-red-500 mt-5">{Helpers.getTranslationValue('org_fetch_error')}</div>;
+    if (!trans) {
+        return <div className="text-center text-red-500 mt-5">Organisation nicht gefunden</div>;
     }
 
     return (
@@ -94,51 +90,34 @@ const EditOrg = () => {
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <input
                                     type="text"
-                                    name="name"
+                                    name="key"
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.name}
+                                    value={formData.key}
                                     onChange={handleChange}
                                     placeholder="Name der Organisation"
                                 />
                                 <input
                                     type="text"
-                                    name="number"
+                                    name="value"
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.number}
+                                    value={formData.value}
                                     onChange={handleChange}
-                                    placeholder="Nummer"
-                                />
-                                <textarea
-                                    name="street"
-                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.street}
-                                    onChange={handleChange}
-                                    placeholder="Straße"
-                                    rows="3"
-                                />
-                                <textarea
-                                    name="prompt"
-                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.prompt}
-                                    onChange={handleChange}
-                                    placeholder="Prompt"
-                                    rows="3"
+                                    placeholder="value"
                                 />
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
                                     {Helpers.getTranslationValue('Cancel')}</button>
-                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">                                 {Helpers.getTranslationValue('save_changes')}</button>
+                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                    {Helpers.getTranslationValue('save_changes')}</button>
                                 </div>
                             </form>
                         ) : (
                             <>
                                 <div className="space-y-4">
-                                    <p><strong>{Helpers.getTranslationValue('Name')}:</strong> {org.name}</p>
-                                    <p><strong>{Helpers.getTranslationValue('Number')}:</strong> {org.number}</p>
-                                    <p><strong>{Helpers.getTranslationValue('street')}:</strong> {org.street}</p>
-                                    <p><strong>{Helpers.getTranslationValue('Prompt')}:</strong> {org.prompt}</p>
+                                    <p><strong>Key:</strong> {trans.key}</p>
+                                    <p><strong>Value:</strong> {trans.value}</p>
                                     <div className="flex justify-end space-x-3">
-                                        <Link to="/admin/orgs" className=" bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">{Helpers.getTranslationValue('Back')}</Link>
+                                        <Link to="/admin/translations" className=" bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">{Helpers.getTranslationValue('Back')}</Link>
                                         <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">{Helpers.getTranslationValue('Edit')}</button>
                                     </div>
                                 </div>
@@ -151,4 +130,4 @@ const EditOrg = () => {
     );
 };
 
-export default EditOrg;
+export default EditTrans;

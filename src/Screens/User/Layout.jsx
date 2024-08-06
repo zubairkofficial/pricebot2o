@@ -36,11 +36,12 @@ const Layout = () => {
     <div className="w-full layout-wrapper active">
       <div className="w-full flex relative">
         <aside className="block xl:block sm:hidden sidebar-wrapper w-[308px] fixed top-0 bg-white h-full z-30">
-          <div className="sidebar-header relative border-r border-b   border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center pl-[50px] z-30">
+          <div className="sidebar-header relative border-r border-b   border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center pl-[40px] z-30">
             <Link to="/">
               <img
-                src="/assets/images/logo/logo-color.svg"
+                src="/assets/images/logo/logo-color.png"
                 className="block"
+                style={{width:'250px'}}
                 alt="logo"
               />
             </Link>
@@ -134,7 +135,7 @@ const Layout = () => {
                               />
                             </svg>
                           </span>
-                          <span className="item-text text-lg font-medium leading-none">
+                          <span className="item-text text-lg font-medium leading-none ">
                             Einstellung
                           </span>
                         </div>
@@ -176,7 +177,7 @@ const Layout = () => {
                               />
                             </svg>
                           </span>
-                          <span className="item-text text-lg font-medium leading-none">
+                          <span className="item-text text-lg font-medium leading-none cursor-pointer">
                             Ausloggen
                           </span>
                         </div>
@@ -197,8 +198,9 @@ const Layout = () => {
             <div className="sidebar-header bg-white  sticky top-0 border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center justify-center z-20">
               <Link to="/">
                 <img
-                  src="/assets/images/logo/logo-short.svg"
+                  src="/assets/images/logo/logo-short.png"
                   className="block"
+                  style={{width:'75px'}}
                   alt="logo"
                 />
               </Link>
@@ -365,13 +367,13 @@ const Layout = () => {
                   </span>
                 </button>
                 <div>
-                  <a href="https://spaceraceit.com/">
+                  <Link to="/">
                     <img
-                      src="/assets/images/logo/logo-color.svg"
+                      src="/assets/images/logo/logo-color.png"
                       className="block"
                       alt="logo"
                     />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

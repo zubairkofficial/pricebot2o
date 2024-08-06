@@ -19,7 +19,7 @@ const EditService = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setHeaderData({ title: 'Dienstleistungen', desc: 'Verwalten Sie hier Ihre Dienste' });
+        setHeaderData({ title: Helpers.getTranslationValue('Servies'), desc: Helpers.getTranslationValue('servies_desc') });
         fetchService();
     }, [id]);
 
@@ -27,7 +27,7 @@ const EditService = () => {
         try {
             const response = await axios.get(`${Helpers.apiUrl}get-service/${id}`, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error("Failed to fetch service");
+                throw new Error(Helpers.getTranslationValue('service_fetch_error'));
             }
             setService(response.data);
             setFormData({
@@ -55,9 +55,9 @@ const EditService = () => {
         try {
             const response = await axios.post(`${Helpers.apiUrl}update-service/${id}`, formData, Helpers.authHeaders);
             if (response.status !== 200) {
-                throw new Error("Failed to update service");
+                throw new Error(Helpers.getTranslationValue('service_update_error'));
             }
-            Helpers.toast("success", "Service updated successfully");
+            Helpers.toast("success", Helpers.getTranslationValue('service_add_msg'));
             navigate("/admin/services");
         } catch (error) {
             setError(error.message);
@@ -68,7 +68,7 @@ const EditService = () => {
         return (
             <div className="flex justify-center items-center h-screen">
                 <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
                 </div>
             </div>
         );
@@ -79,19 +79,19 @@ const EditService = () => {
     }
 
     if (!service) {
-        return <div className="text-center text-red-500 mt-5">Service not found</div>;
+        return <div className="text-center text-red-500 mt-5">{Helpers.getTranslationValue('service_not_found')}</div>;
     }
 
     return (
         <div className="min-h-screen bg-gray-100 py-10">
             <div className="max-w-4xl mx-auto px-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{isEditing ? 'Edit Service' : 'Service Details'}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{isEditing ? Helpers.getTranslationValue('Edit_service') : Helpers.getTranslationValue('Servies')}</h2>
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
                         {isEditing ? (
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Name')}</label>
                                     <input
                                         type="text"
                                         name="name"
@@ -103,7 +103,7 @@ const EditService = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="link" className="block text-sm font-medium text-gray-700">Link</label>
+                                    <label htmlFor="link" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('link')}</label>
                                     <input
                                         type="url"
                                         name="link"
@@ -115,7 +115,7 @@ const EditService = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('description')}</label>
                                     <textarea
                                         name="description"
                                         id="description"
@@ -131,13 +131,13 @@ const EditService = () => {
                                         className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         onClick={() => setIsEditing(false)}
                                     >
-                                        Stornieren
+                                        {Helpers.getTranslationValue('Cancel')}
                                     </button>
                                     <button
                                         type="submit"
                                         className="bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                     >
-                                        Änderungen speichern
+                                        {Helpers.getTranslationValue('save_changes')}
                                     </button>
                                 </div>
                             </form>
@@ -149,13 +149,13 @@ const EditService = () => {
                                         <p className="mt-1 max-w-2xl text-sm text-gray-500">{service.description}</p>
                                     </div>
                                     <Link to="/admin/services" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300">
-                                        Back
+                                        {Helpers.getTranslationValue('Back')}
                                     </Link>
                                     <button
                                         onClick={() => setIsEditing(true)}
                                         className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-success-300 hover:bg-success-4  00"
                                     >
-                                        Edit
+                                        {Helpers.getTranslationValue('Edit')}
                                     </button>
                                 </div>
                             </div>

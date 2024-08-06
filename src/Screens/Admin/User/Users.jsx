@@ -11,7 +11,7 @@ const Users = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    setHeaderData({ title: Helpers.getTranslationValue('Dashboard'), desc: Helpers.getTranslationValue('Dashboard_Desc') });
   }, [setHeaderData]);
 
   const [users, setUsers] = useState([]);
@@ -39,7 +39,10 @@ const Users = () => {
   useEffect(() => {
     setFilteredUsers(
       users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.service_names && user.service_names.join(", ").toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.organization && user.organization.name.toLowerCase().includes(searchTerm.toLowerCase()))
       )
     );
   }, [searchTerm, users]);
@@ -48,7 +51,7 @@ const Users = () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}dashboardInfo`, Helpers.authHeaders);
       if (response.status !== 200) {
-        throw new Error("Failed to fetch users");
+        throw new Error(Helpers.getTranslationValue("users_fetch_error"));
       }
       setUsers(response.data.users);
       setFilteredUsers(response.data.users);
@@ -67,11 +70,11 @@ const Users = () => {
     try {
       const response = await axios.delete(`${Helpers.apiUrl}delete/${id}`, Helpers.authHeaders);
       if (response.status !== 200) {
-        throw new Error("Failed to delete user");
+        throw new Error(Helpers.getTranslationValue('user_delete_error'));
       }
       setUsers(users.filter((user) => user.id !== id));
       setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
-      Helpers.toast("success", "User deleted successfully");
+      Helpers.toast("success", Helpers.getTranslationValue('user_delete_msg'));
     } catch (error) {
       setError(error.message);
     }
@@ -92,7 +95,7 @@ const Users = () => {
   }
 
   if (error) {
-    return <div className="text-blue-500">Fehler: {error}</div>;
+    return <div className="text-blue-500">{Helpers.getTranslationValue('error')}: {error}</div>;
   }
 
   return (
@@ -138,7 +141,7 @@ const Users = () => {
           <Link to="/admin/add-user"
             className="h-10 px-5 mb-2 text-white transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
           >
-            Benutzer hinzufügen
+            {Helpers.getTranslationValue('Add user')}
           </Link>
         </div>
         <div className="rounded-lg">
@@ -147,11 +150,11 @@ const Users = () => {
               <thead className="bg-white-100">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Berechtigungen</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisation</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Name')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Email')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Servies')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Organization')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
                 </tr>
               </thead>
               <tbody className="">

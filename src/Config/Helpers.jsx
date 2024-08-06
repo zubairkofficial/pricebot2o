@@ -42,6 +42,12 @@ class Helpers {
       localStorage.setItem(key, data);
     }
   };
+  
+  static getTranslationValue = (key) => {
+    const translations = Helpers.getItem('translationData', true);
+    const translation = translations.find(item => item.key === key);
+    return translation ? translation.value : key;
+  };
 
   static toast = (type, message) => {
     const notyf = new Notyf();

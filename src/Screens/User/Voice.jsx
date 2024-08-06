@@ -120,23 +120,12 @@ const Voice = () => {
           <div className="max-w-4xl mx-auto pt-10 pb-10">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-6">Stimmaufnahme</h2>
-              <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2">
-                <Link to="/" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
-                  Werkzeuge
-                </Link>
-                <Link to="/sent-emails" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
-                  Vorherige Historie
-                </Link>
-                {state.hasHistory && (
-                  <button onClick={() => window.history.forward()} className="text-white  h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2">
-                    Zurück
-                  </button>
-                )}
-              </div>
+              
               <div className="relative mb-4">
                 <textarea
                   className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
                   readOnly={listening}
+                  rows={8}
                   value={state.userTranscript}
                   onChange={handleTranscriptChange}
                   placeholder="Beginnen Sie zu sprechen oder laden Sie Ihre Sprache hoch, um sie hier zu transkribieren."
@@ -228,6 +217,16 @@ const Voice = () => {
                   </button>
                 </div>
               )}
+            <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2 mt-8">
+                <Link to="/sent-emails" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3">
+                  Vorherige Historie
+                </Link>
+                {state.hasHistory && (
+                  <button onClick={() => window.history.forward()} className="text-white  h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3">
+                    Zurück
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>

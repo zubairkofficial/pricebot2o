@@ -17,12 +17,12 @@ function ResendEmail() {
   const [success, setSuccess] = useState("");
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
-  const [partner, setPartner] = useState(null);
-  const [branchManager, setBranchManager] = useState("");
+  // const [partner, setPartner] = useState(null);
+  // const [branchManager, setBranchManager] = useState("");
   const [participants, setParticipants] = useState("");
   const [author, setAuthor] = useState("");
   const [partnerNumbers, setPartnerNumbers] = useState([]);
-  const [partnerNumber, setPartnerNumber] = useState("");
+  // const [partnerNumber, setPartnerNumber] = useState("");
   const navigate = useNavigate();
   const { userId } = useParams();
 
@@ -40,8 +40,8 @@ function ResendEmail() {
         setSummary(emailData.summary || "");
         setDate(emailData.date || "");
         setTheme(emailData.theme || "");
-        setPartnerNumber(emailData.partnerNumber || "");
-        setBranchManager(emailData.branchManager || "");
+        // setPartnerNumber(emailData.partnerNumber || "");
+        // setBranchManager(emailData.branchManager || "");
         setParticipants(emailData.participants || "");
         setAuthor(emailData.author || "");
         setSuccess("");
@@ -58,28 +58,28 @@ function ResendEmail() {
     }
   }, [userId]);
 
-  useEffect(() => {
-    const fetchPartnerNumbers = async () => {
-      try {
-        const response = await axios.get(
-          `${Helpers.apiUrl}getData`,
-          Helpers.authHeaders
-        );
-        if (Array.isArray(response.data)) {
-          setPartnerNumbers(response.data);
-        } else {
-          setPartnerNumbers([]); 
-          console.error("Fetched data is not an array:", response);
-        }
-      } catch (error) {
-        Helpers.toast("error", error.message);
-        setPartnerNumbers([]); 
-        console.error("Error fetching partner numbers:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPartnerNumbers = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${Helpers.apiUrl}getData`,
+  //         Helpers.authHeaders
+  //       );
+  //       if (Array.isArray(response.data)) {
+  //         setPartnerNumbers(response.data);
+  //       } else {
+  //         setPartnerNumbers([]); 
+  //         console.error("Fetched data is not an array:", response);
+  //       }
+  //     } catch (error) {
+  //       Helpers.toast("error", error.message);
+  //       setPartnerNumbers([]); 
+  //       console.error("Error fetching partner numbers:", error);
+  //     }
+  //   };
 
-    fetchPartnerNumbers();
-  }, []);
+  //   fetchPartnerNumbers();
+  // }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,8 +93,8 @@ function ResendEmail() {
           summary,
           date,
           theme,
-          partnerNumber: partner?.value.number,
-          branchManager,
+          // partnerNumber: partner?.value.number,
+          // branchManager,
           participants,
           author,
         },
@@ -110,19 +110,19 @@ function ResendEmail() {
     }
   };
 
-  const options = partnerNumbers.map((partner) => ({
-    value: {
-      number: partner.number,
-      name: partner.name,
-      street: partner.street,
-    },
-    label: `${partner.number} / ${partner.name} / ${partner.street}`,
-  }));
+  // const options = partnerNumbers.map((partner) => ({
+  //   value: {
+  //     number: partner.number,
+  //     name: partner.name,
+  //     street: partner.street,
+  //   },
+  //   label: `${partner.number} / ${partner.name} / ${partner.street}`,
+  // }));
 
-  const handleChange = (selectedOption) => {
-    setPartner(selectedOption);
-    setPartnerNumber(selectedOption?.value.number || "");
-  };
+  // const handleChange = (selectedOption) => {
+    // setPartner(selectedOption);
+    // setPartnerNumber(selectedOption?.value.number || "");
+  // };
 
   const back = () => navigate("/voice");
 
@@ -160,7 +160,7 @@ function ResendEmail() {
                         onChange={(e) => setTheme(e.target.value)}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">Gesellschafternummer:</label>
                       <Select
                         className=" border border-bgray-300  rounded-lg px-4 py-3.5"
@@ -170,14 +170,14 @@ function ResendEmail() {
                         onChange={handleChange}
                         options={options}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
                       <label className="">Verfasser:</label>
                       <input
                         type="text"
-                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                        value={branchManager}
-                        onChange={(e) => setBranchManager(e.target.value)}
+                        className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        
                       />
                     </div>
                     <div className="mb-4">
@@ -189,19 +189,20 @@ function ResendEmail() {
                         onChange={(e) => setParticipants(e.target.value)}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">Niederlassungsleiter:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
+                        value={branchManager}
+                        onChange={(e) => setBranchManager(e.target.value)}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
                       <label className="">Transkription:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        rows={8}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                       />
@@ -209,7 +210,8 @@ function ResendEmail() {
                     <div className="mb-4">
                       <label className="">Zusammenfassung:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        rows={8}
                         value={summary}
                         onChange={(e) => setSummary(e.target.value)}
                       />

@@ -21,6 +21,9 @@ import EditService from "./Screens/Admin/Service/EditService";
 import Orgs from "./Screens/Admin/Organization/Orgs";
 import AddOrg from "./Screens/Admin/Organization/AddOrg";
 import EditOrg from "./Screens/Admin/Organization/EditOrg";
+import Trans from "./Screens/Admin/Translation/Translations";
+import AddTrans from "./Screens/Admin/Translation/AddTrans";
+import EditTrans from "./Screens/Admin/Translation/EditTrans";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -98,6 +101,9 @@ const App = () => {
             <Route path="orgs" element={<Auth isAdmin={true}><Orgs /> </Auth>} />
             <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /> </Auth>} />
             <Route path="edit-org/:id" element={<Auth isAdmin={true}><EditOrg /> </Auth>} />
+            <Route path="translations" element={<Auth isAdmin={true}><Trans /> </Auth>} />
+            <Route path="add-trans" element={<Auth isAdmin={true}><AddTrans /> </Auth>} />
+            <Route path="edit-trans/:id" element={<Auth isAdmin={true}><EditTrans /> </Auth>} />
           </Route>
         </Routes>
       </HeaderProvider>

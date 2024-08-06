@@ -23,6 +23,7 @@ const Login = () => {
       .then((response) => {
         Helpers.toast("success", response.data.message);
         Helpers.setItem("user", response.data.user, true);
+        Helpers.setItem("translationData", response.data.translationData, true);
         Helpers.setItem("token", response.data.token);
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
@@ -95,7 +96,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="py-3.5 flex  text-white items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
-                {isLoading ? "Wird geladen..." : "Anmeldung"}
+                {isLoading ? Helpers.getTranslationValue('Is_loading') : "Anmeldung"}
               </button>
             </form>
           </div>

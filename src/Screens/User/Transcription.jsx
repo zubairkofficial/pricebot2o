@@ -20,33 +20,33 @@ function Transcription() {
   const [summary, setSummary] = useState("");
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
-  const [branchManager, setBranchManager] = useState("");
+  // const [branchManager, setBranchManager] = useState("");
   const [participants, setParticipants] = useState("");
   const [author, setAuthor] = useState("");
-  const [partnerNumbers, setPartnerNumbers] = useState([]);
-  const [partnerNumber, setPartnerNumber] = useState("");
+  // const [partnerNumbers, setPartnerNumbers] = useState([]);
+  // const [partnerNumber, setPartnerNumber] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state) {
       setEmail(location.state.email || "");
-      setText(location.state.text || "");
+      setText(location.state.text || ""); 
       setSummary(location.state.summary || "");
     }
   }, [location.state]);
 
-  useEffect(() => {
-    const fetchPartnerNumbers = async () => {
-      try {
-        const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
-        setPartnerNumbers(response.data);
-      } catch (error) {
-        Helpers.toast('error', error.message);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchPartnerNumbers = async () => {
+  //     try {
+  //       const response = await axios.get(`${Helpers.apiUrl}getData`, Helpers.authHeaders);
+  //       setPartnerNumbers(response.data);
+  //     } catch (error) {
+  //       Helpers.toast('error', error.message);
+  //     }
+  //   };
 
-    fetchPartnerNumbers();
-  }, []);
+  //   fetchPartnerNumbers();
+  // }, []);
 
   useEffect(() => {
     const fetchLatestNumber = async () => {
@@ -56,14 +56,14 @@ function Transcription() {
         );
 
         const data = response.data ?? {};
-        const number = data.number ?? '';
+        // const number = data.number ?? '';
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';
         const author = data.BM ?? '';
         const branchManager = data.Niederlassungsleiter ?? '';
         const participants = data.Teilnehmer ?? '';
 
-        setPartnerNumber(number);
+        // setPartnerNumber(number);
 
         let parsedDate = '';
         if (dateStr) {
@@ -76,7 +76,7 @@ function Transcription() {
 
         setTheme(theme);
         setAuthor(author);
-        setBranchManager(branchManager);
+        // setBranchManager(branchManager);
         setParticipants(participants);
 
       } catch (error) {
@@ -98,8 +98,8 @@ function Transcription() {
         summary,
         date,
         theme,
-        partnerNumber,
-        branchManager,
+        // partnerNumber,
+        // branchManager,
         participants,
         author,
       }, Helpers.authHeaders
@@ -117,14 +117,14 @@ function Transcription() {
     window.history.back();
   };
 
-  const options = partnerNumbers.map((partner) => ({
-    value: { number: partner.number, name: partner.name, street: partner.street },
-    label: `${partner.number} / ${partner.name} / ${partner.street}`,
-  }));
+  // const options = partnerNumbers.map((partner) => ({
+  //   value: { number: partner.number, name: partner.name, street: partner.street },
+  //   label: `${partner.number} / ${partner.name} / ${partner.street}`,
+  // }));
 
-  const handleChange = (selectedOption) => {
-    setPartnerNumber(selectedOption);
-  };
+  // const handleChange = (selectedOption) => {
+    // setPartnerNumber(selectedOption);
+  // };
 
   return (
     <section className="bg-white p-5">
@@ -160,7 +160,7 @@ function Transcription() {
                         onChange={(e) => setTheme(e.target.value)}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">Gesellschafternummer:</label>
                       <Select
                         className=" border border-bgray-300  rounded-lg px-4 py-3.5"
@@ -170,14 +170,14 @@ function Transcription() {
                         onChange={handleChange}
                         options={options}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
                       <label className="">Verfasser:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                        value={branchManager}
-                        onChange={(e) => setBranchManager(e.target.value)}
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
                       />
                     </div>
                     <div className="mb-4">
@@ -189,19 +189,20 @@ function Transcription() {
                         onChange={(e) => setParticipants(e.target.value)}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">Niederlassungsleiter:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
+                        value={branchManager}
+                        onChange={(e) => setBranchManager(e.target.value)}
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
                       <label className="">Transkription:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        rows={8}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                       />
@@ -209,7 +210,8 @@ function Transcription() {
                     <div className="mb-4">
                       <label className="">Zusammenfassung:</label>
                       <textarea
-                        className=" border border-bgray-300  h-36 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                        rows={8}
                         value={summary}
                         onChange={(e) => setSummary(e.target.value)}
                       />

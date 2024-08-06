@@ -10,7 +10,7 @@ const Services = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: 'Dienstleistungen', desc: 'Verwalten Sie hier Ihre Dienste' });
+    setHeaderData({ title: Helpers.getTranslationValue('Servies'), desc: Helpers.getTranslationValue('servies_desc') });
   }, []);
 
   const [services, setServices] = useState([]);
@@ -18,8 +18,8 @@ const Services = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(0); // Start from page 0
-  const itemsPerPage = 10; // Set this as a constant value
+  const [currentPage, setCurrentPage] = useState(0); 
+  const itemsPerPage = 10; 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +29,9 @@ const Services = () => {
   useEffect(() => {
     setFilteredServices(
       services.filter(service =>
-        service.name.toLowerCase().includes(searchTerm.toLowerCase())
+        service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.link.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchTerm.toLowerCase()) 
       )
     );
   }, [searchTerm, services]);
@@ -38,7 +40,7 @@ const Services = () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}all-services`, Helpers.authHeaders);
       if (response.status !== 200) {
-        throw new Error("Failed to fetch services");
+        throw new Error(Helpers.getTranslationValue('services_fetch_error'));
       }
       setServices(response.data);
       setFilteredServices(response.data);
@@ -57,7 +59,7 @@ const Services = () => {
     try {
       const response = await axios.post(`${Helpers.apiUrl}update-service-status/${id}`, {}, Helpers.authHeaders);
       if (response.status !== 200) {
-        throw new Error("Der Dienststatus konnte nicht geändert werden");
+        throw new Error(Helpers.getTranslationValue('service_update_error'));
       }
       fetchServices();
     } catch (error) {
@@ -73,14 +75,14 @@ const Services = () => {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-          <span className="visually-hidden">Wird geladen...</span>
+          <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
         </div>
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500 text-center">Fehler: {error}</div>;
+    return <div className="text-red-500 text-center">{Helpers.getTranslationValue('error')}: {error}</div>;
   }
 
   return (
@@ -128,10 +130,10 @@ const Services = () => {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Beschreibung</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verknüpfung</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aktionen</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Name')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('description')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('link')}</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
