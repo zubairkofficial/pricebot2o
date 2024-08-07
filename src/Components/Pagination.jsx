@@ -33,20 +33,20 @@ const Pagination = ({
       </div>
       <ul className="flex list-none gap-2">
         <li className={`p-2 cursor-pointer ${currentPage === 0 ? "text-gray-400" : "text-blue-600"}`}
-            onClick={onFirstPage}>&laquo;</li>
+          onClick={onFirstPage}>&laquo;</li>
         <li className={`p-2 cursor-pointer ${currentPage === 0 ? "text-gray-400" : "text-blue-600"}`}
-            onClick={onPreviousPage}>&lt;</li>
+          onClick={onPreviousPage}>&lt;</li>
         {pageNumbers.map(number => (
           <li key={number}
-              className={`p-2 cursor-pointer ${number === currentPage ? "text-blue-600 font-bold" : "text-gray-700"}`}
-              onClick={() => onPageChange(number)}>
+            className={`p-2 cursor-pointer ${number === currentPage ? "text-blue-600 font-bold" : "text-gray-700"}`}
+            onClick={() => onPageChange(number)}>
             {number + 1}
           </li>
         ))}
         <li className={`p-2 cursor-pointer ${currentPage === totalPages - 1 ? "text-gray-400" : "text-blue-600"}`}
-            onClick={onNextPage}>&gt;</li>
+          onClick={onNextPage}>&gt;</li>
         <li className={`p-2 cursor-pointer ${currentPage === totalPages - 1 ? "text-gray-400" : "text-blue-600"}`}
-            onClick={onLastPage}>&raquo;</li>
+          onClick={onLastPage}>&raquo;</li>
       </ul>
     </div>
   );

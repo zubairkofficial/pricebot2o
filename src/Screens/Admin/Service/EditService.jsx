@@ -83,9 +83,9 @@ const EditService = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10">
+        <div className="bg-gray-100 py-8">
             <div className="max-w-4xl mx-auto px-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{isEditing ? Helpers.getTranslationValue('Edit_service') : Helpers.getTranslationValue('Servies')}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{Helpers.getTranslationValue(isEditing ? 'Edit_service' : 'Servies')}</h2>
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
                         {isEditing ? (

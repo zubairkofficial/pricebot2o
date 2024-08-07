@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: 'Armaturenbrett', desc: 'Lassen Sie uns noch heute Ihr Update überprüfen' });
+    setHeaderData({ title: Helpers.getTranslationValue('Dashboard'), desc: Helpers.getTranslationValue('user_dashboard_desc') });
   }, [setHeaderData]);
 
   const [services, setServices] = useState([]);
@@ -32,7 +32,7 @@ const Dashboard = () => {
         Helpers.authHeaders
       );
       if (response.status !== 200) {
-        throw new Error("Failed to fetch services");
+        throw new Error(Helpers.getTranslationValue('services_fetch_error'));
       }
       setServices(response.data);
     } catch (error) {
@@ -57,7 +57,7 @@ const Dashboard = () => {
         {services.map((service) => (
           <div
             key={service.id}
-            className="w-full p-2" 
+            className="w-full p-2"
           >
             <Link
               to={isServiceEnabled(service.id) ? `/${service.link}` : "#"}
@@ -71,7 +71,7 @@ const Dashboard = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   cursor: "pointer",
-                  height: "200px", 
+                  height: "200px",
                 }}
               >
                 {!isServiceEnabled(service.id) && (

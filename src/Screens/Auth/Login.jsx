@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -21,12 +21,13 @@ const Login = () => {
     axios
       .post(`${Helpers.apiUrl}auth/login`, user)
       .then((response) => {
-        Helpers.toast("success", response.data.message);
+        Helpers.toast("success", Helpers.getTranslationValue('login_msg'));
         Helpers.setItem("user", response.data.user, true);
-        Helpers.setItem("translationData", response.data.translationData, true);
         Helpers.setItem("token", response.data.token);
+        localStorage.removeItem('translationData');
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
+        Helpers.setItem("translationData", response.data.translationData, true);
         if (response.data.user.user_type == 1) {
           window.location.href = "/admin/dashboard";
         } else {
@@ -35,12 +36,11 @@ const Login = () => {
         setIsLoading(false);
       })
       .catch((error) => {
-        Helpers.toast("error", error.response.data.message);
         setErrors(error.response.data.errors || {});
         setIsLoading(false);
       });
   };
-
+  
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
@@ -50,7 +50,7 @@ const Login = () => {
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <h2 className="text-2xl font-bold  mb-6 text-center">Anmeldung</h2>
+            <h2 className="text-2xl font-bold  mb-6 text-center">{Helpers.getTranslationValue('Login')}</h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
@@ -61,7 +61,6 @@ const Login = () => {
                     setUser({ ...user, email: e.target.value })
                   }
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                  placeholder="Email"
                 />
                 <small className="text-danger">
                   {errors.email ? errors.email[0] : ""}
@@ -75,7 +74,6 @@ const Login = () => {
                     setUser({ ...user, password: e.target.value })
                   }
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                  placeholder="Passwort"
                 />
                 <div
                   className="absolute top-4 right-4 bottom-4 cursor-pointer"
@@ -96,7 +94,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="py-3.5 flex  text-white items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
-                {isLoading ? Helpers.getTranslationValue('Is_loading') : "Anmeldung"}
+                {Helpers.getTranslationValue(isLoading ? 'Is_loading' : 'Login')}
               </button>
             </form>
           </div>

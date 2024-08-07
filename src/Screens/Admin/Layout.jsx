@@ -9,7 +9,6 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // Clear the access token from local storage
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
@@ -23,8 +22,11 @@ const Layout = () => {
         }
       );
       if (response.status === 200) {
-        localStorage.clear();
-        Helpers.toast("success", response.data.message);
+        Helpers.toast("success", Helpers.getTranslationValue('logout'));
+        // localStorage.clear();
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('loginTimestamp');
         navigate("/login");
       }
     } catch (error) {

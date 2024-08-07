@@ -8,7 +8,7 @@ const SentEmails = () => {
 
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: "Gesendete E-Mails", desc: "" });
+    setHeaderData({ title: Helpers.getTranslationValue('emails_sent'), desc: "" });
   }, [setHeaderData]);
   const [emails, setEmails] = useState([]);
   const [filteredEmails, setFilteredEmails] = useState([]);
@@ -26,7 +26,7 @@ const SentEmails = () => {
         setFilteredEmails(response.data.emails);
         setIsLoading(false);
       } catch (error) {
-        setError("Fehler beim Abrufen gesendeter E-Mails");
+        setError(Helpers.getTranslationValue('sent_emails_retrieve_error'));
         setIsLoading(false);
       }
     };
@@ -56,19 +56,18 @@ const SentEmails = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-3">
             <div className="flex justify-between items-center flex-wrap mb-4">
-              <h2 className="text-2xl font-bold  mb-4 sm:mb-0">Gesendete E-Mails</h2>
+              <h2 className="text-2xl font-bold  mb-4 sm:mb-0">{Helpers.getTranslationValue('emails_sent')}</h2>
               <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                 <input
                   type="text"
                   className="py-2 px-3  mr-2 border rounded w-full sm:w-auto focus:outline-none focus:border-success-300"
-                  placeholder="Nach email oder Transkriptions suchen..."
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <Link
                   to="/voice"
                   className="h-10  px-5 mb-2 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/2 md:w-1/2"
                 >
-                  Sprachassistent
+                  {Helpers.getTranslationValue('voice_assistant')}
                 </Link>
               </div>
             </div>
@@ -101,7 +100,7 @@ const SentEmails = () => {
                           {email.transcriptionText ? `${email.transcriptionText.substring(0, 70)}${email.transcriptionText.length > 70 ? '...' : ''}` : ''}
                         </div>
                         {email.transcriptionText && email.transcriptionText.length > 70 && (
-                          <div className="text-sm ">Vollständige E-Mail anzeigen</div>
+                          <div className="text-sm ">{Helpers.getTranslationValue('view_full_email')}</div>
                         )}
                         <small className="">{email.email}</small>
                       </div>

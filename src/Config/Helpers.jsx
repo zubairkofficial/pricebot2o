@@ -42,10 +42,10 @@ class Helpers {
       localStorage.setItem(key, data);
     }
   };
-  
+
   static getTranslationValue = (key) => {
     const translations = Helpers.getItem('translationData', true);
-    const translation = translations.find(item => item.key === key);
+    const translation = translations?.find(item => item.key === key);
     return translation ? translation.value : key;
   };
 
@@ -90,9 +90,8 @@ class Helpers {
 
   static loadScript(scriptName, dashboard = false) {
     return new Promise((resolve, reject) => {
-      const scriptPath = `/${
-        dashboard ? "dashboard" : "assets/user"
-      }/js/${scriptName}`;
+      const scriptPath = `/${dashboard ? "dashboard" : "assets/user"
+        }/js/${scriptName}`;
       const script = document.createElement("script");
       script.src = scriptPath;
       script.async = true;

@@ -9,7 +9,6 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    // Clear the access token from local storage
     const token = localStorage.getItem("token");
     try {
       const response = await axios.post(
@@ -23,8 +22,10 @@ const Layout = () => {
         }
       );
       if (response.status === 200) {
-        localStorage.clear();
-        Helpers.toast("success", response.data.message);
+        Helpers.toast("success", Helpers.getTranslationValue('logout'));
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        localStorage.removeItem('loginTimestamp');
         navigate("/login");
       }
     } catch (error) {
@@ -41,7 +42,7 @@ const Layout = () => {
               <img
                 src="/assets/images/logo/logo-color.png"
                 className="block"
-                style={{width:'250px'}}
+                style={{ width: '250px' }}
                 alt="logo"
               />
             </Link>
@@ -77,7 +78,7 @@ const Layout = () => {
             <div className="nav-wrapper pr-[50px] mb-[36px]">
               <div className="item-wrapper mb-5">
                 <h4 className="text-sm font-medium text-black border-b border-bgray-200 leading-7">
-                  Speisekarte
+                  {Helpers.getTranslationValue("Menu")}
                 </h4>
                 <ul className="mt-2.5">
                   <li className="item py-[11px] text-black ">
@@ -105,7 +106,7 @@ const Layout = () => {
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none">
-                            Armaturenbrett
+                            {Helpers.getTranslationValue("Dashboard")}
                           </span>
                         </div>
                       </div>
@@ -136,7 +137,7 @@ const Layout = () => {
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none ">
-                            Einstellung
+                            {Helpers.getTranslationValue("change_password")}
                           </span>
                         </div>
                       </div>
@@ -178,7 +179,7 @@ const Layout = () => {
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none cursor-pointer">
-                            Ausloggen
+                            {Helpers.getTranslationValue("Log out")}
                           </span>
                         </div>
                       </div>
@@ -200,7 +201,7 @@ const Layout = () => {
                 <img
                   src="/assets/images/logo/logo-short.png"
                   className="block"
-                  style={{width:'75px'}}
+                  style={{ width: '75px' }}
                   alt="logo"
                 />
               </Link>

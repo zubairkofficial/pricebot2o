@@ -18,8 +18,8 @@ const Services = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(0); 
-  const itemsPerPage = 10; 
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Services = () => {
       services.filter(service =>
         service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         service.link.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        service.description.toLowerCase().includes(searchTerm.toLowerCase()) 
+        service.description.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
   }, [searchTerm, services]);
@@ -94,7 +94,7 @@ const Services = () => {
               type="text"
               className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
               id="search"
-              placeholder="Nach Name suchen"
+              placeholder={Helpers.getTranslationValue('service_search')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

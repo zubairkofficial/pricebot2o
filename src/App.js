@@ -1,5 +1,6 @@
-import React from "react";
-import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import React, { useEffect } from 'react';
+import axios from 'axios';
+import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
 import AdminLayout from "./Screens/Admin/Layout";
 import { HeaderProvider } from './Components/HeaderContext';
 import Users from "./Screens/Admin/User/Users";
@@ -75,7 +76,48 @@ const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   }
 };
 
+const NotFound = () => {
+  useEffect(() => {
+    const user = Helpers.getItem("user", true);
+    const token = Helpers.getItem("token");
+
+    if (!user || !token) {
+      <Navigate to="/login"/>;
+    } else if (parseInt(user.user_type) === 1) {
+      <Navigate to="/admin/dashboard"/>;
+    } else {
+      <Navigate to="/"/>;
+    }
+  }, [Navigate]);
+
+  return (
+    <section class="bg-no-repeat bg-cover bg-notfound-light">
+      <div class="flex items-center justify-center min-h-screen">
+        <div class="max-w-2xl mx-auto">
+          <img src="/assets/images/illustration/404.svg" alt="" />
+          <div class="flex justify-center mt-10">
+            <Link to="/" class="bg-success-300 text-sm font-bold text-white rounded-lg px-10 py-3">Go Back</Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  ); 
+};
+
 const App = () => {
+  useEffect(() => {
+    fetchTranslations();
+  }, []);
+
+  const fetchTranslations = async () => {
+    try {
+      const response = await axios.get(`${Helpers.apiUrl}get-trans`);
+      Helpers.setItem("translationData", response.data, true);
+    } catch (error) {
+      console.error('Error fetching translations:', error);
+    } 
+  };
+
   return (
     <BrowserRouter>
       <HeaderProvider>
@@ -105,6 +147,8 @@ const App = () => {
             <Route path="add-trans" element={<Auth isAdmin={true}><AddTrans /> </Auth>} />
             <Route path="edit-trans/:id" element={<Auth isAdmin={true}><EditTrans /> </Auth>} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </HeaderProvider>
     </BrowserRouter>

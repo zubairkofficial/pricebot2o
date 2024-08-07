@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import Select from "react-select";
+// import Select from "react-select";
 import Helpers from "../../Config/Helpers";
 import { useHeader } from "../../Components/HeaderContext";
 
@@ -9,7 +9,7 @@ function Transcription() {
 
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: "Transkription", desc: "" });
+    setHeaderData({ title: Helpers.getTranslationValue('transcription_details'), desc: "" });
   }, [setHeaderData]);
 
   const location = useLocation();
@@ -30,7 +30,7 @@ function Transcription() {
   useEffect(() => {
     if (location.state) {
       setEmail(location.state.email || "");
-      setText(location.state.text || ""); 
+      setText(location.state.text || "");
       setSummary(location.state.summary || "");
     }
   }, [location.state]);
@@ -60,7 +60,7 @@ function Transcription() {
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';
         const author = data.BM ?? '';
-        const branchManager = data.Niederlassungsleiter ?? '';
+        // const branchManager = data.Niederlassungsleiter ?? '';
         const participants = data.Teilnehmer ?? '';
 
         // setPartnerNumber(number);
@@ -123,7 +123,7 @@ function Transcription() {
   // }));
 
   // const handleChange = (selectedOption) => {
-    // setPartnerNumber(selectedOption);
+  // setPartnerNumber(selectedOption);
   // };
 
   return (
@@ -133,17 +133,17 @@ function Transcription() {
           <div className="max-w-[614px] m-auto py-6">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-center text-2xl font-semibold  mb-8">
-                Transkriptionsdetails
+                {Helpers.getTranslationValue('transcription_details')}
               </h2>
               <div className="flex flex-col items-center">
                 {success ? (
                   <p className="text-center  mb-4">
-                    Transkription erfolgreich an {email} gesendet!
+                    {Helpers.getTranslationValue('transcription_send_to')} {email}!
                   </p>
                 ) : (
                   <form onSubmit={handleSubmit} className="w-full">
                     <div className="mb-4">
-                      <label className="">Datum:</label>
+                      <label className="">{Helpers.getTranslationValue('date')}:</label>
                       <input
                         type="date"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
@@ -152,7 +152,7 @@ function Transcription() {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="">Thema:</label>
+                      <label className="">{Helpers.getTranslationValue('topic')}:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
@@ -172,7 +172,7 @@ function Transcription() {
                       />
                     </div> */}
                     <div className="mb-4">
-                      <label className="">Verfasser:</label>
+                      <label className="">{Helpers.getTranslationValue('author')}:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
@@ -181,7 +181,7 @@ function Transcription() {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="">Teilnehmer:</label>
+                      <label className="">{Helpers.getTranslationValue('participant')}:</label>
                       <input
                         type="text"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
@@ -199,7 +199,7 @@ function Transcription() {
                       />
                     </div> */}
                     <div className="mb-4">
-                      <label className="">Transkription:</label>
+                      <label className="">{Helpers.getTranslationValue('transcription')}:</label>
                       <textarea
                         className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         rows={8}
@@ -208,7 +208,7 @@ function Transcription() {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="">Zusammenfassung:</label>
+                      <label className="">{Helpers.getTranslationValue('summary')}:</label>
                       <textarea
                         className=" border border-bgray-300 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         rows={8}
@@ -217,7 +217,7 @@ function Transcription() {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="">E-Mail:</label>
+                      <label className="">{Helpers.getTranslationValue('Email')}:</label>
                       <input
                         type="email"
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
@@ -230,14 +230,14 @@ function Transcription() {
                       className="mt-6 py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
                       disabled={loading}
                     >
-                      {loading ? "Senden..." : "Transkription senden"}
+                      {Helpers.getTranslationValue(loading ? 'sending..' : 'send_transcription')}
                     </button>
                     <button
                       type="button"
                       className="mt-4 py-3.5 flex items-center justify-center bg-gray-300  rounded-lg w-full hover:bg-gray-400 hover:bg-white-300"
                       onClick={back}
                     >
-                      Zurück
+                      {Helpers.getTranslationValue('Back')}
                     </button>
                   </form>
                 )}

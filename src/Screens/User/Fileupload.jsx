@@ -9,7 +9,7 @@ import * as XLSX from "xlsx";
 function FileUpload() {
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: 'Datei-Upload', desc: '' });
+    setHeaderData({ title: Helpers.getTranslationValue('files_upload'), desc: '' });
   }, [setHeaderData]);
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -28,7 +28,7 @@ function FileUpload() {
 
   const handleFileUpload = async () => {
     if (!selectedFiles || selectedFiles.length === 0) {
-      Helpers.toast("error", "Bitte wählen Sie zunächst eine Datei aus.");
+      Helpers.toast("error", Helpers.getTranslationValue('file_select_first'));
       return;
     }
 
@@ -49,17 +49,17 @@ function FileUpload() {
         if (response.status === 200) {
           newStatuses[file.name] = { status: "Completed", data: response.data.data };
         } else {
-          throw new Error(response.message || "Fehler beim Hochladen der Datei");
+          throw new Error(response.message || Helpers.getTranslationValue('error_file_upload'));
         }
       } catch (error) {
         console.error("Error:", error);
-        Helpers.toast("error", "Fehler beim Hochladen der Datei " + file.name);
+        Helpers.toast("error", Helpers.getTranslationValue('error_file_upload') + file.name);
         newStatuses[file.name] = { status: "Error", data: error.toString() };
       }
 
       setFileStatuses({ ...newStatuses });
     }
-    Helpers.toast("success", "Dateien erfolgreich verarbeitet.");
+    Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
   };
 
   const allFilesCompleted = Object.values(fileStatuses).every(file => file.status === "Completed");
@@ -96,7 +96,7 @@ function FileUpload() {
   };
   return (
     <div className="w-full bg-white py-5 mx-auto">
-      <h2 className="text-center text-2xl font-semibold mb-8">Daten hochladen</h2>
+      <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('files_upload')}</h2>
       <div className="flex flex-col items-center px-10">
         <input
           type="file"
@@ -126,14 +126,14 @@ function FileUpload() {
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
           style={{ marginRight: '40px' }}
         >
-          Ausführen <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" />
+          {Helpers.getTranslationValue('carry_out')} <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" />
         </button>
         <button
           onClick={handleDownload}
           disabled={!allFilesCompleted}
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
         >
-          Download <FontAwesomeIcon icon={faDownload} className="ml-2" />
+          {Helpers.getTranslationValue('download')} <FontAwesomeIcon icon={faDownload} className="ml-2" />
         </button>
       </div>
     </div>

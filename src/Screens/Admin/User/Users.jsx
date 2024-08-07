@@ -108,7 +108,7 @@ const Users = () => {
                 type="text"
                 className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
                 id="search"
-                placeholder="Nach Name suchen"
+                placeholder={Helpers.getTranslationValue('user_search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />

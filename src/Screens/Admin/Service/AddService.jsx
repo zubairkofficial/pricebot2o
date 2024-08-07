@@ -44,7 +44,7 @@ const AddService = () => {
                 link: "",
             });
 
-            Helpers.toast("success", response.data.message);
+            Helpers.toast("success", Helpers.getTranslationValue('add_service_msg'));
             navigate("/admin/services");
         } catch (error) {
             Helpers.toast('error', error.message);
@@ -52,7 +52,7 @@ const AddService = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 py-5">
+        <div className="bg-gray-100 py-8">
             <div className="flex justify-center items-center">
                 <div className="bg-white shadow-md rounded-lg p-6 max-w-2xl w-full">
                     <h5 className="text-xl font-semibold mb-4">{Helpers.getTranslationValue('add_service')}</h5>

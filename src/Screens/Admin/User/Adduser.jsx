@@ -63,10 +63,10 @@ const AddUser = () => {
   };
 
   return (
-    <section className="bg-white p-5">
-      <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
-        <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 pt-10">
-          <div className="max-w-2xl mx-auto pt-10 pb-16">
+    <section className="bg-white">
+      <div className="flex flex-col lg:flex-row justify-between lg:px-12">
+        <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 ">
+          <div className="max-w-2xl mx-auto pb-16">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('Add user')}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -104,7 +104,7 @@ const AddUser = () => {
                 />
 
                 <label htmlFor="services" className="block text-sm font-medium text-gray-700">
-                {Helpers.getTranslationValue('Servies')}</label>
+                  {Helpers.getTranslationValue('Servies')}</label>
                 <Select
                   options={services.map(service => ({ label: service.name, value: service.id }))}
                   multi
@@ -115,7 +115,7 @@ const AddUser = () => {
                 {user.services.includes(2) &&
                   <>
                     <label htmlFor="org" className="block text-sm font-medium text-gray-700">
-                    {Helpers.getTranslationValue('Organization')}</label>
+                      {Helpers.getTranslationValue('Organization')}</label>
                     <Select
                       options={orgs.map(org => ({ label: org.name, value: org.id }))}
                       onChange={(value) => handleChange('org_id')(value.value)}

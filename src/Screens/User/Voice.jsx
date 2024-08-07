@@ -29,7 +29,7 @@ const Voice = () => {
   });
 
   useEffect(() => {
-    setHeaderData({ title: "Stimme", desc: "" });
+    setHeaderData({ title: Helpers.getTranslationValue('voice_assistant'), desc: "" });
     setState(prevState => ({ ...prevState, hasHistory: window.history.length > 1 }));
   }, [setHeaderData]);
 
@@ -52,7 +52,7 @@ const Voice = () => {
         );
 
         if (response.status !== 200) {
-          throw new Error(response.message || "Netzwerkantwort war nicht erfolgreich.");
+          throw new Error(response.message || Helpers.getTranslationValue('voice_assistant_file_upload_error'));
         }
 
         setState(prevState => ({
@@ -60,13 +60,13 @@ const Voice = () => {
           transcriptionText: response.data.transcription.results.channels[0].alternatives[0].transcript
         }));
       } catch (error) {
-        const errorMessage = error.message || "Fehler beim Transkribieren der Datei.";
+        const errorMessage = error.message || Helpers.getTranslationValue('error_transcribing_file');
         setState(prevState => ({ ...prevState, errorMessage }));
       } finally {
         setState(prevState => ({ ...prevState, transcribing: false }));
       }
     } else {
-      setState(prevState => ({ ...prevState, errorMessage: "Bitte wählen Sie zuerst eine Datei aus." }));
+      setState(prevState => ({ ...prevState, errorMessage: Helpers.getTranslationValue('select_file_first') }));
     }
   };
 
@@ -81,7 +81,7 @@ const Voice = () => {
       );
 
       if (response.status !== 200) {
-        throw new Error(response.message || "Failed to generate summary.");
+        throw new Error(response.message || Helpers.getTranslationValue('fail_to_generate_summary'));
       }
 
       setState(prevState => ({
@@ -91,7 +91,7 @@ const Voice = () => {
         isEmailButtonVisible: true,
       }));
     } catch (error) {
-      setState(prevState => ({ ...prevState, summaryError: error.message || "Error generating summary." }));
+      setState(prevState => ({ ...prevState, summaryError: error.message || Helpers.getTranslationValue('fail_to_generate_summary') }));
     } finally {
       setState(prevState => ({ ...prevState, isSummaryGenerating: false }));
     }
@@ -117,10 +117,10 @@ const Voice = () => {
     <section className="bg-white">
       <div className="flex flex-col lg:flex-row justify-between">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
-          <div className="max-w-4xl mx-auto pt-10 pb-10">
+          <div className="max-w-4xl mx-auto py-4">
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-bold mb-6">Stimmaufnahme</h2>
-              
+              <h2 className="text-2xl font-bold mb-6">{Helpers.getTranslationValue('voice_recording')}</h2>
+
               <div className="relative mb-4">
                 <textarea
                   className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
@@ -128,7 +128,6 @@ const Voice = () => {
                   rows={8}
                   value={state.userTranscript}
                   onChange={handleTranscriptChange}
-                  placeholder="Beginnen Sie zu sprechen oder laden Sie Ihre Sprache hoch, um sie hier zu transkribieren."
                 />
               </div>
               {state.errorMessage && (
@@ -136,7 +135,7 @@ const Voice = () => {
               )}
               {state.showSummary && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold">Zusammenfassung:</h5>
+                  <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('summary')}:</h5>
                   <p>{state.summary}</p>
                 </div>
               )}
@@ -147,14 +146,14 @@ const Voice = () => {
                     className="h-12 px-5 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     disabled={state.isSummaryGenerating}
                   >
-                    {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
+                    {Helpers.getTranslationValue(state.isSummaryGenerating ? 'generateing_summary' : "generate_summary")}
                   </button>
                   {state.isEmailButtonVisible && (
                     <button
                       onClick={() => handleNextPageClick(state.userTranscript, state.summary)}
                       className="h-10 px-5 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     >
-                      Per E-Mail senden
+                      {Helpers.getTranslationValue('send_via_email')}
                     </button>
                   )}
                 </div>
@@ -166,17 +165,17 @@ const Voice = () => {
                 {listening ? (
                   <span className="flex items-center">
                     <FontAwesomeIcon icon={faStopCircle} className="mr-2" />
-                    Stoppen
+                    {Helpers.getTranslationValue('stop')}
                   </span>
                 ) : (
                   <span className="flex items-center">
                     <FontAwesomeIcon icon={faMicrophone} className="mr-2" />
-                    Aufzeichnen
+                    {Helpers.getTranslationValue('record')}
                   </span>
                 )}
               </button>
               {state.transcribing && (
-                <div className="text-gray-600 mt-4">Transkribieren...</div>
+                <div className="text-gray-600 mt-4">{Helpers.getTranslationValue('transcribe...')}</div>
               )}
               <div className="mb-4">
                 <input
@@ -189,41 +188,41 @@ const Voice = () => {
                   className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
                   disabled={state.transcribing}
                 >
-                  {state.transcribing ? "Transkribieren..." : "Datei transkribieren"}
+                  {Helpers.getTranslationValue(state.transcribing ? "transcribe..." : "transcribe_file")}
                 </button>
               </div>
               {state.transcriptionText && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold">Transkription:</h5>
+                  <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('transcription')}:</h5>
                   <p>{state.transcriptionText}</p>
                   <button
                     onClick={() => handleGenerateSummary(state.transcriptionText, 'transcription')}
                     className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     disabled={state.isSummaryGenerating}
                   >
-                    {state.isSummaryGenerating ? "Zusammenfassung wird generiert..." : "Zusammenfassung generieren"}
+                    {Helpers.getTranslationValue(state.isSummaryGenerating ? 'generateing_summary' : "generate_summary")}
                   </button>
                 </div>
               )}
               {state.showTranscriptionSummary && (
                 <div className="mb-4">
-                  <h5 className="text-lg font-semibold">Zusammenfassung:</h5>
+                  <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('summary')}:</h5>
                   <p>{state.transcriptionSummary}</p>
                   <button
                     onClick={() => handleNextPageClick(state.transcriptionText, state.transcriptionSummary)}
                     className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                   >
-                    Per E-Mail senden
+                    {Helpers.getTranslationValue('send_via_email')}
                   </button>
                 </div>
               )}
-            <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2 mt-8">
+              <div className="flex flex-col md:flex-row md:space-x-4 mb-4 gap-2 mt-8">
                 <Link to="/sent-emails" className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3">
-                  Vorherige Historie
+                  {Helpers.getTranslationValue('emails_sent')}
                 </Link>
                 {state.hasHistory && (
                   <button onClick={() => window.history.forward()} className="text-white  h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3">
-                    Zurück
+                    {Helpers.getTranslationValue('previous_history')}
                   </button>
                 )}
               </div>

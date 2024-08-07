@@ -85,9 +85,9 @@ const EditOrg = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10">
+        <div className="bg-gray-100 py-8">
             <div className="max-w-4xl mx-auto px-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{isEditing ? 'Organisation bearbeiten' : 'Organisationsdetails'}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{Helpers.getTranslationValue(isEditing ? 'edit_org' : 'Organizations')}</h2>
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
                         {isEditing ? (
@@ -98,7 +98,6 @@ const EditOrg = () => {
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    placeholder="Name der Organisation"
                                 />
                                 <input
                                     type="text"
@@ -106,14 +105,12 @@ const EditOrg = () => {
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.number}
                                     onChange={handleChange}
-                                    placeholder="Nummer"
                                 />
                                 <textarea
                                     name="street"
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.street}
                                     onChange={handleChange}
-                                    placeholder="Straße"
                                     rows="3"
                                 />
                                 <textarea
@@ -121,12 +118,11 @@ const EditOrg = () => {
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.prompt}
                                     onChange={handleChange}
-                                    placeholder="Prompt"
                                     rows="3"
                                 />
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
-                                    {Helpers.getTranslationValue('Cancel')}</button>
+                                        {Helpers.getTranslationValue('Cancel')}</button>
                                     <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">                                 {Helpers.getTranslationValue('save_changes')}</button>
                                 </div>
                             </form>

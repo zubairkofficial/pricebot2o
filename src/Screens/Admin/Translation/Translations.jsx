@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaPencilAlt, FaTrash, FaTimes } from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
@@ -9,7 +9,7 @@ import Pagination from '../../../Components/Pagination';
 const Translations = () => {
     const { setHeaderData } = useHeader();
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue("Translations"), desc: 'Verwalten Sie hier Ihre Organisationen' });
+        setHeaderData({ title: Helpers.getTranslationValue("Translations"), desc: Helpers.getTranslationValue('trans_desc') });
     }, [setHeaderData]);
 
     const [trans, setTrans] = useState([]);
@@ -37,10 +37,10 @@ const Translations = () => {
     const fetchTrans = async () => {
         try {
             const response = await axios.get(`${Helpers.apiUrl}all-trans`, Helpers.authHeaders);
-            localStorage.removeItem('translationData');
             if (response.status !== 200) {
-                throw new Error("Organisationen konnten nicht abgerufen werden");
+                throw new Error(Helpers.getTranslationValue('trans_fetch_error'));
             }
+            localStorage.removeItem('translationData');
             Helpers.setItem("translationData", response.data, true);
             setTrans(response.data);
             setFilteredTrans(response.data);
@@ -76,7 +76,7 @@ const Translations = () => {
 
     return (
         <section className="bg-white">
-            <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
+            <div className="flex flex-col lg:flex-row justify-between lg:px-12 py-4">
                 <div className="w-full px-5 xl:pl-12">
                     <div className="m-auto">
                         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -87,7 +87,7 @@ const Translations = () => {
                                             type="text"
                                             className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
                                             id="search"
-                                            placeholder="Nach Name suchen"
+                                            placeholder={Helpers.getTranslationValue('trans_search')}
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
@@ -120,7 +120,7 @@ const Translations = () => {
                                 <Link to="/admin/add-trans"
                                     className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
-                                    Organisation hinzufügen
+                                    {Helpers.getTranslationValue("add_trans")}
                                 </Link>
                             </div>
                             <div className="overflow-x-auto">
@@ -128,8 +128,8 @@ const Translations = () => {
                                     <thead className="bg-gray-100">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Value</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue("key")}</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue("value")}</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
                                         </tr>
                                     </thead>

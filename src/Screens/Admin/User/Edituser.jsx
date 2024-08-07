@@ -73,7 +73,7 @@ const EditUser = () => {
         Helpers.authHeaders
       );
       if (response.status !== 200) throw new Error(Helpers.getTranslationValue('user_not_found'));
-      Helpers.toast("success",Helpers.getTranslationValue('user_update_msg'));
+      Helpers.toast("success", Helpers.getTranslationValue('user_update_msg'));
       navigate("/admin/home");
     } catch (error) {
       setError(error.message);
@@ -92,7 +92,7 @@ const EditUser = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-       {Helpers.getTranslationValue('Is_loading')}
+        {Helpers.getTranslationValue('Is_loading')}
       </div>
     );
 
@@ -103,7 +103,7 @@ const EditUser = () => {
     return <div className="text-center text-red-500 mt-5">{Helpers.getTranslationValue('user_not_found')}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-5">
+    <div className="bg-gray-100 py-5">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold text-gray-900 mb-6">{Helpers.getTranslationValue('Edit user')}</h2>
         <div className="bg-white shadow sm:rounded-lg">
@@ -171,7 +171,7 @@ const EditUser = () => {
                         htmlFor="org"
                         className="block text-sm font-medium text-gray-700"
                       >
-                      {Helpers.getTranslationValue('Organization')}
+                        {Helpers.getTranslationValue('Organization')}
                       </label>
                       <Select
                         values={selectedOrg ? [selectedOrg] : []}
@@ -182,7 +182,6 @@ const EditUser = () => {
                             org_id: selectedOption[0].value,
                           })
                         }
-                        placeholder="Organisation  auswählen"
                         className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                       />
                     </div>
@@ -210,13 +209,13 @@ const EditUser = () => {
                   <Avatar name={user.name} src={userAvatar} round size="100" />
                 </div>
                 <h6 className="text-center text-lg font-medium text-gray-900 mt-4">
-                {Helpers.getTranslationValue('User_info')}
+                  {Helpers.getTranslationValue('User_info')}
                 </h6>
                 <div className="border-t border-gray-200 mt-5">
                   <dl>
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                      {Helpers.getTranslationValue('Name')}
+                        {Helpers.getTranslationValue('Name')}
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {user.name}
@@ -224,7 +223,7 @@ const EditUser = () => {
                     </div>
                     <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                      {Helpers.getTranslationValue('Email')}
+                        {Helpers.getTranslationValue('Email')}
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {user.email}
@@ -232,7 +231,7 @@ const EditUser = () => {
                     </div>
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">
-                      {Helpers.getTranslationValue('Services')}
+                        {Helpers.getTranslationValue('Services')}
                       </dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                         {services

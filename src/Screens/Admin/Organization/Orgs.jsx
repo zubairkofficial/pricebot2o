@@ -18,7 +18,7 @@ const Orgs = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -89,7 +89,7 @@ const Orgs = () => {
 
     return (
         <section className="bg-white">
-            <div className="flex flex-col lg:flex-row justify-between lg:px-12 pt-10">
+            <div className="flex flex-col lg:flex-row justify-between lg:px-12">
                 <div className="w-full px-5 xl:pl-12">
                     <div className="m-auto">
                         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -100,7 +100,7 @@ const Orgs = () => {
                                             type="text"
                                             className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
                                             id="search"
-                                            placeholder="Nach Name suchen"
+                                            placeholder={Helpers.getTranslationValue('org_search')}
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />

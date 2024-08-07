@@ -54,7 +54,7 @@ const AddOrg = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 py-10 flex justify-center items-center">
+        <div className="bg-gray-100 py-8 flex justify-center items-center">
             <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
                 <h5 className="text-xl font-semibold mb-4">{Helpers.getTranslationValue('add_org')}</h5>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
@@ -102,7 +102,7 @@ const AddOrg = () => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="col-span-2 flex justify-end">
+                    <div className="col-span-2 flex justify-start">
                         <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {Helpers.getTranslationValue('add_org')}
                         </button>
