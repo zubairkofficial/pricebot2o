@@ -37,7 +37,7 @@ const Login = () => {
       })  
       .catch((error) => {
         if (error.response && error.response.data) {
-          const errorData = error.response.data.errors || { message: error.response.data.message };
+          const errorData = error.response.data.errors || { message: Helpers.getTranslationValue(error.response.data.message) };
           setErrors(errorData);
         } else {
           setErrors({ message: Helpers.getTranslationValue('unexpected_error') });
@@ -67,7 +67,7 @@ const Login = () => {
                   className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 {errors.email && (
-                  <small className="text-danger">
+                  <small className="text-error-200">
                     {errors.email[0]}
                   </small>
                 )}
@@ -90,14 +90,14 @@ const Login = () => {
                   />
                 </div>
                 {errors.password && (
-                  <small className="text-danger">
+                  <small className="text-error-200">
                     {errors.password[0]}
                   </small>
                 )}
               </div>
 
               {errors.message && (
-                <div className="mb-4 text-danger text-center">
+                <div className="mb-4 text-error-200 text-center">
                   {errors.message}
                 </div>
               )}

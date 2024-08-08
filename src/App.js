@@ -111,7 +111,7 @@ const App = () => {
 
   const fetchTranslations = async () => {
     try {
-      const response = await axios.get(`${Helpers.apiUrl}get-trans`);
+      const response = await axios.get(`${Helpers.apiUrl}get-trans`,{headers: {'Content-Type': "application/json"}});
       Helpers.setItem("translationData", response.data, true);
     } catch (error) {
       console.error('Error fetching translations:', error);
