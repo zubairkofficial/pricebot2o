@@ -40,7 +40,7 @@ const Login = () => {
           const errorData = error.response.data.errors || { message: error.response.data.message };
           setErrors(errorData);
         } else {
-          setErrors({ message: "An unexpected error occurred. Please try again." });
+          setErrors({ message: Helpers.getTranslationValue('unexpected_error') });
         }
         setIsLoading(false);
       });
