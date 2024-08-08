@@ -10,7 +10,7 @@ const Services = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: Helpers.getTranslationValue('Servies'), desc: Helpers.getTranslationValue('servies_desc') });
+    setHeaderData({ title: Helpers.getTranslationValue('Services'), desc: Helpers.getTranslationValue('services_desc') });
   }, []);
 
   const [services, setServices] = useState([]);

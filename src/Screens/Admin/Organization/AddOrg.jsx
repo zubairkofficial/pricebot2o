@@ -64,6 +64,7 @@ const AddOrg = () => {
                             type="text"
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="name"
+                            placeholder={Helpers.getTranslationValue('Name')}
                             name="name"
                             value={org.name}
                             onChange={handleChange}
@@ -76,6 +77,7 @@ const AddOrg = () => {
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="number"
                             name="number"
+                            placeholder={Helpers.getTranslationValue('Number')}
                             value={org.number}
                             onChange={handleChange}
                         />
@@ -87,6 +89,7 @@ const AddOrg = () => {
                             id="street"
                             name="street"
                             rows={3}
+                            placeholder={Helpers.getTranslationValue('street')}
                             value={org.street}
                             onChange={handleChange}
                         />
@@ -98,6 +101,7 @@ const AddOrg = () => {
                             id="prompt"
                             name="prompt"
                             rows={3}
+                            placeholder={Helpers.getTranslationValue('Prompt')}
                             value={org.prompt}
                             onChange={handleChange}
                         />

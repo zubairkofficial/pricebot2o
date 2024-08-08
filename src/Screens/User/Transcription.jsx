@@ -146,6 +146,7 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('date')}:</label>
                       <input
                         type="date"
+                        placeholder={Helpers.getTranslationValue('date')}
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
@@ -155,6 +156,7 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('topic')}:</label>
                       <input
                         type="text"
+                        placeholder={Helpers.getTranslationValue('topic')}
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={theme}
                         onChange={(e) => setTheme(e.target.value)}
@@ -175,6 +177,7 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('author')}:</label>
                       <input
                         type="text"
+                        placeholder={Helpers.getTranslationValue('author')}
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={author}
                         onChange={(e) => setAuthor(e.target.value)}
@@ -184,6 +187,7 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('participant')}:</label>
                       <input
                         type="text"
+                        placeholder={Helpers.getTranslationValue('participant')}
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={participants}
                         onChange={(e) => setParticipants(e.target.value)}
@@ -220,6 +224,7 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('Email')}:</label>
                       <input
                         type="email"
+                        placeholder={Helpers.getTranslationValue('Email')}
                         className=" border border-bgray-300  h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}

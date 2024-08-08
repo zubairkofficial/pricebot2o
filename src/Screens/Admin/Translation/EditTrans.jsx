@@ -91,6 +91,7 @@ const EditTrans = () => {
                                 <input
                                     type="text"
                                     name="key"
+                                    placeholder={Helpers.getTranslationValue('key')}
                                     readOnly
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.key}
@@ -99,6 +100,7 @@ const EditTrans = () => {
                                 <input
                                     type="text"
                                     name="value"
+                                    placeholder={Helpers.getTranslationValue('value')}
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.value}
                                     onChange={handleChange}

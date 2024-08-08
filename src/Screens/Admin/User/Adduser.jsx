@@ -76,6 +76,7 @@ const AddUser = () => {
                   name="name"
                   type="text"
                   required
+                  placeholder={Helpers.getTranslationValue('Name')}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={user.name}
                   onChange={(e) => handleChange('name')(e.target.value)}
@@ -87,6 +88,7 @@ const AddUser = () => {
                   name="email"
                   type="email"
                   required
+                  placeholder={Helpers.getTranslationValue('Email')}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={user.email}
                   onChange={(e) => handleChange('email')(e.target.value)}
@@ -98,6 +100,7 @@ const AddUser = () => {
                   name="password"
                   type="password"
                   required
+                  placeholder={Helpers.getTranslationValue('Password')}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   value={user.password}
                   onChange={(e) => handleChange('password')(e.target.value)}

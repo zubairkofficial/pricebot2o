@@ -60,6 +60,7 @@ const Login = () => {
                   onChange={(e) =>
                     setUser({ ...user, email: e.target.value })
                   }
+                  placeholder={Helpers.getTranslationValue('Email')}
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <small className="text-danger">
@@ -73,6 +74,7 @@ const Login = () => {
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
+                  placeholder={Helpers.getTranslationValue('Password')}
                   className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <div

@@ -97,6 +97,7 @@ const ChangePassword = () => {
                     name="old_password"
                     value={credentials.old_password}
                     onChange={handleChange}
+                    placeholder={Helpers.getTranslationValue('old_password')}
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"
@@ -119,6 +120,7 @@ const ChangePassword = () => {
                     name="password"
                     value={credentials.password}
                     onChange={handleChange}
+                    placeholder={Helpers.getTranslationValue('new_password')}
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"
@@ -141,6 +143,7 @@ const ChangePassword = () => {
                     name="password_confirmation"
                     value={credentials.password_confirmation}
                     onChange={handleChange}
+                    placeholder={Helpers.getTranslationValue('confirm_password')}
                   />
                   <div
                     className="absolute top-4 right-4 cursor-pointer"

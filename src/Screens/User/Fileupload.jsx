@@ -62,7 +62,7 @@ function FileUpload() {
     Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
   };
 
-  const allFilesCompleted = Object.values(fileStatuses).every(file => file.status === "Completed");
+  const allFilesCompleted = selectedFiles.length > 0 && Object.values(fileStatuses).every(file => file.status === "Completed");
 
   const handleDownload = () => {
     const data = [];
@@ -92,7 +92,7 @@ function FileUpload() {
     const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Files");
-    XLSX.writeFile(wb, "files_status.xlsx");
+    XLSX.writeFile(wb, "Data.xlsx");
   };
   return (
     <div className="w-full bg-white py-5 mx-auto">

@@ -19,7 +19,7 @@ const EditService = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Servies'), desc: Helpers.getTranslationValue('servies_desc') });
+        setHeaderData({ title: Helpers.getTranslationValue('Services'), desc: Helpers.getTranslationValue('services_desc') });
         fetchService();
     }, [id]);
 

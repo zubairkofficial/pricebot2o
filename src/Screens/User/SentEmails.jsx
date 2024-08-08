@@ -60,6 +60,7 @@ const SentEmails = () => {
               <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                 <input
                   type="text"
+                  placeholder={Helpers.getTranslationValue('search_mails')}
                   className="py-2 px-3  mr-2 border rounded w-full sm:w-auto focus:outline-none focus:border-success-300"
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />

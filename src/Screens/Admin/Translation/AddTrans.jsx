@@ -62,6 +62,7 @@ const AddTrans = () => {
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="key"
                             name="key"
+                            placeholder={Helpers.getTranslationValue('key')}
                             value={trans.key}
                             onChange={handleChange}
                         />
@@ -73,6 +74,7 @@ const AddTrans = () => {
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="value"
                             name="value"
+                            placeholder={Helpers.getTranslationValue('value')}
                             value={trans.value}
                             onChange={handleChange}
                         />

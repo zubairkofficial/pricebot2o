@@ -95,6 +95,7 @@ const EditOrg = () => {
                                 <input
                                     type="text"
                                     name="name"
+                                    placeholder={Helpers.getTranslationValue('Name')}
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.name}
                                     onChange={handleChange}
@@ -102,12 +103,14 @@ const EditOrg = () => {
                                 <input
                                     type="text"
                                     name="number"
+                                    placeholder={Helpers.getTranslationValue('Number')}
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.number}
                                     onChange={handleChange}
                                 />
                                 <textarea
                                     name="street"
+                                    placeholder={Helpers.getTranslationValue('street')}
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.street}
                                     onChange={handleChange}
@@ -115,6 +118,7 @@ const EditOrg = () => {
                                 />
                                 <textarea
                                     name="prompt"
+                                    placeholder={Helpers.getTranslationValue('Prompt')}
                                     className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.prompt}
                                     onChange={handleChange}
