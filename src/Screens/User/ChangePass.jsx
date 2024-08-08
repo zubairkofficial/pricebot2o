@@ -108,7 +108,7 @@ const ChangePassword = () => {
                       className="text-gray-500"
                     />
                   </div>
-                  <small className="text-danger">
+                  <small className="text-error-200">
                     {errors.old_password ? errors.old_password[0] : ""}
                   </small>
                 </div>
@@ -131,7 +131,7 @@ const ChangePassword = () => {
                       className="text-gray-500"
                     />
                   </div>
-                  <small className="text-danger">
+                  <small className="text-error-200">
                     {errors.password ? errors.password[0] : ""}
                   </small>
                 </div>
@@ -154,7 +154,7 @@ const ChangePassword = () => {
                       className="text-gray-500"
                     />
                   </div>
-                  <small className="text-danger">
+                  <small className="text-error-200">
                     {errors.password_confirmation ? errors.password_confirmation[0] : ""}
                   </small>
                 </div>
