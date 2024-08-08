@@ -44,7 +44,7 @@ class Helpers {
   };
 
   static getTranslationValue = (key) => {
-    const translations = Helpers.getItem('translationData', true);
+    const translations = this.getItem('translationData', true);
     const translation = translations?.find(item => item.key === key);
     return translation ? translation.value : key;
   };
@@ -96,7 +96,7 @@ class Helpers {
       script.src = scriptPath;
       script.async = true;
 
-      script.onload = () => resolve(script); // Resolve the promise once the script is loaded
+      script.onload = () => resolve(script); 
       script.onerror = () =>
         reject(new Error(`Script load error: ${scriptPath}`));
 
