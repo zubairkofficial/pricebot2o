@@ -34,13 +34,18 @@ const Login = () => {
           window.location.href = "/";
         }
         setIsLoading(false);
-      })
+      })  
       .catch((error) => {
-        setErrors(error.response.data.errors || {});
+        if (error.response && error.response.data) {
+          const errorData = error.response.data.errors || { message: error.response.data.message };
+          setErrors(errorData);
+        } else {
+          setErrors({ message: "An unexpected error occurred. Please try again." });
+        }
         setIsLoading(false);
       });
   };
-  
+
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
@@ -50,32 +55,30 @@ const Login = () => {
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <h2 className="text-2xl font-bold  mb-6 text-center">{Helpers.getTranslationValue('Login')}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">{Helpers.getTranslationValue('Login')}</h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
                   type="email"
                   id="email"
                   value={user.email}
-                  onChange={(e) =>
-                    setUser({ ...user, email: e.target.value })
-                  }
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
                   placeholder={Helpers.getTranslationValue('Email')}
-                  className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                  className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
-                <small className="text-danger">
-                  {errors.email ? errors.email[0] : ""}
-                </small>
+                {errors.email && (
+                  <small className="text-danger">
+                    {errors.email[0]}
+                  </small>
+                )}
               </div>
               <div className="mb-6 relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={user.password}
-                  onChange={(e) =>
-                    setUser({ ...user, password: e.target.value })
-                  }
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
                   placeholder={Helpers.getTranslationValue('Password')}
-                  className=" text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                  className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <div
                   className="absolute top-4 right-4 bottom-4 cursor-pointer"
@@ -86,15 +89,23 @@ const Login = () => {
                     className="text-gray-500"
                   />
                 </div>
-                <small className="text-danger">
-                  {errors.password ? errors.password[0] : ""}
-                </small>
+                {errors.password && (
+                  <small className="text-danger">
+                    {errors.password[0]}
+                  </small>
+                )}
               </div>
+
+              {errors.message && (
+                <div className="mb-4 text-danger text-center">
+                  {errors.message}
+                </div>
+              )}
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="py-3.5 flex  text-white items-center justify-center  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
+                className="py-3.5 flex text-white items-center justify-center font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
                 {Helpers.getTranslationValue(isLoading ? 'Is_loading' : 'Login')}
               </button>
