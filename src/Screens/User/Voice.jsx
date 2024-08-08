@@ -123,6 +123,7 @@ const Voice = () => {
 
               <div className="relative mb-4">
                 <textarea
+                  placeholder={Helpers.getTranslationValue('voice_recording')}
                   className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
                   readOnly={listening}
                   rows={8}

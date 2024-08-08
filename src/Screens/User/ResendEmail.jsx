@@ -209,6 +209,7 @@ function ResendEmail() {
                         rows={8}
                         value={text}
                         onChange={(e) => setText(e.target.value)}
+                        placeholder={Helpers.getTranslationValue('transcription')}
                       />
                     </div>
                     <div className="mb-4">
@@ -218,6 +219,7 @@ function ResendEmail() {
                         rows={8}
                         value={summary}
                         onChange={(e) => setSummary(e.target.value)}
+                        placeholder={Helpers.getTranslationValue('summary')}
                       />
                     </div>
                     <div className="mb-4">
