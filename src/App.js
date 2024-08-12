@@ -8,7 +8,7 @@ import Helpers from "./Config/Helpers";
 import Login from "./Screens/Auth/Login";
 import Adduser from "./Screens/Admin/User/Adduser";
 import Edituser from "./Screens/Admin/User/Edituser";
-import UserDashboard from "./Screens/User/Home";
+import UserDashboard from "./Screens/User/Dashboard";
 import UserLayout from "./Screens/User/Layout";
 import FileUpload from "./Screens/User/Fileupload";
 import ChangePass from "./Screens/User/ChangePass";
