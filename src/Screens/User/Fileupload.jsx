@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudUploadAlt, faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faCloudUploadAlt, faDownload, faSpinner, faCheckCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from '../../Components/HeaderContext';
 import * as XLSX from "xlsx";
 
@@ -94,6 +94,20 @@ function FileUpload() {
     XLSX.utils.book_append_sheet(wb, ws, "Files");
     XLSX.writeFile(wb, "Data.xlsx");
   };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case "In Progress":
+        return <FontAwesomeIcon icon={faSpinner} spin className="text-blue-500" />;
+      case "Completed":
+        return <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />;
+      case "Error":
+        return <FontAwesomeIcon icon={faExclamationCircle} className="text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="w-full bg-white py-5 mx-auto">
       <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('files_upload')}</h2>
@@ -113,7 +127,10 @@ function FileUpload() {
             <li key={index} className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex justify-between items-center space-x-2">
                 <span>{file.name} ({file.size} bytes)</span>
-                <span>{fileStatuses[file.name].status}</span>
+                <span className="flex items-center space-x-2">
+                  {getStatusIcon(fileStatuses[file.name].status)}
+                  <span>{fileStatuses[file.name].status}</span>
+                </span>
               </div>
             </li>
           ))}
