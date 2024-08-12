@@ -233,7 +233,7 @@ const Layout = () => {
                     </Link>
                   </li>
                   <li className="item py-[11px] text-black ">
-                    <a onClick={handleLogout}>
+                    <a onClick={handleLogout} className="cursor-pointer">
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-2.5 items-center">
                           <span className="item-ico">
@@ -267,7 +267,7 @@ const Layout = () => {
                               />
                             </svg>
                           </span>
-                          <span className="item-text text-lg font-medium leading-none cursor-pointer">
+                          <span className="item-text text-lg font-medium leading-none">
                             {Helpers.getTranslationValue("Log out")}
                           </span>
                         </div>
@@ -423,7 +423,7 @@ const Layout = () => {
                         </Link>
                       </li>
                       <li className="item py-[11px] px-[43px]">
-                        <a onClick={handleLogout}>
+                        <a onClick={handleLogout} className="cursor-pointer">
                           <span className="item-ico">
                             <svg
                               width="21"
