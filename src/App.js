@@ -25,6 +25,7 @@ import EditOrg from "./Screens/Admin/Organization/EditOrg";
 import Trans from "./Screens/Admin/Translation/Translations";
 import AddTrans from "./Screens/Admin/Translation/AddTrans";
 import EditTrans from "./Screens/Admin/Translation/EditTrans";
+import ContractAutomationSolution from './Screens/User/ContractAutomationSolution';
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -127,6 +128,8 @@ const App = () => {
             <Route path="/" element={<Auth><UserDashboard /></Auth>} />
             <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
             <Route path="/voice" element={<Auth><Voice /></Auth>} />
+            <Route path="/contract_automation_solution" element={<Auth><ContractAutomationSolution /></Auth>} />
+
             <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
             <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
             <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
