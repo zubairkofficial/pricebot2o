@@ -18,6 +18,8 @@ function Transcription() {
   const [success, setSuccess] = useState(false);
   const [text, setText] = useState("");
   const [summary, setSummary] = useState("");
+  const [summaryId, setSummaryId] = useState("");
+
   const [date, setDate] = useState("");
   const [theme, setTheme] = useState("");
   // const [branchManager, setBranchManager] = useState("");
@@ -32,6 +34,9 @@ function Transcription() {
       setEmail(location.state.email || "");
       setText(location.state.text || "");
       setSummary(location.state.summary || "");
+      setSummaryId(location.state.summary_id || "");
+      
+
     }
   }, [location.state]);
 
@@ -50,12 +55,17 @@ function Transcription() {
 
   useEffect(() => {
     const fetchLatestNumber = async () => {
+
+      
       try {
+        // console.log('fetch latest summary id', location.state.summary_id);
         const response = await axios.get(
-          `${Helpers.apiUrl}getLatestNumber`, Helpers.authHeaders
+          `${Helpers.apiUrl}getLatestNumber/${location.state.summary_id}`, Helpers.authHeaders
         );
 
         const data = response.data ?? {};
+        // console.log('data in getLatestNumber',data);
+        
         // const number = data.number ?? '';
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';

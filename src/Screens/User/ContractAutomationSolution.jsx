@@ -9,7 +9,7 @@ function ContractAutomationSolution() {
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Vertrags automatisierung slösung'), desc: '' });
+        setHeaderData({ title: Helpers.getTranslationValue('Automatisierte Vertragserstellung'), desc: '' });
     }, [setHeaderData]);
 
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -102,7 +102,7 @@ function ContractAutomationSolution() {
 
     return (
         <div className="w-full bg-white py-5 mx-auto">
-            <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('Vertrags automatisierung slösung')}</h2>
+            <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('Automatisierte Vertragserstellung')}</h2>
             <div className="flex flex-col items-center px-10">
                 <div className="w-full mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">

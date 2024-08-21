@@ -51,9 +51,9 @@ const AddUser = () => {
     e.preventDefault();
     try {
       const response = await axios.post(`${Helpers.apiUrl}auth/register`, user, Helpers.authHeaders);
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         Helpers.toast('success', Helpers.getTranslationValue('user_save_msg'));
-        navigate("/admin/home");
+        navigate("/admin/dashboard");
       } else {
         throw new Error(Helpers.getTranslationValue('user_save_error'));
       }

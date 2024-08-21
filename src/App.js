@@ -26,6 +26,9 @@ import Trans from "./Screens/Admin/Translation/Translations";
 import AddTrans from "./Screens/Admin/Translation/AddTrans";
 import EditTrans from "./Screens/Admin/Translation/EditTrans";
 import ContractAutomationSolution from './Screens/User/ContractAutomationSolution';
+import Tools from './Screens/Admin/Tools/Tools';
+import AddTool from './Screens/Admin/Tools/AddTool';
+import EditTool from './Screens/Admin/Tools/EditTool';
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -149,6 +152,10 @@ const App = () => {
             <Route path="translations" element={<Auth isAdmin={true}><Trans /> </Auth>} />
             <Route path="add-trans" element={<Auth isAdmin={true}><AddTrans /> </Auth>} />
             <Route path="edit-trans/:id" element={<Auth isAdmin={true}><EditTrans /> </Auth>} />
+            <Route path="tools" element={<Auth isAdmin={true}><Tools /> </Auth>} />
+            <Route path="add-tool" element={<Auth isAdmin={true}><AddTool /> </Auth>} />
+            <Route path="edit-tool/:id" element={<Auth isAdmin={true}><EditTool /> </Auth>} />
+
           </Route>
 
           <Route path="*" element={<NotFound />} />

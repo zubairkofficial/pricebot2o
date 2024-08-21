@@ -66,6 +66,9 @@ const Services = () => {
       setError(error.message);
     }
   };
+  const handleAdd = () => {
+    navigate(`/admin/add-service`);
+  };
 
   const indexOfFirstService = currentPage * itemsPerPage;
   const indexOfLastService = indexOfFirstService + itemsPerPage;
@@ -94,7 +97,7 @@ const Services = () => {
               type="text"
               className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
               id="search"
-              placeholder={Helpers.getTranslationValue('service_search')}
+              placeholder={Helpers.getTranslationValue('Suchdienst')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -123,16 +126,24 @@ const Services = () => {
               </svg>
             </div>
           </div>
+
         </div>
+        <button
+          className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
+          onClick={handleAdd}>
+          Dienst hinzufügen
+        </button>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Image')}</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Name')}</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('description')}</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('link')}</th>
+  
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
             </tr>
           </thead>
@@ -140,9 +151,21 @@ const Services = () => {
             {currentServices.map((service, index) => (
               <tr key={service.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstService + index + 1}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {service.image ? (
+                    <img
+                      src={`${Helpers.basePath}/images/${service.image}`}
+                      alt={service.name}
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span>No Image</span>
+                  )}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.description}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.link}</td>
+               
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                   <button className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 p-2" onClick={() => handleEdit(service.id)}>
                     <FaPencilAlt />

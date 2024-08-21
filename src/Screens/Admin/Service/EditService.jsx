@@ -16,6 +16,8 @@ const EditService = () => {
         description: "",
         link: "",
     });
+    const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,6 +37,9 @@ const EditService = () => {
                 description: response.data.description,
                 link: response.data.link,
             });
+            if (response.data.image) {
+                setImagePreview(`${Helpers.basePath}/images/${response.data.image}`);
+            }
             setLoading(false);
         } catch (error) {
             setError(error.message);
@@ -50,14 +55,50 @@ const EditService = () => {
         }));
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+
+            // For previewing the selected image
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const updateData = new FormData();
+        updateData.append("name", formData.name);
+        updateData.append("description", formData.description);
+        updateData.append("link", formData.link);
+        if (image) {
+            updateData.append("image", image);
+        }
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            Helpers.toast('error', 'User is not authenticated. Please log in again.');
+            navigate('/login');
+            return;
+        }
+
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+        };
+
         try {
-            const response = await axios.post(`${Helpers.apiUrl}update-service/${id}`, formData, Helpers.authHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}update-service/${id}`, updateData, { headers });
             if (response.status !== 200) {
                 throw new Error(Helpers.getTranslationValue('service_update_error'));
             }
-            Helpers.toast("success", Helpers.getTranslationValue('service_add_msg'));
+            Helpers.toast("success", Helpers.getTranslationValue('service_update_msg'));
             navigate("/admin/services");
         } catch (error) {
             setError(error.message);
@@ -85,7 +126,7 @@ const EditService = () => {
     return (
         <div className="bg-gray-100 py-8">
             <div className="max-w-4xl mx-auto px-4">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">{Helpers.getTranslationValue(isEditing ? 'Edit_service' : 'Servies')}</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">{Helpers.getTranslationValue(isEditing ? 'Edit_service' : 'Service')}</h2>
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <div className="px-4 py-5 sm:p-6">
                         {isEditing ? (
@@ -128,6 +169,22 @@ const EditService = () => {
                                         placeholder={Helpers.getTranslationValue('description')}
                                     />
                                 </div>
+                                <div>
+                                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Image')}</label>
+                                    <input
+                                        type="file"
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        id="image"
+                                        name="image"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                    />
+                                    {imagePreview && (
+                                        <div className="mt-4">
+                                            <img src={imagePreview} alt="Selected" className="h-40 w-auto object-cover rounded-lg border" />
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="flex justify-end space-x-3">
                                     <button
                                         type="button"
@@ -150,13 +207,16 @@ const EditService = () => {
                                     <div className="flex-1">
                                         <h3 className="text-lg leading-6 font-medium text-gray-900">{service.name}</h3>
                                         <p className="mt-1 max-w-2xl text-sm text-gray-500">{service.description}</p>
+                                        {/* {service.image && (
+                                            <img src={`${Helpers.basePath}/images/${service.image}`} alt="Service" className="max-h-40 max-w-full object-contain mt-4" />
+                                        )} */}
                                     </div>
                                     <Link to="/admin/services" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300">
                                         {Helpers.getTranslationValue('Back')}
                                     </Link>
                                     <button
                                         onClick={() => setIsEditing(true)}
-                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-success-300 hover:bg-success-4  00"
+                                        className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-success-300 hover:bg-success-400"
                                     >
                                         {Helpers.getTranslationValue('Edit')}
                                     </button>

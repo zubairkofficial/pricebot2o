@@ -13,17 +13,23 @@ class Helpers {
     return `${this.basePath}/uploads/${name}`;
   };
 
+  static getToken = () => {
+    const token = localStorage.getItem("token");
+    // console.log("Retrieved token:", token); // Debugging: Check if the token is correctly retrieved
+    return token;
+  };
+
   static authHeaders = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${this.getToken()}`,
     },
   };
 
   static authFileHeaders = {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${this.getToken()}`,
     },
   };
 

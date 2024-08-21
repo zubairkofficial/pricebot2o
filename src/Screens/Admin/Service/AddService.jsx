@@ -6,6 +6,7 @@ import { useHeader } from '../../../Components/HeaderContext';
 
 const AddService = () => {
     const { setHeaderData } = useHeader();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setHeaderData({ title: Helpers.getTranslationValue('Services'), desc: Helpers.getTranslationValue('services_desc') });
@@ -17,11 +18,26 @@ const AddService = () => {
         link: "",
     });
 
-    const navigate = useNavigate();
+    const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setService({ ...service, [name]: value });
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+
+            // For previewing the selected image
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -32,8 +48,30 @@ const AddService = () => {
             return;
         }
 
+        const formData = new FormData();
+        formData.append("name", service.name);
+        formData.append("description", service.description);
+        formData.append("link", service.link);
+        if (image) {
+            formData.append("image", image);
+        }
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            Helpers.toast('error', 'User is not authenticated. Please log in again.');
+            navigate('/login');
+            return;
+        }
+
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+        };
+
         try {
-            const response = await axios.post(`${Helpers.apiUrl}add-service`, service, Helpers.authHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}add-service`, formData, { headers });
+
             if (response.status !== 200) {
                 throw new Error(Helpers.getTranslationValue('service_add_error'));
             }
@@ -43,11 +81,20 @@ const AddService = () => {
                 description: "",
                 link: "",
             });
+            setImage(null);
+            setImagePreview(null);
 
             Helpers.toast("success", Helpers.getTranslationValue('add_service_msg'));
             navigate("/admin/services");
         } catch (error) {
-            Helpers.toast('error', error.message);
+            if (error.response && error.response.status === 401) {
+                // Token might be invalid or expired
+                localStorage.removeItem('authToken');
+                Helpers.toast('error', 'Session expired or invalid token. Please log in again.');
+                navigate('/login');
+            } else {
+                Helpers.toast('error', error.response?.data?.message || error.message);
+            }
         }
     };
 
@@ -92,6 +139,22 @@ const AddService = () => {
                                 value={service.description}
                                 onChange={handleChange}
                             />
+                        </div>
+                        <div>
+                            <label htmlFor="image" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Image')}</label>
+                            <input
+                                type="file"
+                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                id="image"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                            {imagePreview && (
+                                <div className="mt-4">
+                                    <img src={imagePreview} alt="Selected" className="max-h-20" />
+                                </div>
+                            )}
                         </div>
                         <div className="flex justify-end">
                             <button

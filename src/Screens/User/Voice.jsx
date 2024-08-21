@@ -26,6 +26,7 @@ const Voice = () => {
     hasHistory: false,
     isGenerateSummaryBtnVisible: false,
     userTranscript: "",
+    summary_id: "",
   });
 
   useEffect(() => {
@@ -83,10 +84,12 @@ const Voice = () => {
       if (response.status !== 200) {
         throw new Error(response.message || Helpers.getTranslationValue('fail_to_generate_summary'));
       }
+      
 
       setState(prevState => ({
         ...prevState,
         [type === 'voice' ? 'summary' : 'transcriptionSummary']: response.data.summary,
+        [type === 'voice' ? 'summary_id' : 'summary_id']: response.data.summary_id,
         [type === 'voice' ? 'showSummary' : 'showTranscriptionSummary']: true,
         isEmailButtonVisible: true,
       }));
@@ -99,8 +102,8 @@ const Voice = () => {
 
   const handleFileChange = (event) => setState(prevState => ({ ...prevState, file: event.target.files[0] }));
 
-  const handleNextPageClick = (text, summary) => {
-    navigate("/transcription", { state: { text, summary } });
+  const handleNextPageClick = (summary_id ,text, summary) => {
+    navigate("/transcription", { state: { summary_id, text, summary } });
   };
 
   const handleStartListening = () => {
@@ -138,6 +141,7 @@ const Voice = () => {
                 <div className="mb-4">
                   <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('summary')}:</h5>
                   <p>{state.summary}</p>
+               
                 </div>
               )}
               {!listening && state.isGenerateSummaryBtnVisible && (
@@ -151,7 +155,7 @@ const Voice = () => {
                   </button>
                   {state.isEmailButtonVisible && (
                     <button
-                      onClick={() => handleNextPageClick(state.userTranscript, state.summary)}
+                      onClick={() => handleNextPageClick(state.summary_id,state.userTranscript, state.summary)}
                       className="h-10 px-5 text-white  transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                     >
                       {Helpers.getTranslationValue('send_via_email')}
@@ -210,7 +214,7 @@ const Voice = () => {
                   <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('summary')}:</h5>
                   <p>{state.transcriptionSummary}</p>
                   <button
-                    onClick={() => handleNextPageClick(state.transcriptionText, state.transcriptionSummary)}
+                    onClick={() => handleNextPageClick(state.summary_id, state.transcriptionText, state.transcriptionSummary)}
                     className="h-10 px-5 transition-colors text-white  duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300"
                   >
                     {Helpers.getTranslationValue('send_via_email')}
