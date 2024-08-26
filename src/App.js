@@ -29,6 +29,7 @@ import ContractAutomationSolution from './Screens/User/ContractAutomationSolutio
 import Tools from './Screens/Admin/Tools/Tools';
 import AddTool from './Screens/Admin/Tools/AddTool';
 import EditTool from './Screens/Admin/Tools/EditTool';
+import DataProcess from './Screens/User/DataProcess';
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -132,6 +133,7 @@ const App = () => {
             <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />
             <Route path="/voice" element={<Auth><Voice /></Auth>} />
             <Route path="/contract_automation_solution" element={<Auth><ContractAutomationSolution /></Auth>} />
+            <Route path="/data_process" element={<Auth><DataProcess /></Auth>} />
 
             <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
             <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />

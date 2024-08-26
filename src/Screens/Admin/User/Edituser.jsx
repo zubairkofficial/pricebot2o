@@ -74,7 +74,7 @@ const EditUser = () => {
       );
       if (response.status !== 200) throw new Error(Helpers.getTranslationValue('user_not_found'));
       Helpers.toast("success", Helpers.getTranslationValue('user_update_msg'));
-      navigate("/admin/home");
+      navigate("/admin/dashboard");
     } catch (error) {
       setError(error.message);
     }
