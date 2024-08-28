@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudUploadAlt, faSpinner, faCheckCircle, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { faCloudUploadAlt, faSpinner, faCheckCircle, faExclamationCircle, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from '../../Components/HeaderContext';
 
 function DataProcess() {
@@ -19,12 +19,18 @@ function DataProcess() {
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
         const newStatuses = {};
+        
         files.forEach(file => {
-            newStatuses[file.name] = { status: "Pending", data: null };
+            newStatuses[file.name] = { status: "Pending", data: null, downloadUrl: null };
         });
-        setSelectedFiles(files);
-        setFileStatuses(newStatuses);
+    
+        // Combine existing files with new ones
+        setSelectedFiles(prevFiles => [...prevFiles, ...files]);
+    
+        // Combine existing statuses with new ones
+        setFileStatuses(prevStatuses => ({ ...prevStatuses, ...newStatuses }));
     };
+    
 
     const handleFileUpload = async () => {
         if (!selectedFiles || selectedFiles.length === 0) {
@@ -55,22 +61,16 @@ function DataProcess() {
                 });
 
                 if (response.status === 200) {
-                    // Create a URL for the file blob and trigger a download
+                    // Create a URL for the file blob and update the state with the download URL
                     const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     const downloadUrl = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = downloadUrl;
-                    link.download = `Data_Processed_${file.name.split('.')[0]}.xlsx`; 
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
 
-                    newStatuses[file.name] = { status: "Completed", data: null };
-                    setSelectedFiles([]);
-                    setFileStatuses({});
-                    if (fileInputRef.current) {
-                        fileInputRef.current.value = ''; // Reset the file input
-                    }
+                    newStatuses[file.name] = {
+                        status: "Completed",
+                        data: null,
+                        downloadUrl: downloadUrl, // Save the download URL in the status
+                    };
+
                     Helpers.toast("success", Helpers.getTranslationValue('upload_success'));
                 } else {
                     throw new Error(response.message || Helpers.getTranslationValue('error_file_upload'));
@@ -82,6 +82,21 @@ function DataProcess() {
             }
 
             setFileStatuses({ ...newStatuses });
+        }
+    };
+
+    const handleDownload = (fileName) => {
+        const updatedFiles = selectedFiles.filter(file => file.name !== fileName);
+        const updatedStatuses = { ...fileStatuses };
+        delete updatedStatuses[fileName];
+
+        setSelectedFiles(updatedFiles);
+        setFileStatuses(updatedStatuses);
+
+        if (updatedFiles.length === 0) {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''; // Reset the file input when all files are downloaded
+            }
         }
     };
 
@@ -102,7 +117,6 @@ function DataProcess() {
         <div className="w-full bg-white py-5 mx-auto">
             <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue('Data Process')}</h2>
             <div className="flex flex-col items-center px-10">
-               
                 <input
                     type="file"
                     className="form-control mb-4 border border-bgray-300 w-full rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
@@ -121,6 +135,15 @@ function DataProcess() {
                                 <span className="flex items-center space-x-2">
                                     {getStatusIcon(fileStatuses[file.name].status)}
                                     <span>{fileStatuses[file.name].status}</span>
+                                    {fileStatuses[file.name].status === "Completed" && fileStatuses[file.name].downloadUrl && (
+                                        <a
+                                            href={fileStatuses[file.name].downloadUrl}
+                                            download={`Data_Processed_${file.name.split('.')[0]}.xlsx`}
+                                            onClick={() => handleDownload(file.name)}
+                                        >
+                                            <FontAwesomeIcon icon={faDownload} className="text-blue-500 ml-2" />
+                                        </a>
+                                    )}
                                 </span>
                             </div>
                         </li>

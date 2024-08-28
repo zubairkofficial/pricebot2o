@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import Helpers from "../../Config/Helpers";
 import { useHeader } from "../../Components/HeaderContext";
@@ -7,6 +7,28 @@ import { useHeader } from "../../Components/HeaderContext";
 const Layout = () => {
   const { headerData } = useHeader();
   const navigate = useNavigate();
+  const [logo, setLogo] = useState(null); // Initialize with null
+
+  useEffect(() => {
+    // Fetch current logo when the layout mounts
+    const fetchLogo = async () => {
+      try {
+        const response = await axios.get(`${Helpers.apiUrl}fetch-logo`, Helpers.authHeaders);
+        if (response.data.logo) {
+          setLogo(Helpers.serverImage(response.data.logo));
+        }
+      } catch (error) {
+        console.log("No logo found or error fetching logo");
+      }
+    };
+
+    fetchLogo();
+  }, []);
+
+  // Function to update the logo state
+  const updateLogo = (newLogoPath) => {
+    setLogo(newLogoPath);
+  };
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
@@ -37,15 +59,23 @@ const Layout = () => {
     <div className="w-full layout-wrapper active">
       <div className="w-full flex relative">
         <aside className="block xl:block sm:hidden sidebar-wrapper w-[308px] fixed top-0 bg-white h-full z-30">
-          <div className="sidebar-header relative border-r border-b   border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center pl-[40px] z-30">
-            <Link to="/">
-              <img
-                src="/assets/images/logo/logo-color.png"
-                className="block"
-                style={{ width: '250px' }}
-                alt="logo"
-              />
-            </Link>
+          <div className="sidebar-header relative border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center pl-[40px] z-30">
+           <div className="p-2 max-w-sm mx-auto flex items-center space-x-4">
+           <Link to="/">
+                {logo ? (
+                  <img
+                    src={logo} // Use the logo state
+                    className="h-16 rounded-md"
+                    style={{ width: '200px' }}
+                    alt="logo"
+                  />
+                ) : (
+                  <>
+                    
+                  </>
+                )}
+              </Link>
+           </div>
             <button
               type="button"
               className="drawer-btn absolute right-0 top-auto"
@@ -113,7 +143,7 @@ const Layout = () => {
                     </Link>
                   </li>
                   <li className="item py-[11px] text-black ">
-                    <Link to="/changePass">
+                    <Link to="/settings">
                       <div className="flex items-center justify-between">
                         <div className="flex space-x-2.5 items-center">
                           <span className="item-ico">
@@ -137,7 +167,7 @@ const Layout = () => {
                             </svg>
                           </span>
                           <span className="item-text text-lg font-medium leading-none ">
-                            {Helpers.getTranslationValue("change_password")}
+                            {Helpers.getTranslationValue("Einstellungen")}
                           </span>
                         </div>
                       </div>
@@ -196,14 +226,20 @@ const Layout = () => {
         ></div>
         <aside className="sm:block hidden relative w-[96px] bg-white">
           <div className="w-full sidebar-wrapper-collapse relative top-0 z-30">
-            <div className="sidebar-header bg-white  sticky top-0 border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center justify-center z-20">
+            <div className="sidebar-header bg-white sticky top-0 border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center justify-center z-20">
               <Link to="/">
+              {logo ? (
                 <img
-                  src="/assets/images/logo/logo-short.png"
-                  className="block"
-                  style={{ width: '75px' }}
+                  src={logo} // Use the logo state
+                  className="h-12 w-16 rounded-md"
+                
                   alt="logo"
                 />
+              ) : (
+                <>
+                  
+                </>
+              )}
               </Link>
             </div>
             <div className="sidebar-body pt-[14px] w-full">
@@ -301,7 +337,7 @@ const Layout = () => {
             </div>
           </div>
         </aside>
-        <div className="body-wrapper  flex-1 overflow-x-hidden">
+        <div className="body-wrapper flex-1 overflow-x-hidden">
           <header className="md:block hidden header-wrapper w-full fixed z-30">
             <div className="w-full h-[108px] bg-white flex items-center justify-between 2xl:px-[76px] px-10 relative">
               <button
@@ -369,11 +405,17 @@ const Layout = () => {
                 </button>
                 <div>
                   <Link to="/">
+                  {logo ? (
                     <img
-                      src="/assets/images/logo/logo-color.png"
+                      src={logo} // Use the logo state
                       className="block"
                       alt="logo"
                     />
+                    ) : (
+                  <>
+                    
+                  </>
+                )}
                   </Link>
                 </div>
               </div>
@@ -382,7 +424,7 @@ const Layout = () => {
           <main className="w-full xl:px-12 px-6 pb-6 xl:pb-12 sm:pt-[156px] pt-[100px]">
             <div className="2xl:flex 2xl:space-x-[48px]">
               <section className="2xl:flex-1 2xl:mb-0 mb-6">
-                <Outlet />
+                <Outlet context={{ updateLogo }} /> {/* Pass updateLogo function */}
               </section>
             </div>
           </main>

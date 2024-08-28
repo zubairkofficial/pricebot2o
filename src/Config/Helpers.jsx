@@ -4,18 +4,18 @@ import "notyf/notyf.min.css";
 class Helpers {
   static localhost = "http://127.0.0.1:8000";
   static server = "https://dhnapi.cyberifyportfolio.com";
-  static basePath = `${this.server}`;
+  static basePath = `${this.localhost}`;
   static apiUrl = `${this.basePath}/api/`;
 
   static authUser = JSON.parse(localStorage.getItem("user") ?? "{}");
 
   static serverImage = (name) => {
-    return `${this.basePath}/uploads/${name}`;
+    return `${this.basePath}/${name}`;
   };
+  
 
   static getToken = () => {
     const token = localStorage.getItem("token");
-    // console.log("Retrieved token:", token); // Debugging: Check if the token is correctly retrieved
     return token;
   };
 

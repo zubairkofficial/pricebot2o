@@ -30,6 +30,8 @@ import Tools from './Screens/Admin/Tools/Tools';
 import AddTool from './Screens/Admin/Tools/AddTool';
 import EditTool from './Screens/Admin/Tools/EditTool';
 import DataProcess from './Screens/User/DataProcess';
+import ChangeLogo from './Screens/User/ChangeLogo';
+import Settings from './Screens/User/Settings';
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -139,6 +141,9 @@ const App = () => {
             <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
             <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
             <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
+            <Route path="/change-logo" element={<Auth><ChangeLogo /></Auth>} />
+            <Route path="/settings" element={<Auth><Settings /></Auth>} />
+
           </Route>
 
           <Route path="/admin/" element={<AdminLayout />}>
