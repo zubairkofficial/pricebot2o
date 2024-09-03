@@ -96,7 +96,7 @@ function DataProcess() {
         // Define the custom headers in your desired order
         const headers = [
             "Lagerkunde", "Artikel Nr.(Länge beachten)", "Materialkurztext", "Produktname", "Hersteller", "Dateiname SDB", "Ausgabedatum bzw. letzte Änderung", "LG Klasse", "WGK(numerischer Wert)", "H Sätze durch Komma getrennt",
-            "Flammpunkt (numerischer Wert)[°C]", "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017", "UN Nr", "Gefahrensymbole", "Gefahrgutklasse (Länge beachten)", "Tunnelcode",
+            "Flammpunkt (numerischer Wert)[°C]", "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017", "UN Nr", "Gefahrensymbole", "Gefahrgutklasse (Länge beachten)", "Verpackungsgruppe","Tunnelcode",
             "N.A.G./NOS technische Benennung (Gefahraus-löser)", "LQ (Spalte eingefügt)", "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)",
             "Freigabe Störrfallbeauftragter", "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5", "Main Ingredients", "Section - PreText",
             "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1", "Section - 7|7.2",
@@ -124,6 +124,7 @@ function DataProcess() {
             "UN Nr": "UN Nr ADR",
             "Gefahrensymbole": "Gefahrensymbole",
             "Gefahrgutklasse (Länge beachten)": "Gefahrgutklasse",
+            "Verpackungsgruppe" : "Verpackungsgruppe",
             "Tunnelcode": "Tunnelcode",
             "N.A.G./NOS technische Benennung (Gefahraus-löser)": "N.A.G./NOS technische Benennung",
             "LQ (Spalte eingefügt)": "LQ",
@@ -160,6 +161,8 @@ function DataProcess() {
                     rowData.push(fileData.data[key] || ""); // Use empty string as default value
                 }
             });
+             // Ensure column L is empty
+            rowData[11] = ""; // Adjust index based on header order
     
             data.push(rowData);
         });
