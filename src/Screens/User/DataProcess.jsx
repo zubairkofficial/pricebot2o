@@ -100,7 +100,7 @@ function DataProcess() {
             "N.A.G./NOS technische Benennung (Gefahraus-löser)", "LQ (Spalte eingefügt)", "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)",
             "Freigabe Störrfallbeauftragter", "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5", "Main Ingredients", "Section - PreText",
             "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1", "Section - 7|7.2",
-            "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14|14.1", "Section - 14|14.2", "Section - 14"
+            "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14"
         ];
         data.push(headers);
     
@@ -111,27 +111,28 @@ function DataProcess() {
         // Define a mapping from headers to data keys
         const headerMapping = {
             "Lagerkunde": "Lagerkunde",
-            "Artikel Nr.(Länge beachten)": "Artikel Nr",
+            "Artikel Nr.(Länge beachten)": "Artikel Nr.\n(Länge beachten)",
             "Materialkurztext": "Materialkurztext",
             "Produktname": "Produktname",
             "Hersteller": "Hersteller",
             "Dateiname SDB": "Dateiname SDB",
-            "Ausgabedatum bzw. letzte Änderung": "Ausgabedatum",
+            "Ausgabedatum bzw. letzte Änderung": "Ausgabedatum bzw. letzte Änderung",
             "LG Klasse": "LG Klasse",
-            "WGK(numerischer Wert)": "WGK", // Make sure this matches the API response key
-            "H Sätze durch Komma getrennt": "H Sätze",
-            "Flammpunkt (numerischer Wert)[°C]": "Flammpunkt", // Mapping "Flammpunkt" from data
-            "UN Nr": "UN Nr ADR",
+            "WGK(numerischer Wert)": "WGK\n(numerischer Wert)", // Make sure this matches the API response key
+            "H Sätze durch Komma getrennt": "H Sätze\ndurch Komma getrennt",
+            "Flammpunkt (numerischer Wert)[°C]": "Flammpunkt\n(numerischer Wert)\n[°C]", // Mapping "Flammpunkt" from data
+            "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017" : "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017",
+            "UN Nr": "UN Nr",
             "Gefahrensymbole": "Gefahrensymbole",
-            "Gefahrgutklasse (Länge beachten)": "Gefahrgutklasse",
+            "Gefahrgutklasse (Länge beachten)": "Gefahrgutklasse (Länge beachten)",
             "Verpackungsgruppe" : "Verpackungsgruppe",
             "Tunnelcode": "Tunnelcode",
-            "N.A.G./NOS technische Benennung (Gefahraus-löser)": "N.A.G./NOS technische Benennung",
-            "LQ (Spalte eingefügt)": "LQ",
-            "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)": "Hinweise",
+            "N.A.G./NOS technische Benennung (Gefahraus-löser)": "N.A.G./NOS\ntechnische Benennung\n(Gefahraus-löser)",
+            "LQ (Spalte eingefügt)": "LQ (Spalte eingefügt)",
+            "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)": "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)",
             "Freigabe Störrfallbeauftragter": "Freigabe Störrfallbeauftragter",
-            "Maßnahmen Lagerung Abschnitt 7.2": "Maßnahmen Lagerung",
-            "Zusammenlagerverbot Abschnitt 10.5": "Zusammenlagerverbot",
+            "Maßnahmen Lagerung Abschnitt 7.2": "Maßnahmen Lagerung\nAbschnitt 7.2",
+            "Zusammenlagerverbot Abschnitt 10.5": "Zusammenlagerverbot\nAbschnitt 10.5",
             "Main Ingredients": "Main Ingredients",
             "Section - PreText": "Section - PreText",
             "Section - 1": "Section - 1",
@@ -144,8 +145,8 @@ function DataProcess() {
             "Section - 9|9.1": "Section - 9|9.1",
             "Section - 10|10.5": "Section - 10|10.5",
             "Section - 15": "Section - 15",
-            "Section - 14|14.1": "Section - 14|14.1",
-            "Section - 14|14.2": "Section - 14|14.2",
+            // "Section - 14|14.1": "Section - 14|14.1",
+            // "Section - 14|14.2": "Section - 14|14.2",
             "Section - 14": "Section - 14"
         };
     
