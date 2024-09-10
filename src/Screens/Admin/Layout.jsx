@@ -22,11 +22,11 @@ const Layout = () => {
         }
       );
       if (response.status === 200) {
-        Helpers.toast("success", Helpers.getTranslationValue('logout'));
+        Helpers.toast("success", Helpers.getTranslationValue("logout"));
         // localStorage.clear();
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('loginTimestamp');
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("loginTimestamp");
         navigate("/login");
       }
     } catch (error) {

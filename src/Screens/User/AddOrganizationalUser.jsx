@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Select from "react-dropdown-select";
-import Switch from "react-switch"; // Import react-switch or use a custom toggle
+ // Import react-switch or use a custom toggle
 import axios from "axios";
-import "./styles.css";
-import Helpers from "../../../Config/Helpers";
-import { useHeader } from "../../../Components/HeaderContext";
 
-const AddUser = () => {
-  const { setHeaderData } = useHeader();
+import Helpers from "../../Config/Helpers";
+
+const AddOrganizationalUser = () => {
   const [user, setUser] = useState({
+    creator_id: "",
     name: "",
     email: "",
     password: "",
     org_id: "",
     services: [],
-    is_user_organizational: 0, // 0 for normal user, 1 for organizational user
     showPassword: false,
   });
   const [services, setServices] = useState([]);
@@ -23,10 +20,20 @@ const AddUser = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setHeaderData({
-      title: Helpers.getTranslationValue("Dashboard"),
-      desc: Helpers.getTranslationValue("Dashboard_Desc"),
-    });
+    const userObj = localStorage.getItem("user");
+    const user = JSON.parse(userObj);
+    const user_id = user.id;
+    const user_services = user.services;
+    const user_org_id = user.org_id;
+
+    // Set the creator_id (user_id) in the state
+    setUser((prevUser) => ({
+      ...prevUser,
+      creator_id: user_id, 
+      services: user_services,
+      org_id: user_org_id,// Set the creator_id from localStorage
+    }));
+
     fetchServices();
     fetchOrgs();
   }, []);
@@ -61,15 +68,17 @@ const AddUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      // Post request with user data including creator_id
       const response = await axios.post(
-        `${Helpers.apiUrl}/register_user`,
-        user,
+        `${Helpers.apiUrl}register_user`,
+        user, // This user object contains creator_id
         Helpers.authHeaders
       );
       if (response.status === 201 || response.status === 200) {
         Helpers.toast("success", Helpers.getTranslationValue("user_save_msg"));
-        navigate("/admin/dashboard");
+      
       } else {
         throw new Error(Helpers.getTranslationValue("user_save_error"));
       }
@@ -77,6 +86,8 @@ const AddUser = () => {
       Helpers.toast("error", error.message);
     }
   };
+
+
 
   return (
     <section className="bg-white">
@@ -139,72 +150,7 @@ const AddUser = () => {
                   onChange={(e) => handleChange("password")(e.target.value)}
                 />
 
-                <label
-                  htmlFor="services"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {Helpers.getTranslationValue("Servies")}
-                </label>
-                <Select
-                  options={services.map((service) => ({
-                    label: service.name,
-                    value: service.id,
-                  }))}
-                  multi
-                  onChange={(values) =>
-                    handleChange("services")(values.map((v) => v.value))
-                  }
-                  className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
-                />
-
-                <div className="flex flex-col items-start space-x-3 space-y-2 mt-4">
-                  <label
-                    htmlFor="is_user_organization"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    {Helpers.getTranslationValue("User Type")}
-                  </label>
-
-                  <div className="custom-switch-toggle">
-                    <button
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 0 ? "active" : ""
-                      }`}
-                      onClick={() => handleChange("is_user_organizational")(0)}
-                    >
-                      Normal
-                    </button>
-                    <button
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 1 ? "active" : ""
-                      }`}
-                      onClick={() => handleChange("is_user_organizational")(1)}
-                    >
-                      Organizational
-                    </button>
-                  </div>
-                </div>
-
-                {user.services.includes(2) && (
-                  <>
-                    <label
-                      htmlFor="org"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {Helpers.getTranslationValue("Organization")}
-                    </label>
-                    <Select
-                      options={orgs.map((org) => ({
-                        label: org.name,
-                        value: org.id,
-                      }))}
-                      onChange={(value) =>
-                        handleChange("org_id")(value[0].value)
-                      } // Ensure it's updating correctly
-                      className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
-                    />
-                  </>
-                )}
+               
 
                 <div className="flex justify-end mt-4">
                   <button
@@ -223,4 +169,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddOrganizationalUser;

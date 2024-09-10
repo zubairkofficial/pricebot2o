@@ -7,13 +7,17 @@ import { useHeader } from "../../Components/HeaderContext";
 const Layout = () => {
   const { headerData } = useHeader();
   const navigate = useNavigate();
-  const [logo, setLogo] = useState(null); // Initialize with null
+  const [logo, setLogo] = useState(null);
+  const [isUserOrganizational, setIsUserOrganizational] = useState(0); // Initialize with null
 
   useEffect(() => {
     // Fetch current logo when the layout mounts
     const fetchLogo = async () => {
       try {
-        const response = await axios.get(`${Helpers.apiUrl}fetch-logo`, Helpers.authHeaders);
+        const response = await axios.get(
+          `${Helpers.apiUrl}fetch-logo`,
+          Helpers.authHeaders
+        );
         if (response.data.logo) {
           setLogo(Helpers.serverImage(response.data.logo));
         }
@@ -21,6 +25,11 @@ const Layout = () => {
         console.log("No logo found or error fetching logo");
       }
     };
+
+    const isOrganizational = localStorage.getItem("is_user_org");
+    if (isOrganizational) {
+      setIsUserOrganizational(parseInt(isOrganizational)); // Convert to an integer
+    }
 
     fetchLogo();
   }, []);
@@ -44,10 +53,10 @@ const Layout = () => {
         }
       );
       if (response.status === 200) {
-        Helpers.toast("success", Helpers.getTranslationValue('logout'));
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('loginTimestamp');
+        Helpers.toast("success", Helpers.getTranslationValue("logout"));
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("loginTimestamp");
         navigate("/login");
       }
     } catch (error) {
@@ -60,22 +69,20 @@ const Layout = () => {
       <div className="w-full flex relative">
         <aside className="block xl:block sm:hidden sidebar-wrapper w-[308px] fixed top-0 bg-white h-full z-30">
           <div className="sidebar-header relative border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center pl-[40px] z-30">
-           <div className="p-2 max-w-sm mx-auto flex items-center space-x-4">
-           <Link to="/">
+            <div className="p-2 max-w-sm mx-auto flex items-center space-x-4">
+              <Link to="/">
                 {logo ? (
                   <img
                     src={logo} // Use the logo state
                     className="h-16 rounded-md"
-                    style={{ width: '200px' }}
+                    style={{ width: "200px" }}
                     alt="logo"
                   />
                 ) : (
-                  <>
-                    
-                  </>
+                  <></>
                 )}
               </Link>
-           </div>
+            </div>
             <button
               type="button"
               className="drawer-btn absolute right-0 top-auto"
@@ -142,6 +149,33 @@ const Layout = () => {
                       </div>
                     </Link>
                   </li>
+                  {isUserOrganizational === 1 && (
+                    <li className="item py-[11px] text-black ">
+                      <Link to="/org-user-table">
+                        <div className="flex items-center justify-between">
+                          <div className="flex space-x-2.5 items-center">
+                            <span className="item-ico">
+                              <svg
+                                width="18"
+                                height="21"
+                                viewBox="0 0 18 21"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
+                                  fill="#1A202C"
+                                />
+                              </svg>
+                            </span>
+                            <span className="item-text text-lg font-medium leading-none">
+                              {Helpers.getTranslationValue("Add User")}
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  )}
                   <li className="item py-[11px] text-black ">
                     <Link to="/settings">
                       <div className="flex items-center justify-between">
@@ -228,18 +262,15 @@ const Layout = () => {
           <div className="w-full sidebar-wrapper-collapse relative top-0 z-30">
             <div className="sidebar-header bg-white sticky top-0 border-r border-b border-r-[#F7F7F7] border-b-[#F7F7F7] w-full h-[108px] flex items-center justify-center z-20">
               <Link to="/">
-              {logo ? (
-                <img
-                  src={logo} // Use the logo state
-                  className="h-12 w-16 rounded-md"
-                
-                  alt="logo"
-                />
-              ) : (
-                <>
-                  
-                </>
-              )}
+                {logo ? (
+                  <img
+                    src={logo} // Use the logo state
+                    className="h-12 w-16 rounded-md"
+                    alt="logo"
+                  />
+                ) : (
+                  <></>
+                )}
               </Link>
             </div>
             <div className="sidebar-body pt-[14px] w-full">
@@ -271,6 +302,30 @@ const Layout = () => {
                           </span>
                         </Link>
                       </li>
+                      {isUserOrganizational === 1 && (
+                        <li className="item py-[11px] text-black ">
+                          <Link to="/org-user-table">
+                            <div className="flex items-center justify-between">
+                              <div className="flex space-x-2.5 items-center">
+                                <span className="item-ico">
+                                  <svg
+                                    width="18"
+                                    height="21"
+                                    viewBox="0 0 18 21"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
+                                      fill="#1A202C"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                          </Link>
+                        </li>
+                      )}
                       <li className="item py-[11px] px-[43px]">
                         <Link to="/changePass">
                           <span className="item-ico">
@@ -380,7 +435,10 @@ const Layout = () => {
           <header className="md:hidden block mobile-wrapper w-full fixed z-20">
             <div className="w-full h-[80px] bg-white flex justify-between items-center">
               <div className="w-full h-full flex items-center space-x-5">
-                <button type="button" className="text-white drawer-btn transform rotate-180">
+                <button
+                  type="button"
+                  className="text-white drawer-btn transform rotate-180"
+                >
                   <span>
                     <svg
                       width="16"
@@ -405,17 +463,15 @@ const Layout = () => {
                 </button>
                 <div>
                   <Link to="/">
-                  {logo ? (
-                    <img
-                      src={logo} // Use the logo state
-                      className="block"
-                      alt="logo"
-                    />
+                    {logo ? (
+                      <img
+                        src={logo} // Use the logo state
+                        className="block"
+                        alt="logo"
+                      />
                     ) : (
-                  <>
-                    
-                  </>
-                )}
+                      <></>
+                    )}
                   </Link>
                 </div>
               </div>
@@ -424,7 +480,8 @@ const Layout = () => {
           <main className="w-full xl:px-12 px-6 pb-6 xl:pb-12 sm:pt-[156px] pt-[100px]">
             <div className="2xl:flex 2xl:space-x-[48px]">
               <section className="2xl:flex-1 2xl:mb-0 mb-6">
-                <Outlet context={{ updateLogo }} /> {/* Pass updateLogo function */}
+                <Outlet context={{ updateLogo }} />{" "}
+                {/* Pass updateLogo function */}
               </section>
             </div>
           </main>

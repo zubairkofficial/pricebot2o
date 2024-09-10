@@ -21,26 +21,35 @@ const Login = () => {
     axios
       .post(`${Helpers.apiUrl}auth/login`, user)
       .then((response) => {
-        Helpers.toast("success", Helpers.getTranslationValue('login_msg'));
+        Helpers.toast("success", Helpers.getTranslationValue("login_msg"));
         Helpers.setItem("user", response.data.user, true);
         Helpers.setItem("token", response.data.token);
-        localStorage.removeItem('translationData');
+        Helpers.setItem(
+          "is_user_org",
+          response.data.user.is_user_organizational
+        );
+        localStorage.removeItem("translationData");
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
-        Helpers.setItem("translationData", response.data.translationData, true);
+        Helpers.setItem("is_user_org", response.data.user.is_user_organizational);
+       // Helpers.setItem("translationData", response.data.translationData, true);
         if (response.data.user.user_type == 1) {
           window.location.href = "/admin/dashboard";
         } else {
           window.location.href = "/";
         }
         setIsLoading(false);
-      })  
+      })
       .catch((error) => {
         if (error.response && error.response.data) {
-          const errorData = error.response.data.errors || { message: Helpers.getTranslationValue(error.response.data.message) };
+          const errorData = error.response.data.errors || {
+            message: Helpers.getTranslationValue(error.response.data.message),
+          };
           setErrors(errorData);
         } else {
-          setErrors({ message: Helpers.getTranslationValue('unexpected_error') });
+          setErrors({
+            message: Helpers.getTranslationValue("unexpected_error"),
+          });
         }
         setIsLoading(false);
       });
@@ -55,7 +64,9 @@ const Login = () => {
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
-            <h2 className="text-2xl font-bold mb-6 text-center">{Helpers.getTranslationValue('Login')}</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              {Helpers.getTranslationValue("Login")}
+            </h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <input
@@ -63,21 +74,21 @@ const Login = () => {
                   id="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  placeholder={Helpers.getTranslationValue('Email')}
+                  placeholder={Helpers.getTranslationValue("Email")}
                   className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 {errors.email && (
-                  <small className="text-error-200">
-                    {errors.email[0]}
-                  </small>
+                  <small className="text-error-200">{errors.email[0]}</small>
                 )}
               </div>
               <div className="mb-6 relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={user.password}
-                  onChange={(e) => setUser({ ...user, password: e.target.value })}
-                  placeholder={Helpers.getTranslationValue('Password')}
+                  onChange={(e) =>
+                    setUser({ ...user, password: e.target.value })
+                  }
+                  placeholder={Helpers.getTranslationValue("Password")}
                   className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
                 <div
@@ -90,9 +101,7 @@ const Login = () => {
                   />
                 </div>
                 {errors.password && (
-                  <small className="text-error-200">
-                    {errors.password[0]}
-                  </small>
+                  <small className="text-error-200">{errors.password[0]}</small>
                 )}
               </div>
 
@@ -107,7 +116,9 @@ const Login = () => {
                 disabled={isLoading}
                 className="py-3.5 flex text-white items-center justify-center font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
               >
-                {Helpers.getTranslationValue(isLoading ? 'Is_loading' : 'Login')}
+                {Helpers.getTranslationValue(
+                  isLoading ? "Is_loading" : "Login"
+                )}
               </button>
             </form>
           </div>
