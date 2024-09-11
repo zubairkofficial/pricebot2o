@@ -56,14 +56,17 @@ const AddUser = () => {
   };
 
   const handleChange = (name) => (value) => {
-    setUser({ ...user, [name]: value });
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
     try {
       const response = await axios.post(
-        `${Helpers.apiUrl}/register_user`,
+        `${Helpers.apiUrl}auth/register`,
         user,
         Helpers.authHeaders
       );
@@ -77,6 +80,7 @@ const AddUser = () => {
       Helpers.toast("error", error.message);
     }
   };
+  
 
   return (
     <section className="bg-white">
@@ -167,6 +171,7 @@ const AddUser = () => {
 
                   <div className="custom-switch-toggle">
                     <button
+                      type="button" // Added to prevent form submission when clicking the button
                       className={`custom-switch-button ${
                         user.is_user_organizational === 0 ? "active" : ""
                       }`}
@@ -175,6 +180,7 @@ const AddUser = () => {
                       Normal
                     </button>
                     <button
+                      type="button" // Added to prevent form submission when clicking the button
                       className={`custom-switch-button ${
                         user.is_user_organizational === 1 ? "active" : ""
                       }`}

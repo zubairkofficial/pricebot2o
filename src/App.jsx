@@ -33,15 +33,18 @@ import EditTool from "./Screens/Admin/Tools/EditTool";
 import DataProcess from "./Screens/User/DataProcess";
 import ChangeLogo from "./Screens/User/ChangeLogo";
 import Settings from "./Screens/User/Settings";
-import OrganizationalUserTable from "./Components/OrganizationalUserTable"
+import OrganizationalUserTable from "./Components/OrganizationalUserTable";
+import { useState } from "react";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
   let token = Helpers.getItem("token");
   let loginTime = Helpers.getItem("loginTimestamp");
+ 
   let currentTime = new Date().getTime();
   let minutesPassed = Math.floor((currentTime - loginTime) / (1000 * 60));
 
+  
   // Check for session expiration
   if (loginTime && minutesPassed > 120) {
     localStorage.clear();
@@ -120,6 +123,17 @@ const NotFound = () => {
 };
 
 const App = () => {
+  const [isOrganizationalUser, setIsOrganizationalUser] = useState(false);
+
+  // Retrieve is_user_organizational from localStorage on component mount
+  useEffect(() => {
+    let isUserOrg = Helpers.getItem("is_user_org");
+    if (isUserOrg === "1") {
+      setIsOrganizationalUser(true); // Set state to true if user is organizational
+    } else {
+      setIsOrganizationalUser(false); // Set state to false if user is normal
+    }
+  }, []);
   useEffect(() => {
     fetchTranslations();
   }, []);
@@ -240,27 +254,29 @@ const App = () => {
                 </Auth>
               }
             />
-            <Route
-              path="/settings"
-              element={
-                <Auth>
-                  {" "}
-                  <Settings />{" "}
-                </Auth>
-              }
-            />
-
-            <Route
-              path="/add-org-user"
-              element={
-                <Auth>
-                  {" "}
-                  <AddOrganizationalUser />{" "}
-                </Auth>
-              }
-            />
-
-            <Route
+               <Route
+                  path="/settings"
+                  element={
+                    <Auth>
+                      {" "}
+                      <Settings />{" "}
+                    </Auth>
+                  }
+                />
+            {isOrganizationalUser && (
+              <>
+                {" "}
+             
+                <Route
+                  path="/add-org-user"
+                  element={
+                    <Auth>
+                      {" "}
+                      <AddOrganizationalUser />{" "}
+                    </Auth>
+                  }
+                />
+                   <Route
               path="/org-user-table"
               element={
                 <Auth>
@@ -269,6 +285,10 @@ const App = () => {
                 </Auth>
               }
             />
+              </>
+            )}
+
+         
           </Route>
           <Route path="/admin/" element={<AdminLayout />}>
             <Route

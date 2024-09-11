@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashAlt } from "react-icons/fa";
+import axios from "axios";
 import Pagination from './Pagination';
 import { Link } from "react-router-dom";
 import Helpers from "../Config/Helpers";
@@ -8,55 +9,55 @@ const OrganizationalUserTable = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
 
   useEffect(() => {
-    // Hardcoded user data (replace this with real data from an API in production)
-    const userData = [
-      {
-        id: 1,
-        name: "John Doe",
-        email: "johndoe@example.com",
-        service_names: ["Service 1", "Service 2"],
-        organization: { name: "Org A" },
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        email: "janesmith@example.com",
-        service_names: ["Service 3"],
-        organization: { name: "Org B" },
-      },
-      {
-        id: 3,
-        name: "Alice Johnson",
-        email: "alicej@example.com",
-        service_names: ["Service 1"],
-        organization: { name: "Org C" },
-      },
-      // Add more users as necessary
-    ];
-    setUsers(userData);
-    setFilteredUsers(userData);
-    setLoading(false);
-  }, []);
+    fetchUsers();
+  }, [currentPage]);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${Helpers.apiUrl}getOrganizationUsers?page=${currentPage + 1}&limit=${itemsPerPage}`, Helpers.authHeaders);
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue("users_fetch_error"));
+      }
+      const usersData = response.data.organization_users;
+      setUsers(usersData);
+      setFilteredUsers(usersData);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setFilteredUsers(
-      users.filter((user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.service_names && user.service_names.join(", ").toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (user.organization && user.organization.name.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.services && user.services.join(", ").toLowerCase().includes(searchTerm.toLowerCase())) ||
+      user.org_id.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-    setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${Helpers.apiUrl}delete_User/${id}`, Helpers.authHeaders);
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue('user_delete_error'));
+      }
+      setUsers(users.filter((user) => user.id !== id));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+      Helpers.toast("success", Helpers.getTranslationValue('user_delete_msg'));
+      window.location.reload();
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   const indexOfLastUser = (currentPage + 1) * itemsPerPage;
@@ -71,11 +72,15 @@ const OrganizationalUserTable = () => {
     );
   }
 
+  if (error) {
+    return <div className="text-blue-500">{Helpers.getTranslationValue('error')}: {error}</div>;
+  }
+
   return (
     <section className="w-full h-full">
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex justify-between space-x-2 mb-4">
-          <div className="mb-4 ">
+          <div className="mb-4">
             <div className="relative">
               <input
                 type="text"
@@ -132,35 +137,45 @@ const OrganizationalUserTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentUsers.map((user, index) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstUser + index + 1}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.service_names ? user.service_names.join(", ") : ""}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.organization?.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        className="bg-red-500 text-black p-2 rounded-lg hover:bg-red-600 ml-2"
-                        onClick={() => handleDelete(user.id)}
-                      >
-                        <FaTrashAlt />
-                      </button>
+                {currentUsers.length > 0 ? (
+                  currentUsers.map((user, index) => (
+                    <tr key={user.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstUser + index + 1}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.services ? user.services.join(", ") : ""}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.organization_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button
+                          className="bg-red-500 text-black p-2 rounded-lg hover:bg-red-600 ml-2"
+                          onClick={() => handleDelete(user.id)}
+                        >
+                          <FaTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4">
+                      No users have been created yet.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalItems={filteredUsers.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
+          {filteredUsers.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalItems={filteredUsers.length}
+              itemsPerPage={itemsPerPage}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          )}
         </div>
       </div>
     </section>
