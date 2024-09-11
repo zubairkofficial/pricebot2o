@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaEye,FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
@@ -80,6 +80,9 @@ const Users = () => {
     }
   };
 
+  const handleView = (userId) => {
+    navigate(`/admin/user-usage/${userId}`); // Navigate to the usage-user route with user ID
+  };
   const indexOfLastUser = (currentPage + 1) * itemsPerPage;
   const indexOfFirstUser = currentPage * itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -144,6 +147,7 @@ const Users = () => {
             {Helpers.getTranslationValue('Add user')}
           </Link>
         </div>
+     
         <div className="rounded-lg">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-darkblack-200">
@@ -176,11 +180,15 @@ const Users = () => {
                       </button>
                       <button
                         className="bg-red-500 text-black   p-2 rounded-lg hover:bg-red-600 ml-2"
-                        onClick={() => {
-                          handleDelete(user.id);
-                        }}
+                        onClick={() => handleDelete(user.id)}
                       >
                         <FaTrashAlt />
+                      </button>
+                      <button
+                        className="bg-green-500 text-black p-2 rounded-lg hover:bg-green-600 ml-2"
+                        onClick={() => handleView(user.id)} // Handle viewing user
+                      >
+                        <FaEye /> {/* Eye icon */}
                       </button>
                     </td>
                   </tr>

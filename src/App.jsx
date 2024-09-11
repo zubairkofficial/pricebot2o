@@ -34,6 +34,7 @@ import DataProcess from "./Screens/User/DataProcess";
 import ChangeLogo from "./Screens/User/ChangeLogo";
 import Settings from "./Screens/User/Settings";
 import OrganizationalUserTable from "./Components/OrganizationalUserTable";
+import UserUsage from "./Screens/Admin/User/UserUsage";
 import { useState } from "react";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
@@ -297,6 +298,15 @@ const App = () => {
                 <Auth isAdmin={true}>
                   {" "}
                   <Users />{" "}
+                </Auth>
+              }
+            />
+              <Route
+              path="user-usage/:id"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <UserUsage />{" "}
                 </Auth>
               }
             />
