@@ -35,7 +35,9 @@ function DataProcess() {
             Helpers.toast("error", Helpers.getTranslationValue('file_select_first'));
             return;
         }
-    
+        let json = localStorage.getItem("user");
+        let userObj = JSON.parse(json);
+        let userId = userObj.id
         const newStatuses = { ...fileStatuses };
         let allData = [];
     
@@ -43,6 +45,7 @@ function DataProcess() {
             const file = selectedFiles[i];
             const formData = new FormData();
             formData.append("documents[]", file);
+            formData.append("user_id", userId);
     
             newStatuses[file.name] = { status: "In Progress" };
             setFileStatuses({ ...newStatuses });

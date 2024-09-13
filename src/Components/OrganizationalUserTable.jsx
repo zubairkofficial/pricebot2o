@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
-import Pagination from './Pagination';
+import Pagination from "./Pagination";
 import { Link } from "react-router-dom";
 import Helpers from "../Config/Helpers";
-
+import { useHeader } from "./HeaderContext";
 const OrganizationalUserTable = () => {
+  const { setHeaderData } = useHeader();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,13 +16,22 @@ const OrganizationalUserTable = () => {
   const itemsPerPage = 10;
 
   useEffect(() => {
+    setHeaderData({
+      title: Helpers.getTranslationValue("Benutzer"),
+      desc: Helpers.getTranslationValue("Benutzer verwalten"),
+    });
     fetchUsers();
   }, [currentPage]);
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${Helpers.apiUrl}getOrganizationUsers?page=${currentPage + 1}&limit=${itemsPerPage}`, Helpers.authHeaders);
+      const response = await axios.get(
+        `${Helpers.apiUrl}getOrganizationUsers?page=${
+          currentPage + 1
+        }&limit=${itemsPerPage}`,
+        Helpers.authHeaders
+      );
       if (response.status !== 200) {
         throw new Error(Helpers.getTranslationValue("users_fetch_error"));
       }
@@ -36,24 +46,32 @@ const OrganizationalUserTable = () => {
   };
 
   useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.services && user.services.join(", ").toLowerCase().includes(searchTerm.toLowerCase())) ||
-      user.org_id.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.services &&
+          user.services
+            .join(", ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())) ||
+        user.org_id.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${Helpers.apiUrl}delete_User/${id}`, Helpers.authHeaders);
+      const response = await axios.delete(
+        `${Helpers.apiUrl}delete_User/${id}`,
+        Helpers.authHeaders
+      );
       if (response.status !== 200) {
-        throw new Error(Helpers.getTranslationValue('user_delete_error'));
+        throw new Error(Helpers.getTranslationValue("user_delete_error"));
       }
       setUsers(users.filter((user) => user.id !== id));
       setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
-      Helpers.toast("success", Helpers.getTranslationValue('user_delete_msg'));
+      Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
       window.location.reload();
     } catch (error) {
       setError(error.message);
@@ -73,7 +91,11 @@ const OrganizationalUserTable = () => {
   }
 
   if (error) {
-    return <div className="text-blue-500">{Helpers.getTranslationValue('error')}: {error}</div>;
+    return (
+      <div className="text-blue-500">
+        {Helpers.getTranslationValue("error")}: {error}
+      </div>
+    );
   }
 
   return (
@@ -116,10 +138,11 @@ const OrganizationalUserTable = () => {
               </div>
             </div>
           </div>
-          <Link to="/add-org-user"
+          <Link
+            to="/add-org-user"
             className="h-10 px-5 mb-2 text-white transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
           >
-            {Helpers.getTranslationValue('Add user')}
+            {Helpers.getTranslationValue("Add user")}
           </Link>
         </div>
 
@@ -128,25 +151,45 @@ const OrganizationalUserTable = () => {
             <table className="min-w-full divide-y divide-darkblack-200">
               <thead className="bg-white-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Services</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    #
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Dienstleistungen
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Organisation
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Aktionen
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {currentUsers.length > 0 ? (
                   currentUsers.map((user, index) => (
                     <tr key={user.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstUser + index + 1}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {indexOfFirstUser + index + 1}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.email}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {user.services ? user.services.join(", ") : ""}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.organization_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.organization_name}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button
                           className="bg-red-500 text-black p-2 rounded-lg hover:bg-red-600 ml-2"
@@ -160,7 +203,8 @@ const OrganizationalUserTable = () => {
                 ) : (
                   <tr>
                     <td colSpan="6" className="text-center py-4">
-                      No users have been created yet.
+                    Es wurden noch keine Benutzer erstellt.
+
                     </td>
                   </tr>
                 )}

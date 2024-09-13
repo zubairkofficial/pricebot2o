@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
-import Switch from "react-switch"; // Import react-switch or use a custom toggle
 import axios from "axios";
 import "./styles.css";
 import Helpers from "../../../Config/Helpers";
@@ -9,6 +8,11 @@ import { useHeader } from "../../../Components/HeaderContext";
 
 const AddUser = () => {
   const { setHeaderData } = useHeader();
+  const [organizationalUsers, setOrganizationalUsers] = useState([]);
+  const [selectedOrganizationalUser, setSelectedOrganizationalUser] = useState({
+    org_id: "",
+    services: [],
+  }); // Store org_id and services for selected organizational user
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -17,6 +21,7 @@ const AddUser = () => {
     services: [],
     is_user_organizational: 0, // 0 for normal user, 1 for organizational user
     showPassword: false,
+    creator_id: "",
   });
   const [services, setServices] = useState([]);
   const [orgs, setOrgs] = useState([]);
@@ -28,8 +33,21 @@ const AddUser = () => {
       desc: Helpers.getTranslationValue("Dashboard_Desc"),
     });
     fetchServices();
+    fetchOrganizationalUsers();
     fetchOrgs();
   }, []);
+
+  const fetchOrganizationalUsers = async () => {
+    try {
+      const response = await axios.get(
+        `${Helpers.apiUrl}getOrganizationalUserss`,
+        Helpers.authHeaders
+      );
+      setOrganizationalUsers(response.data);
+    } catch (error) {
+      Helpers.toast("error", error.message);
+    }
+  };
 
   const fetchServices = async () => {
     try {
@@ -62,14 +80,59 @@ const AddUser = () => {
     }));
   };
 
+  // Handle organizational user selection
+  const handleSelectOrganizationalUser = (selectedValues) => {
+    const selectedUserId = selectedValues[0]?.value;
+    
+    // Find selected organizational user's org_id and services
+    const selectedUser = organizationalUsers.find(user => user.id === selectedUserId);
+    
+    setSelectedOrganizationalUser({
+      org_id: selectedUser?.org_id || "",
+      services: selectedUser?.services || [],
+    });
+    
+    // Set the creator_id in the user state
+    setUser((prevUser) => ({
+      ...prevUser,
+      creator_id: selectedUserId,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
+
     try {
-      const response = await axios.post(
-        `${Helpers.apiUrl}auth/register`,
-        user,
-        Helpers.authHeaders
-      );
+      let payload;
+      let apiUrl;
+
+      // Conditionally build payload and select API route
+      if (user.is_user_organizational === 0) {
+        // Normal user - use creator_id's org_id and services
+        payload = {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          creator_id: user.creator_id, // The organizational user (ID)
+          org_id: selectedOrganizationalUser.org_id, // Use org_id from selected organizational user
+          services: selectedOrganizationalUser.services, // Use services from selected organizational user
+        };
+        apiUrl = `${Helpers.apiUrl}register_user`;
+      } else {
+        // Organizational user
+        payload = {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          org_id: user.org_id,
+          services: user.services,
+          is_user_organizational: user.is_user_organizational,
+        };
+        apiUrl = `${Helpers.apiUrl}auth/register`;
+      }
+
+      const response = await axios.post(apiUrl, payload, Helpers.authHeaders);
+
       if (response.status === 201 || response.status === 200) {
         Helpers.toast("success", Helpers.getTranslationValue("user_save_msg"));
         navigate("/admin/dashboard");
@@ -80,7 +143,6 @@ const AddUser = () => {
       Helpers.toast("error", error.message);
     }
   };
-  
 
   return (
     <section className="bg-white">
@@ -143,35 +205,17 @@ const AddUser = () => {
                   onChange={(e) => handleChange("password")(e.target.value)}
                 />
 
-                <label
-                  htmlFor="services"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  {Helpers.getTranslationValue("Servies")}
-                </label>
-                <Select
-                  options={services.map((service) => ({
-                    label: service.name,
-                    value: service.id,
-                  }))}
-                  multi
-                  onChange={(values) =>
-                    handleChange("services")(values.map((v) => v.value))
-                  }
-                  className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
-                />
-
                 <div className="flex flex-col items-start space-x-3 space-y-2 mt-4">
                   <label
                     htmlFor="is_user_organization"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    {Helpers.getTranslationValue("User Type")}
+                    {Helpers.getTranslationValue("Benutzertyp")}
                   </label>
 
                   <div className="custom-switch-toggle">
                     <button
-                      type="button" // Added to prevent form submission when clicking the button
+                      type="button"
                       className={`custom-switch-button ${
                         user.is_user_organizational === 0 ? "active" : ""
                       }`}
@@ -180,35 +224,77 @@ const AddUser = () => {
                       Normal
                     </button>
                     <button
-                      type="button" // Added to prevent form submission when clicking the button
+                      type="button"
                       className={`custom-switch-button ${
                         user.is_user_organizational === 1 ? "active" : ""
                       }`}
                       onClick={() => handleChange("is_user_organizational")(1)}
                     >
-                      Organizational
+                      Organisatorisch
                     </button>
                   </div>
                 </div>
 
-                {user.services.includes(2) && (
-                  <>
+                {user.is_user_organizational === 0 && (
+                  <div>
                     <label
-                      htmlFor="org"
+                      htmlFor="organization2"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      {Helpers.getTranslationValue("Organization")}
+                      {Helpers.getTranslationValue("Organisationsbenutzer")}
                     </label>
                     <Select
-                      options={orgs.map((org) => ({
-                        label: org.name,
-                        value: org.id,
+                      options={organizationalUsers.map((user) => ({
+                        label: user.name,
+                        value: user.id,
                       }))}
-                      onChange={(value) =>
-                        handleChange("org_id")(value[0].value)
-                      } // Ensure it's updating correctly
+                      onChange={handleSelectOrganizationalUser}
+                      className=" mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                    />
+                  </div>
+                )}
+
+                {user.is_user_organizational === 1 && (
+                  <>
+                    <label
+                      htmlFor="services"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      {Helpers.getTranslationValue("Services")}
+                    </label>
+                    <Select
+                      options={services.map((service) => ({
+                        label: service.name,
+                        value: service.id,
+                      }))}
+                      multi
+                      onChange={(values) =>
+                        handleChange("services")(values.map((v) => v.value))
+                      }
                       className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                     />
+
+                    {/* Conditionally render Voice Protocol Organization when services include 2 */}
+                    {user.services.includes(2) && (
+                      <div>
+                        <label
+                          htmlFor="org"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {Helpers.getTranslationValue("Organisation des Sprachprotokolls")}
+                        </label>
+                        <Select
+                          options={orgs.map((org) => ({
+                            label: org.name,
+                            value: org.id,
+                          }))}
+                          onChange={(value) =>
+                            handleChange("org_id")(value[0].value)
+                          }
+                          className="text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                        />
+                      </div>
+                    )}
                   </>
                 )}
 

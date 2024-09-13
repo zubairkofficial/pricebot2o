@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "axios";
+
 import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
 import AdminLayout from "./Screens/Admin/Layout";
 import { HeaderProvider } from "./Components/HeaderContext";
@@ -301,15 +302,7 @@ const App = () => {
                 </Auth>
               }
             />
-              <Route
-              path="user-usage/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <UserUsage />{" "}
-                </Auth>
-              }
-            />
+           ]
             <Route
               path="add-user"
               element={

@@ -78,6 +78,7 @@ const AddOrganizationalUser = () => {
       );
       if (response.status === 201 || response.status === 200) {
         Helpers.toast("success", Helpers.getTranslationValue("user_save_msg"));
+        navigate('/org-user-table')
       
       } else {
         throw new Error(Helpers.getTranslationValue("user_save_error"));
