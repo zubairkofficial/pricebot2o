@@ -37,6 +37,8 @@ import Settings from "./Screens/User/Settings";
 import OrganizationalUserTable from "./Components/OrganizationalUserTable";
 import UserUsage from "./Screens/Admin/User/UserUsage";
 import { useState } from "react";
+import OrganizationUsers from "./Screens/Admin/User/OrganizationUsers";
+import EditOrganizationalUser from "./Screens/User/EditOrganizationalUser";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -287,6 +289,15 @@ const App = () => {
                 </Auth>
               }
             />
+                 <Route
+              path="/edit-user/:id"
+              element={
+                <Auth>
+                  {" "}
+                  <EditOrganizationalUser />{" "}
+                </Auth>
+              }
+            />
               </>
             )}
 
@@ -309,6 +320,15 @@ const App = () => {
                 <Auth isAdmin={true}>
                   {" "}
                   <Adduser />{" "}
+                </Auth>
+              }
+            />
+               <Route
+              path="user-children/:userId"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <OrganizationUsers />{" "}
                 </Auth>
               }
             />

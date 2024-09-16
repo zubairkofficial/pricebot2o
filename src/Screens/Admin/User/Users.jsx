@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { FaEye, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaEye, FaPencilAlt, FaTrashAlt, FaUsers } from "react-icons/fa"; // Import FaUsers for the user icon
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from "../../../Components/HeaderContext";
@@ -104,14 +104,19 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${Helpers.apiUrl}dashboardInfo`,
+        `${Helpers.apiUrl}getAllOrganizationalUsers`,
         Helpers.authHeaders
       );
       if (response.status !== 200) {
         throw new Error(Helpers.getTranslationValue("users_fetch_error"));
       }
-      setUsers(response.data.users);
-      setFilteredUsers(response.data.users);
+
+      // Ensure data is an array
+      const usersData = Array.isArray(response.data.organization_users)
+        ? response.data.organization_users
+        : [];
+      setUsers(usersData);
+      setFilteredUsers(usersData); // Set both users and filteredUsers to the response data
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -138,6 +143,11 @@ const Users = () => {
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  // Navigate to the page that displays children users
+  const handleViewChildren = (userId) => {
+    navigate(`/admin/user-children/${userId}`);
   };
 
   const indexOfLastUser = (currentPage + 1) * itemsPerPage;
@@ -200,56 +210,56 @@ const Users = () => {
                 <p className="text-red-500">Error: {modalError}</p>
               ) : (
                 <div className="overflow-x-auto">
-                 <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-  <thead className="bg-success-300">
-    <tr>
-      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-        Sr. No
-      </th>
-      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-        Werkzeug
-      </th>
-      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-        Dateien hochgeladen
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        1
-      </td>
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        Sthamer
-      </td>
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        {documentCount}
-      </td>
-    </tr>
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        2
-      </td>
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        Contract Automation Solution
-      </td>
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        {contractSolutionCount}
-      </td>
-    </tr>
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-        3
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        Datenprozess
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        {dataProcessCount}
-      </td>
-    </tr>
-  </tbody>
-</table>
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead className="bg-success-300">
+                      <tr>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                          Sr. No
+                        </th>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                          Werkzeug
+                        </th>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                          Dateien hochgeladen
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          1
+                        </td>
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          Sthamer
+                        </td>
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          {documentCount}
+                        </td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          2
+                        </td>
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          Contract Automation Solution
+                        </td>
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          {contractSolutionCount}
+                        </td>
+                      </tr>
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                          3
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          Datenprozess
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          {dataProcessCount}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
@@ -304,11 +314,12 @@ const Users = () => {
             </div>
           </div>
 
-     
-            <Link to="/admin/add-user" className=" flex items-center py-2 px-3 text-white bg-success-300 hover:bg-success-800 rounded-lg">
-              {Helpers.getTranslationValue("Add user")}
-            </Link>
-        
+          <Link
+            to="/admin/add-user"
+            className=" flex items-center py-2 px-3 text-white bg-success-300 hover:bg-success-800 rounded-lg"
+          >
+            {Helpers.getTranslationValue("Add user")}
+          </Link>
         </div>
 
         <div className="rounded-lg">
@@ -334,6 +345,10 @@ const Users = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {Helpers.getTranslationValue("Actions")}
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("users")}
+                  </th>
+             
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -349,10 +364,10 @@ const Users = () => {
                       {user.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.service_names ? user.service_names.join(", ") : ""}
+                      {user.services ? user.services.join(", ") : ""}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.organization?.name}
+                      {user.organization_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
                       <button
@@ -374,7 +389,17 @@ const Users = () => {
                         <FaEye className="text-black" />
                       </button>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  items-center">
+                      <button
+                        className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 ml-2"
+                        onClick={() => handleViewChildren(user.id)}
+                      >
+                        <FaUsers className="text-black" />
+                      </button>
+                    </td>
+             
                   </tr>
+                  
                 ))}
               </tbody>
             </table>
