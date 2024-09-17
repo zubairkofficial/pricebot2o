@@ -40,10 +40,10 @@ const AddUser = () => {
   const fetchOrganizationalUsers = async () => {
     try {
       const response = await axios.get(
-        `${Helpers.apiUrl}getOrganizationalUserss`,
+        `${Helpers.apiUrl}getAllOrganizationalUsers`,
         Helpers.authHeaders
       );
-      setOrganizationalUsers(response.data);
+      setOrganizationalUsers(response.data.organization_users);
     } catch (error) {
       Helpers.toast("error", error.message);
     }

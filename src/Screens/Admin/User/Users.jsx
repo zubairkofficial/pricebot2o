@@ -316,7 +316,7 @@ const Users = () => {
 
           <Link
             to="/admin/add-user"
-            className=" flex items-center py-2 px-3 text-white bg-success-300 hover:bg-success-800 rounded-lg"
+            className="flex flex-col justify-center py-1 px-2 text-white bg-success-300 hover:bg-success-800 rounded-lg"
           >
             {Helpers.getTranslationValue("Add user")}
           </Link>

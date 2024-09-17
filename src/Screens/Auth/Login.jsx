@@ -10,10 +10,15 @@ const Login = () => {
     password: "",
   };
 
-  const [user, setUser] = useState(defaultUser);
+  const [user, setUser] = useState({email: "", password: ""});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e) => {
+    console.log("New value:", e.currentTarget.value);
+    setUser(oldData => ({ ...oldData, email: e.target.value })); // Update state correctly
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -73,7 +78,8 @@ const Login = () => {
                   type="email"
                   id="email"
                   value={user.email}
-                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                   onKeyDown={(e) => console.log(e.key)}
+                  onChange={e => setUser(oldData => ({ ...oldData, email: e.target.value }))}
                   placeholder={Helpers.getTranslationValue("Email")}
                   className="text-base border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
                 />
