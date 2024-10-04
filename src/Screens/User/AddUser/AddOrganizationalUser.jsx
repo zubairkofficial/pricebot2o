@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
  // Import react-switch or use a custom toggle
 import axios from "axios";
 
-import Helpers from "../../Config/Helpers";
+import Helpers from "../../../Config/Helpers";
 
 const AddOrganizationalUser = () => {
   const [user, setUser] = useState({
@@ -68,7 +68,7 @@ const AddOrganizationalUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       // Post request with user data including creator_id
       const response = await axios.post(
@@ -78,15 +78,24 @@ const AddOrganizationalUser = () => {
       );
       if (response.status === 201 || response.status === 200) {
         Helpers.toast("success", Helpers.getTranslationValue("user_save_msg"));
-        navigate('/org-user-table')
-      
+        navigate('/org-user-table');
       } else {
         throw new Error(Helpers.getTranslationValue("user_save_error"));
       }
     } catch (error) {
-      Helpers.toast("error", error.message);
+      if (error.response && error.response.data && error.response.data.errors) {
+        // Iterate through each field's errors and display them
+        Object.keys(error.response.data.errors).forEach((field) => {
+          error.response.data.errors[field].forEach((errorMessage) => {
+            Helpers.toast("error", `Error: ${errorMessage}`);
+          });
+        });
+      } else {
+        Helpers.toast("error", error.message);
+      }
     }
   };
+  
 
 
 

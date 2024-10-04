@@ -1,17 +1,16 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-
 import { BrowserRouter, Navigate, Routes, Route, Link } from "react-router-dom";
-import AdminLayout from "./Screens/Admin/Layout";
+import AdminLayout from "./Screens/Admin/Layout/Layout";
+import AddOrganizationalUser from "./Screens/User/AddUser/AddOrganizationalUser";
 import { HeaderProvider } from "./Components/HeaderContext";
-import AddOrganizationalUser from "./Screens/User/AddOrganizationalUser";
 import Users from "./Screens/Admin/User/Users";
 import Helpers from "./Config/Helpers";
 import Login from "./Screens/Auth/Login";
-import Adduser from "./Screens/Admin/User/Adduser";
+import Adduser from "./Screens/Admin/User/AddUser/Adduser";
 import Edituser from "./Screens/Admin/User/Edituser";
 import UserDashboard from "./Screens/User/Dashboard";
-import UserLayout from "./Screens/User/Layout";
+import UserLayout from "./Screens/User/Layout/Layout";
 import FileUpload from "./Screens/User/Fileupload";
 import ChangePass from "./Screens/User/ChangePass";
 import Voice from "./Screens/User/Voice";
@@ -35,28 +34,43 @@ import DataProcess from "./Screens/User/DataProcess";
 import ChangeLogo from "./Screens/User/ChangeLogo";
 import Settings from "./Screens/User/Settings";
 import OrganizationalUserTable from "./Components/OrganizationalUserTable";
-import UserUsage from "./Screens/Admin/User/UserUsage";
 import { useState } from "react";
 import OrganizationUsers from "./Screens/Admin/User/OrganizationUsers";
 import EditOrganizationalUser from "./Screens/User/EditOrganizationalUser";
+import Register from "./Screens/Auth/Register";
+import AddCustomerAdmin from "./Screens/User/AddUser/AddCustomerAdmin";
+import CustomerUserTable from "./Components/CustomerUserTable";
+import CustomerChildTable from "./Components/CustomerChildTable";
+import NormalUsers from "./Screens/Admin/User/NormalUsers";
+import LoginCustomer from "./Screens/Auth/LoginCustomer";
+import AllUsers from "./Screens/Admin/User/AllUsers";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
   let token = Helpers.getItem("token");
   let loginTime = Helpers.getItem("loginTimestamp");
- 
-  let currentTime = new Date().getTime();
-  let minutesPassed = Math.floor((currentTime - loginTime) / (1000 * 60));
 
-  
-  // Check for session expiration
-  if (loginTime && minutesPassed > 120) {
-    localStorage.clear();
-    Helpers.toast("error", "Session expired. Login again to continue");
-    return <Navigate to="/login" />;
+  // Get current time
+  let currentTime = new Date().getTime();
+
+  // Check if loginTime exists and calculate the minutes passed
+  if (loginTime) {
+    let minutesPassed = Math.floor((currentTime - loginTime) / (1000 * 60));
+
+    // Session expiration check: Expire after 30 minutes
+    if (minutesPassed > 60) {
+      localStorage.clear();
+      Helpers.toast(
+        "error",
+        "Session expired. Please login again to continue."
+      );
+      return <Navigate to="/login" />;
+    }
   }
+
   // For protected routes
-  else if (isAuth) {
+  if (isAuth) {
+    // If no user or token found, redirect to login
     if (!user || !token) {
       Helpers.toast("error", "Please login to continue");
       return <Navigate to="/login" />;
@@ -77,6 +91,7 @@ const Auth = ({ children, isAuth = true, isAdmin = false }) => {
       return <Navigate to="/admin/dashboard" />;
     }
 
+    // If all checks pass, render the children
     return children;
   }
   // For non-protected routes like /login
@@ -128,20 +143,40 @@ const NotFound = () => {
 
 const App = () => {
   const [isOrganizationalUser, setIsOrganizationalUser] = useState(false);
+  const [isCustomerAdmin, setIsCustomerAdmin] = useState(false); // New state for Customer Admin
 
-  // Retrieve is_user_organizational from localStorage on component mount
+  // Retrieve is_user_organizational and is_user_customer from localStorage
   useEffect(() => {
     let isUserOrg = Helpers.getItem("is_user_org");
+    let isUserCustomer = Helpers.getItem("is_user_customer");
+
+    // Retrieve is_user_customer from localStorage
+
     if (isUserOrg === "1") {
-      setIsOrganizationalUser(true); // Set state to true if user is organizational
+      setIsOrganizationalUser(true);
     } else {
-      setIsOrganizationalUser(false); // Set state to false if user is normal
+      setIsOrganizationalUser(false);
+    }
+
+    if (isUserCustomer === "1") {
+      setIsCustomerAdmin(true); // Set Customer Admin to true if is_user_customer is 1
+    } else {
+      setIsCustomerAdmin(false);
     }
   }, []);
+
   useEffect(() => {
     fetchTranslations();
   }, []);
 
+  const hasServiceAccess = (serviceId) => {
+    const user = Helpers.getItem("user", true);
+    if (user && user.services) {
+      // Check if the service ID exists in the user's services array
+      return user.services.includes(serviceId);
+    }
+    return false;
+  };
   const fetchTranslations = async () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}get-trans`, {
@@ -166,6 +201,24 @@ const App = () => {
               </Auth>
             }
           />
+          <Route
+            path="/cretschmar-login"
+            element={
+              <Auth isAuth={false}>
+                {" "}
+                <LoginCustomer />{" "}
+              </Auth>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Auth isAuth={false}>
+                {" "}
+                <Register />{" "}
+              </Auth>
+            }
+          />
           <Route path="/" element={<UserLayout />}>
             <Route
               path="/"
@@ -176,70 +229,80 @@ const App = () => {
                 </Auth>
               }
             />
-            <Route
-              path="/fileupload"
-              element={
-                <Auth>
-                  {" "}
-                  <FileUpload />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/voice"
-              element={
-                <Auth>
-                  {" "}
-                  <Voice />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/contract_automation_solution"
-              element={
-                <Auth>
-                  {" "}
-                  <ContractAutomationSolution />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/data_process"
-              element={
-                <Auth>
-                  {" "}
-                  <DataProcess />{" "}
-                </Auth>
-              }
-            />
 
-            <Route
-              path="/transcription"
-              element={
-                <Auth>
-                  {" "}
-                  <Transcription />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/sent-emails"
-              element={
-                <Auth>
-                  {" "}
-                  <SentEmails />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/resend-email/:userId"
-              element={
-                <Auth>
-                  {" "}
-                  <ResendEmail />{" "}
-                </Auth>
-              }
-            />
+            {/* File Upload for service ID 1 */}
+            {hasServiceAccess(1) && (
+              <Route
+                path="/fileupload"
+                element={
+                  <Auth>
+                    <FileUpload />
+                  </Auth>
+                }
+              />
+            )}
+
+            {/* Voice, Transcription, Sent Emails, and Resend Email for service ID 2 */}
+            {hasServiceAccess(2) && (
+              <>
+                <Route
+                  path="/voice"
+                  element={
+                    <Auth>
+                      <Voice />
+                    </Auth>
+                  }
+                />
+                <Route
+                  path="/transcription"
+                  element={
+                    <Auth>
+                      <Transcription />
+                    </Auth>
+                  }
+                />
+                <Route
+                  path="/sent-emails"
+                  element={
+                    <Auth>
+                      <SentEmails />
+                    </Auth>
+                  }
+                />
+                <Route
+                  path="/resend-email/:userId"
+                  element={
+                    <Auth>
+                      <ResendEmail />
+                    </Auth>
+                  }
+                />
+              </>
+            )}
+
+            {/* Contract Automation Solution for service ID 3 */}
+            {hasServiceAccess(3) && (
+              <Route
+                path="/contract_automation_solution"
+                element={
+                  <Auth>
+                    <ContractAutomationSolution />
+                  </Auth>
+                }
+              />
+            )}
+
+            {/* Data Process for service ID 4 */}
+            {hasServiceAccess(4) && (
+              <Route
+                path="/data_process"
+                element={
+                  <Auth>
+                    <DataProcess />
+                  </Auth>
+                }
+              />
+            )}
             <Route
               path="/changePass"
               element={
@@ -258,19 +321,18 @@ const App = () => {
                 </Auth>
               }
             />
-               <Route
-                  path="/settings"
-                  element={
-                    <Auth>
-                      {" "}
-                      <Settings />{" "}
-                    </Auth>
-                  }
-                />
+            <Route
+              path="/settings"
+              element={
+                <Auth>
+                  {" "}
+                  <Settings />{" "}
+                </Auth>
+              }
+            />
             {isOrganizationalUser && (
               <>
                 {" "}
-             
                 <Route
                   path="/add-org-user"
                   element={
@@ -280,28 +342,55 @@ const App = () => {
                     </Auth>
                   }
                 />
-                   <Route
-              path="/org-user-table"
-              element={
-                <Auth>
-                  {" "}
-                  <OrganizationalUserTable />{" "}
-                </Auth>
-              }
-            />
-                 <Route
-              path="/edit-user/:id"
-              element={
-                <Auth>
-                  {" "}
-                  <EditOrganizationalUser />{" "}
-                </Auth>
-              }
-            />
+                <Route
+                  path="/org-user-table"
+                  element={
+                    <Auth>
+                      {" "}
+                      <OrganizationalUserTable />{" "}
+                    </Auth>
+                  }
+                />
+                <Route
+                  path="/edit-user/:id"
+                  element={
+                    <Auth>
+                      {" "}
+                      <EditOrganizationalUser />{" "}
+                    </Auth>
+                  }
+                />
               </>
             )}
-
-         
+            {isCustomerAdmin && (
+              <>
+                <Route
+                  path="/customer-admin-add-user"
+                  element={
+                    <Auth>
+                      <AddCustomerAdmin /> {/* Add Customer Admin component */}
+                    </Auth>
+                  }
+                />{" "}
+                <Route
+                  path="/customer-user-table"
+                  element={
+                    <Auth>
+                      <CustomerUserTable /> {/* Add Customer Admin component */}
+                    </Auth>
+                  }
+                />
+                <Route
+                  path="/customer-child-table/:userId"
+                  element={
+                    <Auth>
+                      <CustomerChildTable />{" "}
+                      {/* Add Customer Admin component */}
+                    </Auth>
+                  }
+                />
+              </>
+            )}
           </Route>
           <Route path="/admin/" element={<AdminLayout />}>
             <Route
@@ -309,11 +398,20 @@ const App = () => {
               element={
                 <Auth isAdmin={true}>
                   {" "}
-                  <Users />{" "}
+                  <Users  />{" "}
                 </Auth>
               }
             />
-           ]
+              <Route
+              path="show-all-users"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <AllUsers />{" "}
+                </Auth>
+              }
+            />
+
             <Route
               path="add-user"
               element={
@@ -323,8 +421,17 @@ const App = () => {
                 </Auth>
               }
             />
-               <Route
-              path="user-children/:userId"
+            {/* <Route
+              path="customer-requests"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <CustomerRequest />{" "}
+                </Auth>
+              }
+            /> */}
+            <Route
+              path="user-children/:customerId"
               element={
                 <Auth isAdmin={true}>
                   {" "}
@@ -332,6 +439,16 @@ const App = () => {
                 </Auth>
               }
             />
+            <Route
+              path="normal-child-users/:userId"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <NormalUsers />{" "}
+                </Auth>
+              }
+            />
+
             <Route
               path="edit-user/:id"
               element={

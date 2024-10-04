@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { FaTrashAlt, FaPencilAlt, FaEye } from "react-icons/fa"; // Add FaEye for view usage
-import axios from "axios";
-import Pagination from "./Pagination";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { FaEye, FaPencilAlt, FaTrashAlt, FaUsers } from "react-icons/fa";
 import Helpers from "../Config/Helpers";
+import axios from "axios";
 import { useHeader } from "./HeaderContext";
+import Pagination from "./Pagination";
 
-const OrganizationalUserTable = () => {
+const CustomerUserTable = () => {
   const { setHeaderData } = useHeader();
+
+  useEffect(() => {
+    setHeaderData({
+      title: Helpers.getTranslationValue("Dashboard"),
+      desc: Helpers.getTranslationValue("Dashboard_Desc"),
+    });
+  }, [setHeaderData]);
+
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,9 +23,10 @@ const OrganizationalUserTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
-  const navigate = useNavigate(); // For navigating to the edit page
+  const location = useLocation();
+  const navigate = useNavigate();
+  const successMessage = location.state?.successMessage;
 
-  // Modal state management for viewing user usage
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [documentCount, setDocumentCount] = useState(null);
@@ -26,74 +35,6 @@ const OrganizationalUserTable = () => {
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
-  useEffect(() => {
-    setHeaderData({
-      title: Helpers.getTranslationValue("Benutzer"),
-      desc: Helpers.getTranslationValue("Benutzer verwalten"),
-    });
-    fetchUsers();
-  }, [currentPage]);
-
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `${Helpers.apiUrl}getOrganizationUsers?page=${
-          currentPage + 1
-        }&limit=${itemsPerPage}`,
-        Helpers.authHeaders
-      );
-      if (response.status !== 200) {
-        throw new Error(Helpers.getTranslationValue("users_fetch_error"));
-      }
-      const usersData = response.data.organization_users;
-      setUsers(usersData);
-      setFilteredUsers(usersData);
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (user.services &&
-          user.services
-            .join(", ")
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())) ||
-        user.org_id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }, [searchTerm, users]);
-
-  const handleDelete = async (id) => {
-    try {
-      const response = await axios.delete(
-        `${Helpers.apiUrl}delete_User/${id}`,
-        Helpers.authHeaders
-      );
-      if (response.status !== 200) {
-        throw new Error(Helpers.getTranslationValue("user_delete_error"));
-      }
-      setUsers(users.filter((user) => user.id !== id));
-      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
-      Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
-      window.location.reload();
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/edit-user/${id}`); // Navigate to the edit page
-  };
-
-  // Function to show the modal and fetch user usage data
   const handleShowModal = async (userId) => {
     setSelectedUserId(userId);
     setShowModal(true);
@@ -127,25 +68,100 @@ const OrganizationalUserTable = () => {
     setDataProcessCount(null);
     setModalError(null);
   };
+  const user = Helpers.getItem("user");
+  const userObj = JSON.parse(user);
+  const userId = userObj.id;
+  useEffect(() => {
+    if (successMessage) {
+      Helpers.toast("success", successMessage);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [successMessage, navigate, location.pathname]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    setFilteredUsers(
+      users
+        .filter((user) => user.is_user_organizational === 1) // Filter for users with is_user_organizational = 1
+        .filter(
+          (user) =>
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (user.services &&
+              user.services
+                .map((service) => service.name)
+                .join(", ")
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase())) ||
+            (user.organization &&
+              user.organization.name &&
+              user.organization.name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase()))
+        )
+    );
+  }, [searchTerm, users]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        `${Helpers.apiUrl}getAllOrganizationalUsersForCustomer/${userId}`,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue("users_fetch_error"));
+      }
+
+      const usersData = Array.isArray(response.data.organization_users)
+        ? response.data.organization_users
+        : [];
+      setUsers(usersData);
+      setFilteredUsers(
+        usersData.filter((user) => user.is_user_organizational === 1)
+      ); // Only set users with is_user_organizational = 1
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (userId) => {
+    navigate(`/edit-user/${userId}`);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `${Helpers.apiUrl}delete/${id}`,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue("user_delete_error"));
+      }
+      setUsers(users.filter((user) => user.id !== id));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+      Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleViewChildren = (userId) => {
+    navigate(`/customer-child-table/${userId}`);
+  };
 
   const indexOfLastUser = (currentPage + 1) * itemsPerPage;
   const indexOfFirstUser = currentPage * itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
-  // Function to handle the redirection based on local storage value
-  const handleAddUserRedirect = () => {
-    const isUserCustomer = localStorage.getItem("is_user_customer");
-    if (isUserCustomer === "1") {
-      navigate("/customer-admin-add-user");
-    } else {
-      navigate("/add-org-user");
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <div>Loading...</div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
       </div>
     );
   }
@@ -160,13 +176,12 @@ const OrganizationalUserTable = () => {
 
   return (
     <section className="w-full h-full">
-      {/* Modal for displaying user usage */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">User Usage</h2>
+              <h2 className="text-xl font-semibold">Benutzernutzung</h2>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"
@@ -195,7 +210,6 @@ const OrganizationalUserTable = () => {
                 <p className="text-red-500">Fehler: {modalError}</p>
               ) : (
                 <>
-                  {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
                   contractSolutionCount === undefined &&
                   dataProcessCount === undefined ? (
@@ -219,7 +233,6 @@ const OrganizationalUserTable = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {/* Display 0 if the tool is available but count is 0 */}
                           {documentCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
@@ -271,7 +284,7 @@ const OrganizationalUserTable = () => {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
-                Close
+                Schließen
               </button>
             </div>
           </div>
@@ -284,9 +297,9 @@ const OrganizationalUserTable = () => {
             <div className="relative">
               <input
                 type="text"
-                className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                className="border border-gray-300 rounded-lg p-2 pr-10 focus:border-blue-500 focus:ring-0"
                 id="search"
-                placeholder="Search users"
+                placeholder={Helpers.getTranslationValue("user_search")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -316,104 +329,107 @@ const OrganizationalUserTable = () => {
               </div>
             </div>
           </div>
-          {/* Redirect based on is_user_customer */}
-          <button
-            onClick={handleAddUserRedirect}
-            className="h-10 px-5 mb-2 text-white transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 flex items-center justify-center w-1/3 md:w-1/3"
+
+          <Link
+            to="/customer-admin-add-user"
+            className="flex flex-col justify-center py-1 px-2 text-white bg-success-300 hover:bg-success-800 rounded-lg"
           >
             {Helpers.getTranslationValue("Add user")}
-          </button>
+          </Link>
         </div>
 
         <div className="rounded-lg">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-darkblack-200">
-              <thead className="bg-white-100">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     #
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
+                    {Helpers.getTranslationValue("Name")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    {Helpers.getTranslationValue("Email")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Dienstleistungen
+                    {Helpers.getTranslationValue("Services")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Organisation
+                    {Helpers.getTranslationValue("Voice Protocol Organization")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Aktionen
+                    {Helpers.getTranslationValue("Actions")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("users")}
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                {currentUsers.length > 0 ? (
-                  currentUsers.map((user, index) => (
-                    <tr key={user.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {indexOfFirstUser + index + 1}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.services ? user.services.join(", ") : ""}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.organization_name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
-                        {/* <button
-                          className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-                          onClick={() => handleEdit(user.id)} // Edit Button
-                        >
-                          <FaPencilAlt className="text-black" />
-                        </button>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {currentUsers.map((user, index) => (
+                  <tr key={user.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {indexOfFirstUser + index + 1}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.email}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.services.map((service) => service).join(", ")}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.organization_name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
+                      <button
+                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                        onClick={() => handleEdit(user.id)}
+                      >
+                        <FaPencilAlt className="text-black" />
+                      </button>
+                      <button
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
+                        onClick={() => handleDelete(user.id)}
+                      >
+                        <FaTrashAlt className="text-black" />
+                      </button>
+                      {/* <button
+                        className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
+                        onClick={() => handleShowModal(user.id)}
+                      >
+                        <FaEye className="text-black" />
+                      </button> */}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium items-center">
+                      {user.is_user_organizational === 1 && (
                         <button
-                          className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
-                          onClick={() => handleDelete(user.id)} // Delete Button
+                          className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 ml-2"
+                          onClick={() => handleViewChildren(user.id)}
                         >
-                          <FaTrashAlt className="text-black" />
-                        </button> */}
-                        <button
-                          className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
-                          onClick={() => handleShowModal(user.id)} // View Document Usage
-                        >
-                          <FaEye className="text-black" />
+                          <FaUsers className="text-black" />
                         </button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center py-4">
-                      Es wurden noch keine Benutzer erstellt.
+                      )}
                     </td>
                   </tr>
-                )}
+                ))}
               </tbody>
             </table>
           </div>
 
-          {filteredUsers.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalItems={filteredUsers.length}
-              itemsPerPage={itemsPerPage}
-              onPageChange={(page) => setCurrentPage(page)}
-            />
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalItems={filteredUsers.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
     </section>
   );
 };
 
-export default OrganizationalUserTable;
+export default CustomerUserTable;

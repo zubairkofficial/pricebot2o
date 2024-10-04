@@ -5,8 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Helpers from "../../Config/Helpers";
 import loginLogo from "./../../login_logo.svg"; // Import the SVG
-
-const Login = () => {
+import './LoginCustomer.css'; 
+const CustomerLogin = () => {
   const defaultUser = {
     email: "",
     password: "",
@@ -37,15 +37,12 @@ const Login = () => {
         localStorage.removeItem("translationData");
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
-  
-        // Extract is_user_customer and is_user_org from response data
-        const isUserOrg = response.data.user.is_user_organizational;
-        const isUserCustomer = response.data.user.is_user_customer;
-  
+        Helpers.setItem(
+          "is_user_org",
+          response.data.user.is_user_organizational
+        );
         if (response.data.user.user_type === 1) {
           window.location.href = "/admin/dashboard";
-        } else if ((isUserCustomer === 0 || isUserCustomer === null || isUserCustomer === undefined) && isUserOrg === 1) {
-          window.location.href = "/org-user-table";
         } else {
           window.location.href = "/";
         }
@@ -65,20 +62,32 @@ const Login = () => {
         setIsLoading(false);
       });
   };
-  
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
   return (
-    <section className="bg-white min-h-screen flex items-center justify-center">
+    <section className="bg-white min-h-screen flex items-center justify-center font">
       <div className="w-full max-w-md">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          {/* Card body with form */}
-          <h2 className="text-2xl font-bold mb-6 text-center">
-            {Helpers.getTranslationValue("Login")}
-          </h2>
+          {/* Card header with logo */}
+          <div className="text-center mb-6">
+            <img
+              src={loginLogo}
+              alt="Login Logo"
+              className="mx-auto"
+              style={{
+                width: "200px",
+                height: "50px",
+              }} // Reduced size
+            />
+          </div>
+
+          <p className="text-3xl mb-6 text-center font ">
+           <b className="">CRETSCHMAR</b>
+          </p>
+
           <form onSubmit={handleLogin}>
             <div className="mb-4">
               <input
@@ -102,9 +111,7 @@ const Login = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={user.password}
-                onChange={(e) =>
-                  setUser({ ...user, password: e.target.value })
-                }
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
                 placeholder={Helpers.getTranslationValue("Password")}
                 className="text-base border border-gray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
               />
@@ -133,27 +140,25 @@ const Login = () => {
               disabled={isLoading}
               className="py-3.5 flex text-white items-center justify-center font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"
             >
-              {Helpers.getTranslationValue(
-                isLoading ? "Is_loading" : "Login"
-              )}
+              {Helpers.getTranslationValue(isLoading ? "Is_loading" : "Login")}
             </button>
           </form>
 
-          {/* <div className="text-center mt-6">
-            <p className="text-base">
+          <div className="text-center mt-6">
+            <p className="text-base font">
               Sie haben kein Konto?{"  "}
               <Link
                 to="/register"
-                className="text-blue-300 hover:text-success-400 font-bold"
+                className="text-blue-300 hover:text-success-400 "
               >
-                {Helpers.getTranslationValue("Registrieren Sie sich hier")}
+              <span className="font">Registrieren Sie sich hier</span>
               </Link>
             </p>
-          </div> */}
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-export default Login;
+export default CustomerLogin;

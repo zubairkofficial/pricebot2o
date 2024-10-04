@@ -3,26 +3,32 @@ import { useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
 import axios from "axios";
 import "./styles.css";
-import Helpers from "../../../Config/Helpers";
-import { useHeader } from "../../../Components/HeaderContext";
+import Helpers from "../../../../Config/Helpers";
+import { useHeader } from "../../../../Components/HeaderContext";
 
 const AddUser = () => {
   const { setHeaderData } = useHeader();
   const [organizationalUsers, setOrganizationalUsers] = useState([]);
-  const [selectedOrganizationalUser, setSelectedOrganizationalUser] = useState({
+  const [customerAdmins, setCustomerAdmins] = useState([]); // State to hold customer admins
+  const [showOrgUsersDropdown, setShowOrgUsersDropdown] = useState(false); // Control visibility of second dropdown
+  const [selectedCustomer, setSelectedCustomer] = useState({
+    id: "",
     org_id: "",
     services: [],
-  }); // Store org_id and services for selected organizational user
+  }); // Store org_id and services for selected customer admin
+
   const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
     org_id: "",
     services: [],
-    is_user_organizational: 0, // 0 for normal user, 1 for organizational user
+    is_user_organizational: 0,
+    is_user_customer: 0, // 0 for normal user, 1 for customer admin
     showPassword: false,
     creator_id: "",
   });
+
   const [services, setServices] = useState([]);
   const [orgs, setOrgs] = useState([]);
   const navigate = useNavigate();
@@ -33,17 +39,17 @@ const AddUser = () => {
       desc: Helpers.getTranslationValue("Dashboard_Desc"),
     });
     fetchServices();
-    fetchOrganizationalUsers();
+    fetchCustomerAdmins(); // Fetch customer admins
     fetchOrgs();
   }, []);
 
-  const fetchOrganizationalUsers = async () => {
+  const fetchCustomerAdmins = async () => {
     try {
       const response = await axios.get(
-        `${Helpers.apiUrl}getAllOrganizationalUsers`,
+        `${Helpers.apiUrl}getAllCustomerAdmins`,
         Helpers.authHeaders
       );
-      setOrganizationalUsers(response.data.organization_users);
+      setCustomerAdmins(response.data.data); // Store customer admins in state
     } catch (error) {
       Helpers.toast("error", error.message);
     }
@@ -80,19 +86,48 @@ const AddUser = () => {
     }));
   };
 
-  // Handle organizational user selection
+  // Fetch organizational users for the selected customer admin
+  const fetchOrganizationalUsers = async (customerId) => {
+    try {
+      const response = await axios.get(
+        `${Helpers.apiUrl}getAllOrganizationalUsersForCustomer/${customerId}`,
+        Helpers.authHeaders
+      );
+      setOrganizationalUsers(response.data.organization_users || []);
+      console.log(response.data);
+      setShowOrgUsersDropdown(true); // Show the organizational users dropdown after fetching the data
+    } catch (error) {
+      Helpers.toast("error", error.message);
+    }
+  };
+
+  // Handle customer admin selection
+  const handleSelectCustomerAdmin = async (selectedValues) => {
+    const selectedCustomerId = selectedValues[0]?.value;
+    await fetchOrganizationalUsers(selectedCustomerId); // Fetch organizational users after customer admin is selected
+
+    const selectedCustomerAdmin = customerAdmins.find(
+      (admin) => admin.id === selectedCustomerId
+    );
+
+    setSelectedCustomer({
+      id: selectedCustomerAdmin?.id || "",
+      org_id: selectedCustomerAdmin?.org_id || "",
+      services: selectedCustomerAdmin?.services || [],
+    });
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      creator_id: selectedCustomerId,
+    }));
+  };
+
   const handleSelectOrganizationalUser = (selectedValues) => {
     const selectedUserId = selectedValues[0]?.value;
-    
-    // Find selected organizational user's org_id and services
-    const selectedUser = organizationalUsers.find(user => user.id === selectedUserId);
-    
-    setSelectedOrganizationalUser({
-      org_id: selectedUser?.org_id || "",
-      services: selectedUser?.services || [],
-    });
-    
-    // Set the creator_id in the user state
+    const selectedUser = organizationalUsers.find(
+      (user) => user.id === selectedUserId
+    );
+
     setUser((prevUser) => ({
       ...prevUser,
       creator_id: selectedUserId,
@@ -105,32 +140,48 @@ const AddUser = () => {
     try {
       let payload;
       let apiUrl;
+      console.log(selectedCustomer);
 
       // Conditionally build payload and select API route
-      if (user.is_user_organizational === 0) {
-        // Normal user - use creator_id's org_id and services
+      if (user.is_user_organizational === 0 && user.is_user_customer === 0) {
+        // Normal user
         payload = {
           name: user.name,
           email: user.email,
           password: user.password,
-          creator_id: user.creator_id, // The organizational user (ID)
-          org_id: selectedOrganizationalUser.org_id, // Use org_id from selected organizational user
-          services: selectedOrganizationalUser.services, // Use services from selected organizational user
+          is_user_organizational: 0,
+          is_user_customer: 0,
+          creator_id: user.creator_id,
+          parent_id: selectedCustomer.id, // The customer admin (ID)
+          org_id: selectedCustomer.org_id, // Use org_id from selected customer admin
+          services: selectedCustomer.services.map((service) => service), // Properly map the service IDs
         };
         apiUrl = `${Helpers.apiUrl}register_user`;
-      } else {
-        // Organizational user
+      } else if (user.is_user_customer === 1) {
+        // Customer admin
         payload = {
           name: user.name,
           email: user.email,
           password: user.password,
           org_id: user.org_id,
           services: user.services,
+          is_user_customer: user.is_user_customer,
+          is_user_organizational: 1,
+        };
+        apiUrl = `${Helpers.apiUrl}auth/register-customer-admin`;
+      } else {
+        // Organizational user
+        payload = {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          creator_id: user.creator_id,
           is_user_organizational: user.is_user_organizational,
+          org_id: selectedCustomer.org_id,
+          services: selectedCustomer.services.map((service)=> service),
         };
         apiUrl = `${Helpers.apiUrl}auth/register`;
       }
-
       const response = await axios.post(apiUrl, payload, Helpers.authHeaders);
 
       if (response.status === 201 || response.status === 200) {
@@ -140,14 +191,22 @@ const AddUser = () => {
         throw new Error(Helpers.getTranslationValue("user_save_error"));
       }
     } catch (error) {
-      Helpers.toast("error", error.message);
+      if (error.response && error.response.data && error.response.data.errors) {
+        Object.keys(error.response.data.errors).forEach((field) => {
+          error.response.data.errors[field].forEach((errorMessage) => {
+            Helpers.toast("error", `Error: ${errorMessage}`);
+          });
+        });
+      } else {
+        Helpers.toast("error", error.message);
+      }
     }
   };
 
   return (
     <section className="bg-white">
       <div className="flex flex-col lg:flex-row justify-between lg:px-12">
-        <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12 ">
+        <div className="xl:w-full lg:w-8/12 px-5 xl:pl-12">
           <div className="max-w-2xl mx-auto pb-16">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-center text-2xl font-semibold mb-8">
@@ -217,44 +276,109 @@ const AddUser = () => {
                     <button
                       type="button"
                       className={`custom-switch-button ${
-                        user.is_user_organizational === 0 ? "active" : ""
+                        user.is_user_organizational === 0 &&
+                        user.is_user_customer === 0
+                          ? "active"
+                          : ""
                       }`}
-                      onClick={() => handleChange("is_user_organizational")(0)}
+                      onClick={() => {
+                        handleChange("is_user_organizational")(0);
+                        handleChange("is_user_customer")(0);
+                      }}
                     >
-                      Normal
+                      Normaler Benutzer
                     </button>
                     <button
                       type="button"
                       className={`custom-switch-button ${
                         user.is_user_organizational === 1 ? "active" : ""
                       }`}
-                      onClick={() => handleChange("is_user_organizational")(1)}
+                      onClick={() => {
+                        handleChange("is_user_organizational")(1);
+                        handleChange("is_user_customer")(0);
+                      }}
                     >
-                      Organisatorisch
+                      Organisationsbenutzer
+                    </button>
+                    <button
+                      type="button"
+                      className={`custom-switch-button ${
+                        user.is_user_customer === 1 ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        handleChange("is_user_customer")(1);
+                        handleChange("is_user_organizational")(0);
+                      }}
+                    >
+                      Kundenadministrator{" "}
                     </button>
                   </div>
                 </div>
 
-                {user.is_user_organizational === 0 && (
+                {/* Normal user dropdown for selecting customer admin */}
+                {user.is_user_organizational === 0 && user.is_user_customer === 0 && (
+                  <>
+                    <div>
+                      <label
+                        htmlFor="customer_admin"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {Helpers.getTranslationValue("Wählen Sie den Kundenadministrator")}
+                      </label>
+                      <Select
+                        options={customerAdmins.map((admin) => ({
+                          label: admin.name,
+                          value: admin.id,
+                        }))}
+                        onChange={handleSelectCustomerAdmin}
+                        className="mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                      />
+                    </div>
+
+                    {/* Show second dropdown only after selecting customer admin */}
+                    {showOrgUsersDropdown && (
+                      <div>
+                        <label
+                          htmlFor="organizational_user"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          {Helpers.getTranslationValue("Wählen Sie den organisatorischen Benutzer")}
+                        </label>
+                        <Select
+                          options={organizationalUsers.map((user) => ({
+                            label: user.name,
+                            value: user.id,
+                          }))}
+                          onChange={handleSelectOrganizationalUser}
+                          className="mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Organizational user selects customer admin */}
+                {user.is_user_organizational === 1 && (
                   <div>
                     <label
-                      htmlFor="organization2"
+                      htmlFor="customer_admin"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      {Helpers.getTranslationValue("Organisationsbenutzer")}
+                      {Helpers.getTranslationValue("Wählen Sie den Kundenadministrator")}
                     </label>
                     <Select
-                      options={organizationalUsers.map((user) => ({
-                        label: user.name,
-                        value: user.id,
+                      options={customerAdmins.map((admin) => ({
+                        label: admin.name,
+                        value: admin.id,
                       }))}
-                      onChange={handleSelectOrganizationalUser}
-                      className=" mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                      onChange={handleSelectCustomerAdmin}
+                      className="mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
                     />
                   </div>
                 )}
 
-                {user.is_user_organizational === 1 && (
+                {/* Customer admin service selection */}
+                {user.is_user_customer === 1 && (
                   <>
                     <label
                       htmlFor="services"

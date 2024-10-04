@@ -29,8 +29,6 @@ const Orgs = () => {
         setFilteredOrgs(
             orgs.filter((org) =>
                 org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                org.street.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                org.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 org.prompt.toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
@@ -88,7 +86,7 @@ const Orgs = () => {
 
 
     return (
-        <section className="bg-white">
+        <section className="bg-white w-full">
             <div className="flex flex-col lg:flex-row justify-between lg:px-12">
                 <div className="w-full px-5 xl:pl-12">
                     <div className="m-auto">
@@ -142,8 +140,7 @@ const Orgs = () => {
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Name')}</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Number')}</th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('street')}</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Prompt')}</th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{Helpers.getTranslationValue('Actions')}</th>
                                         </tr>
                                     </thead>
@@ -152,8 +149,7 @@ const Orgs = () => {
                                             <tr key={org.id}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{indexOfFirstOrg + index + 1}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.number}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.street}</td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{org.prompt}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                                     <button
                                                         className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"

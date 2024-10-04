@@ -76,7 +76,15 @@ const EditUser = () => {
       Helpers.toast("success", Helpers.getTranslationValue('user_update_msg'));
       navigate("/admin/dashboard");
     } catch (error) {
-      setError(error.message);
+      if (error.response && error.response.data && error.response.data.errors) {
+        Object.keys(error.response.data.errors).forEach((field) => {
+          error.response.data.errors[field].forEach((errorMessage) => {
+            Helpers.toast("error", `Error: ${errorMessage}`);
+          });
+        });
+      } else {
+        Helpers.toast("error", error.message);
+      }
     }
   };
 

@@ -1,103 +1,125 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLock } from "@fortawesome/free-solid-svg-icons";
-import { useLocation, useNavigate } from "react-router-dom";
 import Helpers from "../../Config/Helpers";
 import axios from "axios";
-import { useHeader } from '../../Components/HeaderContext';
+import { useHeader } from "../../Components/HeaderContext";
 
 const Dashboard = () => {
   const { setHeaderData } = useHeader();
 
   useEffect(() => {
-    setHeaderData({ title: Helpers.getTranslationValue('Dashboard'), desc: Helpers.getTranslationValue('user_dashboard_desc') });
+    setHeaderData({
+      title: Helpers.getTranslationValue("Dashboard"),
+      desc: Helpers.getTranslationValue("Benutzer-Dashboard"),
+    });
   }, [setHeaderData]);
 
   const [services, setServices] = useState([]);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const successMessage = location.state?.successMessage;
+  const [shouldDisplayServices, setShouldDisplayServices] = useState(false); // State to determine whether to show services
+  const [loading, setLoading] = useState(true); // State for loading indicator
+  
+  // Fetch the user roles from localStorage and set conditions for showing services
+  useEffect(() => {
+    const isUserOrg = parseInt(localStorage.getItem("is_user_org"), 10) || 0;
+    const isUserCustomer = parseInt(localStorage.getItem("is_user_customer"), 10) || 0;
+
+    // Logic for showing services:
+    // 1. Show services if both `is_user_org` and `is_user_customer` are 1
+    // 2. Show services if both `is_user_org` and `is_user_customer` are 0
+    // 3. Hide services if only `is_user_org` is 1
+    if ((isUserOrg === 1 && isUserCustomer === 1) || (isUserOrg === 0 && isUserCustomer === 0)) {
+      setShouldDisplayServices(true);
+    } else if (isUserOrg === 1 && isUserCustomer === 0) {
+      setShouldDisplayServices(false);
+    }
+  }, []);
+
+  // Fetch the user services (assumes it's stored in Helpers.authUser)
+  const userServices = Helpers.authUser?.services || [];
 
   useEffect(() => {
     fetchServices();
   }, []);
 
-  const userServices = Helpers.authUser.services || [];
-
   const fetchServices = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `${Helpers.apiUrl}active-services`,
         Helpers.authHeaders
       );
       if (response.status !== 200) {
-        throw new Error(Helpers.getTranslationValue('services_fetch_error'));
+        throw new Error(Helpers.getTranslationValue("services_fetch_error"));
       }
       setServices(response.data);
     } catch (error) {
       Helpers.toast("error", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (successMessage) {
-      Helpers.toast("success", successMessage);
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [successMessage, navigate, location.pathname]);
-
+  // Function to check if the service is enabled for the user
   const isServiceEnabled = (serviceId) => {
     return userServices.includes(serviceId);
   };
 
+  // Filter services to only show those that are enabled for the user
+  const filteredServices = services.filter((service) =>
+    isServiceEnabled(service.id)
+  );
+
   return (
     <div className="w-full mb-6">
       <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
-        {services.map((service) => (
-          <div
-            key={service.id}
-            className="w-full p-2"
-          >
-            <Link
-              to={isServiceEnabled(service.id) ? `/${service.link}` : "#"}
-              className="block text-decoration-none relative"
-            >
-              <div
-                className={`shadow-sm rounded-lg p-5 transition-opacity ${isServiceEnabled(service.id) ? "opacity-90" : "opacity-50"
-                  }`}
-                style={{
-                  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${Helpers.basePath}/images/${service.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  cursor: "pointer",
-                  height: "200px",
-                  backgroundColor: "#333", // Fallback color if image is not available
-                }}
-              >
-                {!isServiceEnabled(service.id) && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "white",
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faLock} size="2x" />
+        {/* Display loading indicator if fetching services */}
+        {loading ? (
+          <p>Loading services...</p>
+        ) : (
+          <>
+            {/* Render services only if shouldDisplayServices is true */}
+            {shouldDisplayServices ? (
+              filteredServices.length > 0 ? (
+                filteredServices.map((service) => (
+                  <div key={service.id} className="w-full p-2">
+                    <Link to={`/${service.link}`} className="block text-decoration-none relative">
+                      <div
+                        className="shadow-sm rounded-lg p-5 transition-opacity opacity-90"
+                        style={{
+                          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${Helpers.basePath}/images/${service.image})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          cursor: "pointer",
+                          height: "200px",
+                          backgroundColor: "#333", // Fallback color if image is not available
+                        }}
+                      >
+                        <div className="flex flex-col justify-end h-full">
+                          <h3 className="text-lg text-white font-semibold mb-2">
+                            {service.name}
+                          </h3>
+                          <p className="text-white text-base">{service.description}</p>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
-                )}
-                <div className="flex flex-col justify-end h-full">
-                  <h3 className="text-lg text-white font-semibold mb-2">
-                    {service.name}
-                  </h3>
-                  <p className="text-white text-base">{service.description}</p>
+                ))
+              ) : (
+                <div className="flex items-center justify-center h-96 w-full">
+                  <p className="text-center text-xl text-black">
+                    Sie haben keinen Zugriff auf Dienste.
+                  </p>
                 </div>
+              )
+            ) : (
+              <div className="flex items-center justify-center h-96 w-full">
+                <p className="text-center text-xl text-black">
+                  Organisatorische Benutzer haben keinen Zugriff auf Dienste.
+                </p>
               </div>
-            </Link>
-          </div>
-        ))}
+            )}
+          </>
+        )}
       </div>
     </div>
   );

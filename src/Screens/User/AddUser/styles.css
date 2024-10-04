@@ -1,7 +1,7 @@
 .custom-switch-toggle {
     display: inline-flex;
     border-radius: 50px;
-    background-color: #567BD9;
+    background-color: #567bd9;
     /* Base background color */
     padding: 4px;
     position: relative;
@@ -10,7 +10,8 @@
 
 .custom-switch-button {
     border: none;
-    padding: 10px 30px;
+    padding: 10px 20px;
+    /* Adjusted padding for three buttons */
     background: transparent;
     color: white;
     font-size: 16px;
@@ -40,4 +41,10 @@
 .custom-switch-toggle .custom-switch-button:last-child {
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
+}
+
+.custom-switch-toggle .custom-switch-button:nth-child(2) {
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    /* Remove border radius for middle button */
 }

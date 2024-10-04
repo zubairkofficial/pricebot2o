@@ -13,8 +13,8 @@ const EditOrg = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
-        street: "",
-        number: "",
+        street: "",  // Empty by default
+        number: "",  // Empty by default
         prompt: "",
     });
     const navigate = useNavigate();
@@ -33,8 +33,8 @@ const EditOrg = () => {
             setOrg(response.data);
             setFormData({
                 name: response.data.name,
-                street: response.data.street,
-                number: response.data.number,
+                street: "",  // Set to empty by default
+                number: "",  // Set to empty by default
                 prompt: response.data.prompt,
             });
             setLoading(false);
@@ -100,22 +100,6 @@ const EditOrg = () => {
                                     value={formData.name}
                                     onChange={handleChange}
                                 />
-                                <input
-                                    type="text"
-                                    name="number"
-                                    placeholder={Helpers.getTranslationValue('Number')}
-                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.number}
-                                    onChange={handleChange}
-                                />
-                                <textarea
-                                    name="street"
-                                    placeholder={Helpers.getTranslationValue('street')}
-                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
-                                    value={formData.street}
-                                    onChange={handleChange}
-                                    rows="3"
-                                />
                                 <textarea
                                     name="prompt"
                                     placeholder={Helpers.getTranslationValue('Prompt')}
@@ -126,20 +110,25 @@ const EditOrg = () => {
                                 />
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
-                                        {Helpers.getTranslationValue('Cancel')}</button>
-                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">                                 {Helpers.getTranslationValue('save_changes')}</button>
+                                        {Helpers.getTranslationValue('Cancel')}
+                                    </button>
+                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                        {Helpers.getTranslationValue('save_changes')}
+                                    </button>
                                 </div>
                             </form>
                         ) : (
                             <>
                                 <div className="space-y-4">
                                     <p><strong>{Helpers.getTranslationValue('Name')}:</strong> {org.name}</p>
-                                    <p><strong>{Helpers.getTranslationValue('Number')}:</strong> {org.number}</p>
-                                    <p><strong>{Helpers.getTranslationValue('street')}:</strong> {org.street}</p>
                                     <p><strong>{Helpers.getTranslationValue('Prompt')}:</strong> {org.prompt}</p>
                                     <div className="flex justify-end space-x-3">
-                                        <Link to="/admin/orgs" className=" bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">{Helpers.getTranslationValue('Back')}</Link>
-                                        <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">{Helpers.getTranslationValue('Edit')}</button>
+                                        <Link to="/admin/orgs" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">
+                                            {Helpers.getTranslationValue('Back')}
+                                        </Link>
+                                        <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                            {Helpers.getTranslationValue('Edit')}
+                                        </button>
                                     </div>
                                 </div>
                             </>

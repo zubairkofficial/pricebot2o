@@ -27,7 +27,7 @@ const AddOrg = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!org.name || !org.street || !org.number) {
+        if (!org.name || !org.prompt) {
             Helpers.toast("error", Helpers.getTranslationValue('org_fields_error'));
             return;
         }
@@ -41,8 +41,6 @@ const AddOrg = () => {
 
             setOrg({
                 name: "",
-                street: "",
-                number: "",
                 prompt: "",
             });
 
@@ -54,8 +52,8 @@ const AddOrg = () => {
     };
 
     return (
-        <div className="bg-gray-100 py-8 flex justify-center items-center">
-            <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-4xl">
+        <div className="bg-gray-100 py-8 grid grid-cols-4 justify-center items-center">
+            <div className="bg-white col-span-4 shadow-md rounded-lg p-6 w-full min-w-full">
                 <h5 className="text-xl font-semibold mb-4">{Helpers.getTranslationValue('add_org')}</h5>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                     <div>
@@ -70,7 +68,7 @@ const AddOrg = () => {
                             onChange={handleChange}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <label htmlFor="number" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Number')}</label>
                         <input
                             type="text"
@@ -81,8 +79,8 @@ const AddOrg = () => {
                             value={org.number}
                             onChange={handleChange}
                         />
-                    </div>
-                    <div className="col-span-2">
+                    </div> */}
+                    {/* <div className="col-span-2">
                         <label htmlFor="street" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('street')}</label>
                         <textarea
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -93,14 +91,14 @@ const AddOrg = () => {
                             value={org.street}
                             onChange={handleChange}
                         />
-                    </div>
-                    <div className="col-span-2">
+                    </div> */}
+                    <div className="col-span-4">
                         <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Prompt')}</label>
                         <textarea
                             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             id="prompt"
                             name="prompt"
-                            rows={3}
+                            rows={4}
                             placeholder={Helpers.getTranslationValue('Prompt')}
                             value={org.prompt}
                             onChange={handleChange}

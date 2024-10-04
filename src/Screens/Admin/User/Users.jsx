@@ -1,6 +1,7 @@
+// Import necessary dependencies
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { FaEye, FaPencilAlt, FaTrashAlt, FaUsers } from "react-icons/fa"; // Import FaUsers for the user icon
+import { FaEye, FaPencilAlt, FaTrashAlt, FaUsers } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import axios from "axios";
 import { useHeader } from "../../../Components/HeaderContext";
@@ -27,15 +28,14 @@ const Users = () => {
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;
 
-  const [showModal, setShowModal] = useState(false); // Modal state management
-  const [selectedUserId, setSelectedUserId] = useState(null); // Track selected user ID for modal
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const [documentCount, setDocumentCount] = useState(null);
   const [contractSolutionCount, setContractSolutionCount] = useState(null);
   const [dataProcessCount, setDataProcessCount] = useState(null);
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
-  // Function to show the modal and fetch user usage data
   const handleShowModal = async (userId) => {
     setSelectedUserId(userId);
     setShowModal(true);
@@ -48,6 +48,7 @@ const Users = () => {
         Helpers.authHeaders
       );
       if (response.status === 200) {
+        console.log(response.data);
         setDocumentCount(response.data.document_count);
         setContractSolutionCount(response.data.contract_solution_count);
         setDataProcessCount(response.data.data_process_count);
@@ -61,7 +62,6 @@ const Users = () => {
     }
   };
 
-  // Close the modal
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedUserId(null);
@@ -88,12 +88,14 @@ const Users = () => {
         (user) =>
           user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (user.service_names &&
-            user.service_names
+          (user.services &&
+            user.services
+              .map((service) => service.name)
               .join(", ")
               .toLowerCase()
               .includes(searchTerm.toLowerCase())) ||
           (user.organization &&
+            user.organization.name &&
             user.organization.name
               .toLowerCase()
               .includes(searchTerm.toLowerCase()))
@@ -104,19 +106,18 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${Helpers.apiUrl}getAllOrganizationalUsers`,
+        `${Helpers.apiUrl}getAllCustomerUsers`,
         Helpers.authHeaders
       );
       if (response.status !== 200) {
         throw new Error(Helpers.getTranslationValue("users_fetch_error"));
       }
 
-      // Ensure data is an array
-      const usersData = Array.isArray(response.data.organization_users)
-        ? response.data.organization_users
+      const usersData = Array.isArray(response.data.customer_users)
+        ? response.data.customer_users
         : [];
       setUsers(usersData);
-      setFilteredUsers(usersData); // Set both users and filteredUsers to the response data
+      setFilteredUsers(usersData);
       setLoading(false);
     } catch (error) {
       setError(error.message);
@@ -145,7 +146,6 @@ const Users = () => {
     }
   };
 
-  // Navigate to the page that displays children users
   const handleViewChildren = (userId) => {
     navigate(`/admin/user-children/${userId}`);
   };
@@ -172,16 +172,12 @@ const Users = () => {
 
   return (
     <section className="w-full h-full">
-      {/* Modal for displaying user usage */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Darkened background overlay */}
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
-
-          {/* Modal content */}
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Benutzernutzung</h2>
+              <h2 className="text-xl ">Benutzernutzung</h2>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"
@@ -207,60 +203,78 @@ const Users = () => {
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
               ) : modalError ? (
-                <p className="text-red-500">Error: {modalError}</p>
+                <p className="text-red-500">Fehler: {modalError}</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                    <thead className="bg-success-300">
-                      <tr>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Sr. No
-                        </th>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Werkzeug
-                        </th>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Dateien hochgeladen
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          1
-                        </td>
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          Sthamer
-                        </td>
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          {documentCount}
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          2
-                        </td>
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          Contract Automation Solution
-                        </td>
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          {contractSolutionCount}
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                          3
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                          Datenprozess
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                          {dataProcessCount}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <>
+                  {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
+                  {documentCount === undefined &&
+                  contractSolutionCount === undefined &&
+                  dataProcessCount === undefined ? (
+                    <p className="text-gray-500">
+                      Keine Werkzeugnutzung gefunden
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead className="bg-success-300">
+                          <tr>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Sr. No
+                            </th>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Werkzeug
+                            </th>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Dateien hochgeladen
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {/* Display 0 if the tool is available but count is 0 */}
+                          {documentCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                1
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                Sthamer
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                {documentCount}
+                              </td>
+                            </tr>
+                          )}
+                          {contractSolutionCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                2
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                Contract Automation Solution
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                {contractSolutionCount}
+                              </td>
+                            </tr>
+                          )}
+                          {dataProcessCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                3
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                Datenprozess
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                {dataProcessCount}
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
               )}
             </div>
             <div className="flex justify-end mt-4">
@@ -268,7 +282,7 @@ const Users = () => {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
-                Close
+                Schließen
               </button>
             </div>
           </div>
@@ -277,11 +291,11 @@ const Users = () => {
 
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex justify-between space-x-2 mb-4">
-          <div className="mb-4 ">
+          <div className="mb-4">
             <div className="relative">
               <input
                 type="text"
-                className=" border border-gray-300 rounded-lg p-2 pr-10 focus:border-blue-500 focus:ring-0"
+                className="border border-gray-300 rounded-lg p-2 pr-10 focus:border-blue-500 focus:ring-0"
                 id="search"
                 placeholder={Helpers.getTranslationValue("user_search")}
                 value={searchTerm}
@@ -313,17 +327,25 @@ const Users = () => {
               </div>
             </div>
           </div>
+          <div className="flex justify-center space-x-4 items-center p-2">
+            <Link
+              to="/admin/show-all-users"
+              className=" justify-center py-3 px-4 text-white bg-success-300 hover:bg-success-800 rounded-lg"
+            >
+              {Helpers.getTranslationValue("All Users")}
+            </Link>
 
-          <Link
-            to="/admin/add-user"
-            className="flex flex-col justify-center py-1 px-2 text-white bg-success-300 hover:bg-success-800 rounded-lg"
-          >
-            {Helpers.getTranslationValue("Add user")}
-          </Link>
+            <Link
+              to="/admin/add-user"
+              className=" justify-center py-3 px-4 text-white bg-success-300 hover:bg-success-800 rounded-lg"
+            >
+              {Helpers.getTranslationValue("Add user")}
+            </Link>
+          </div>
         </div>
 
-        <div className="rounded-lg">
-          <div className="overflow-x-auto">
+        {/* <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-full"> */}
+          <div className="relative overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -340,15 +362,14 @@ const Users = () => {
                     {Helpers.getTranslationValue("Services")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Organization")}
+                    {Helpers.getTranslationValue("Voice Protocol Organization")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {Helpers.getTranslationValue("Actions")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("users")}
+                    {Helpers.getTranslationValue("Organisationen")}
                   </th>
-             
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -364,7 +385,7 @@ const Users = () => {
                       {user.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.services ? user.services.join(", ") : ""}
+                      {user.services.map((service) => service).join(", ")}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.organization_name}
@@ -397,9 +418,7 @@ const Users = () => {
                         <FaUsers className="text-black" />
                       </button>
                     </td>
-             
                   </tr>
-                  
                 ))}
               </tbody>
             </table>
@@ -412,7 +431,7 @@ const Users = () => {
             onPageChange={(page) => setCurrentPage(page)}
           />
         </div>
-      </div>
+      {/* </div> */}
     </section>
   );
 };
