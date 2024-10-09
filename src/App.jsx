@@ -44,7 +44,7 @@ import CustomerChildTable from "./Components/CustomerChildTable";
 import NormalUsers from "./Screens/Admin/User/NormalUsers";
 import LoginCustomer from "./Screens/Auth/LoginCustomer";
 import AllUsers from "./Screens/Admin/User/AllUsers";
-
+import ApiSettings from "./Screens/Admin/ApiSettings";
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
   let token = Helpers.getItem("token");
@@ -436,6 +436,17 @@ const App = () => {
                 <Auth isAdmin={true}>
                   {" "}
                   <OrganizationUsers />{" "}
+                </Auth>
+              }
+            />
+
+
+<Route
+              path="api-settings"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <ApiSettings />{" "}
                 </Auth>
               }
             />

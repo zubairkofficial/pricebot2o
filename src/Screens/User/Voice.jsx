@@ -73,19 +73,22 @@ const Voice = () => {
 
   const handleGenerateSummary = async (text, type) => {
     try {
+      // Set loading state before starting the request
       setState(prevState => ({ ...prevState, isSummaryGenerating: true }));
-
+  
+      // Make the API request to generate the summary
       const response = await axios.post(
         `${Helpers.apiUrl}generateSummary`,
         { recordedText: text },
         Helpers.authHeaders
       );
-
+  
+      // Handle non-200 status responses
       if (response.status !== 200) {
-        throw new Error(response.message || Helpers.getTranslationValue('fail_to_generate_summary'));
+        throw new Error(response.data.message || Helpers.getTranslationValue('fail_to_generate_summary'));
       }
-      
-
+  
+      // Update the state based on the response
       setState(prevState => ({
         ...prevState,
         [type === 'voice' ? 'summary' : 'transcriptionSummary']: response.data.summary,
@@ -93,12 +96,27 @@ const Voice = () => {
         [type === 'voice' ? 'showSummary' : 'showTranscriptionSummary']: true,
         isEmailButtonVisible: true,
       }));
+  
+      // Show success toast notification
+      Helpers.toast('success', Helpers.getTranslationValue('summary_generated_successfully'));
+  
     } catch (error) {
-      setState(prevState => ({ ...prevState, summaryError: error.message || Helpers.getTranslationValue('fail_to_generate_summary') }));
+      // Capture error message from the response if available
+      const errorMessage = error.response?.data?.error || error.message || Helpers.getTranslationValue('fail_to_generate_summary');
+  
+      // Update the state with the error message
+      setState(prevState => ({ ...prevState, summaryError: errorMessage }));
+  
+      // Show error toast notification
+      Helpers.toast('error', errorMessage);
+  
     } finally {
+      // Reset the loading state
       setState(prevState => ({ ...prevState, isSummaryGenerating: false }));
     }
   };
+  
+  
 
   const handleFileChange = (event) => setState(prevState => ({ ...prevState, file: event.target.files[0] }));
 

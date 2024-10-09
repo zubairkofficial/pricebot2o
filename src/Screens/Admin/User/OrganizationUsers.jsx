@@ -103,93 +103,104 @@ const OrganizationUsers = () => {
     <section className="w-full h-full">
       {/* Modal for displaying user usage */}
       {showModal && selectedUser && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center">
-    <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
-    <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Gesamtnutzung der Organisation
-        </h2>
-        <button
-          onClick={handleCloseModal}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-      <div className="p-4">
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-success-300 text-white">
-              <tr>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
-                  #
-                </th>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
-                Werkzeug
-                </th>
-                <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
-                Hochgeladene Dateien
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-  {/* Conditionally render rows based on service IDs */}
-  {selectedUser.serviceIds.includes(1) && (
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">1</td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">Sthamer</td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        {selectedUser.documentsCount}
-      </td>
-    </tr>
-  )}
-  {selectedUser.serviceIds.includes(3) && (
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">2</td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        Contract Solution
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        {selectedUser.contractSolutionCount}
-      </td>
-    </tr>
-  )}
-  {selectedUser.serviceIds.includes(4) && (
-    <tr className="hover:bg-gray-50">
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">3</td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">Datenprozess</td>
-      <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-        {selectedUser.dataProcessCount}
-      </td>
-    </tr>
-  )}
-</tbody>
-          </table>
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
+          <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">
+                Gesamtnutzung der Organisation
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4">
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                  <thead className="bg-success-300 text-white">
+                    <tr>
+                      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
+                        #
+                      </th>
+                      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
+                        Werkzeug
+                      </th>
+                      <th className="px-6 py-3 border-b text-left text-sm font-medium text-white">
+                        Hochgeladene Dateien
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Conditionally render rows based on service IDs */}
+                    {selectedUser.serviceIds.includes(1) && (
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          1
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          Sthamer
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          {selectedUser.documentsCount}
+                        </td>
+                      </tr>
+                    )}
+                    {selectedUser.serviceIds.includes(3) && (
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          2
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          Contract Solution
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          {selectedUser.contractSolutionCount}
+                        </td>
+                      </tr>
+                    )}
+                    {selectedUser.serviceIds.includes(4) && (
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          3
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          Datenprozess
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                          {selectedUser.dataProcessCount}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="flex justify-end mt-4">
-        <button
-          onClick={handleCloseModal}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex justify-between space-x-2 mb-4">
@@ -258,16 +269,15 @@ const OrganizationUsers = () => {
                       >
                         <FaEye className="text-black" />
                       </button>
-                   
                     </td>
                     <td>
-                    <button
+                      <button
                         className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 ml-2"
                         onClick={() => handleViewUsers(user.id)}
                       >
                         <FaUsers className="text-black" />
                       </button>
-                      </td>
+                    </td>
                   </tr>
                 ))}
               </tbody>
