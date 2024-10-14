@@ -4,7 +4,7 @@ import "notyf/notyf.min.css";
 class Helpers {
   static localhost = "http://127.0.0.1:8000";
   static server = "https://dhnapi.cyberifyportfolio.com";
-  static basePath = `${this.localhost}`;
+  static basePath = `${this.server}`;
   static apiUrl = `${this.basePath}/api/`;
 
   static authUser = JSON.parse(localStorage.getItem("user") ?? "{}");
@@ -63,7 +63,7 @@ class Helpers {
       position: { x: "right", y: "top" },
       ripple: true,
       dismissible: true,
-      duration: 2000,
+      duration: 3000,
     });
   };
 

@@ -39,8 +39,8 @@ const Layout = () => {
 
     setIsUserOrganizational(parseInt(isOrganizational) || 0);
     setIsUserCustomer(parseInt(isCustomer) || 0);
-
     fetchLogo();
+
   }, []);
 
   // Function to update the logo state

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { FaEye, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import Pagination from "../../../Components/Pagination";
@@ -284,6 +285,12 @@ const AllUsers = () => {
               />
             </div>
           </div>
+          <Link
+              to="/admin/link-user"
+              className="d-flex justify-center items-center py-4 px-4 text-white bg-success-300 hover:bg-success-800 rounded-lg"
+            >
+              {Helpers.getTranslationValue("Link user")}
+            </Link>
         </div>
 
         <div className="rounded-lg">

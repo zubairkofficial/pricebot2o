@@ -45,6 +45,7 @@ import NormalUsers from "./Screens/Admin/User/NormalUsers";
 import LoginCustomer from "./Screens/Auth/LoginCustomer";
 import AllUsers from "./Screens/Admin/User/AllUsers";
 import ApiSettings from "./Screens/Admin/ApiSettings";
+import LinkUsers from "./Screens/Admin/User/LinkUsers";
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
   let token = Helpers.getItem("token");
@@ -408,6 +409,15 @@ const App = () => {
                 <Auth isAdmin={true}>
                   {" "}
                   <AllUsers />{" "}
+                </Auth>
+              }
+            />
+              <Route
+              path="link-user"
+              element={
+                <Auth isAdmin={true}>
+                  {" "}
+                  <LinkUsers />{" "}
                 </Auth>
               }
             />
