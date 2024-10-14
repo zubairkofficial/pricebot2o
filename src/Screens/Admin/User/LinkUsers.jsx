@@ -24,7 +24,7 @@ const LinkUsers = () => {
     try {
       const response = await axios.get(`${Helpers.apiUrl}getNonOrganizationalUsers`, Helpers.authHeaders);
       if (response.status !== 200) {
-        throw new Error("Failed to fetch normal users.");
+        throw new Error("Fehler beim Abrufen der normalen Benutzer.");
       }
       const usersData = Array.isArray(response.data.all_users) ? response.data.all_users : [];
       setUsers(usersData);
@@ -71,14 +71,14 @@ const LinkUsers = () => {
       };
       const response = await axios.post(`${Helpers.apiUrl}auth/link-users`, payload, Helpers.authHeaders);
       if (response.status === 200) {
-        Helpers.toast("success", Helpers.getTranslationValue("User linked successfully"));
+        Helpers.toast("success", "Benutzer erfolgreich verknüpft");
         navigate('/admin/dashboard');
       }
     } catch (error) {
         if (error.response && error.response.data && error.response.data.errors) {
           Object.keys(error.response.data.errors).forEach((field) => {
             error.response.data.errors[field].forEach((errorMessage) => {
-              Helpers.toast("error", `Error: ${errorMessage}`);
+              Helpers.toast("error", `Fehler: ${errorMessage}`);
             });
           });
         } else {
@@ -89,11 +89,11 @@ const LinkUsers = () => {
 
   return (
     <div className="link-users-container">
-      <h2 className="text-center text-2xl font-semibold mb-8">{Helpers.getTranslationValue("Link Users")}</h2>
+      <h2 className="text-center text-2xl font-semibold mb-8">Benutzer verknüpfen</h2>
       
       <div className="dropdown-section">
         <label htmlFor="users" className="block text-sm font-medium text-gray-700">
-          {Helpers.getTranslationValue("Select User")}
+          Benutzer auswählen
         </label>
         <Select
           options={users.map((user) => ({ label: user.name, value: user.id }))}
@@ -104,7 +104,7 @@ const LinkUsers = () => {
 
       <div className="dropdown-section mt-4">
         <label htmlFor="customer_admin" className="block text-sm font-medium text-gray-700">
-          {Helpers.getTranslationValue("Select Customer Admin")}
+          Kundenadministrator auswählen
         </label>
         <Select
           options={customerAdmins.map((admin) => ({ label: admin.name, value: admin.id }))}
@@ -116,7 +116,7 @@ const LinkUsers = () => {
       {showOrgUsersDropdown && (
         <div className="dropdown-section mt-4">
           <label htmlFor="organizational_user" className="block text-sm font-medium text-gray-700">
-            {Helpers.getTranslationValue("Select Organizational User")}
+            Organisationsbenutzer auswählen
           </label>
           <Select
             options={organizationalUsers.map((user) => ({ label: user.name, value: user.id }))}
@@ -132,7 +132,7 @@ const LinkUsers = () => {
           onClick={handleAssignUsers}
           className="py-2 px-4 text-white bg-success-300 hover:bg-blue-600 rounded-lg"
         >
-          {Helpers.getTranslationValue("Assign User")}
+          Benutzer zuweisen
         </button>
       </div>
     </div>
