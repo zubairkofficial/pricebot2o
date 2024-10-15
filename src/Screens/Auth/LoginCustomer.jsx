@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import Helpers from "../../Config/Helpers";
 import loginLogo from "./../../login_logo.svg"; // Import the SVG
-import './LoginCustomer.css'; 
+import "./LoginCustomer.css";
 const CustomerLogin = () => {
   const defaultUser = {
     email: "",
@@ -84,10 +84,6 @@ const CustomerLogin = () => {
             />
           </div>
 
-          <p className="text-3xl mb-6 text-center font ">
-           <b className="">CRETSCHMAR</b>
-          </p>
-
           <form onSubmit={handleLogin}>
             <div className="mb-4">
               <input
@@ -149,9 +145,11 @@ const CustomerLogin = () => {
               Sie haben kein Konto?{"  "}
               <Link
                 to="/register"
-                className="text-blue-300 hover:text-success-400 "
+                className="bg-success-300 rounded-lg p-2 text-white hover:text-success-400 "
               >
-              <span className="font">Registrieren Sie sich hier</span>
+                <b>
+                  <span className="font">Registrieren Sie sich hier</span>
+                </b>{" "}
               </Link>
             </p>
           </div>

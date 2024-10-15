@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Helpers from "../../Config/Helpers"; // Assuming you have this helper for translations and toasts
-
+import './LoginCustomer.css'; 
 const Register = () => {
   const [user, setUser] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [errors, setErrors] = useState({});
@@ -52,7 +52,7 @@ const Register = () => {
   };
 
   return (
-    <section className="bg-white">
+    <section className="bg-white font">
       <div className="flex flex-col lg:flex-row justify-between min-h-screen">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12 pt-10">
           <div className="max-w-[450px] m-auto pt-24 pb-16">
