@@ -21,6 +21,7 @@ const NormalUsers = () => {
   const [documentCount, setDocumentCount] = useState(null);
   const [contractSolutionCount, setContractSolutionCount] = useState(null);
   const [dataProcessCount, setDataProcessCount] = useState(null);
+  const [freeDataProcessCount, setFreeDataProcessCount] = useState(null);
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
@@ -81,6 +82,7 @@ const NormalUsers = () => {
         setDocumentCount(response.data.document_count);
         setContractSolutionCount(response.data.contract_solution_count);
         setDataProcessCount(response.data.data_process_count);
+        setFreeDataProcessCount(response.data.free_data_process_count);
       } else {
         throw new Error("Failed to fetch user usage data");
       }
@@ -128,7 +130,7 @@ const NormalUsers = () => {
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Benutzernutzung</h2>
+              <h2 className="text-xl font-semibold">User Usage</h2>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"
@@ -149,71 +151,97 @@ const NormalUsers = () => {
               </button>
             </div>
             <div className="p-4">
-              {loadingModal ? (
+            {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
               ) : modalError ? (
                 <p className="text-red-500">Fehler: {modalError}</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                    <thead className="bg-success-300">
-                      <tr>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Nr.
-                        </th>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Werkzeug
-                        </th>
-                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                          Hochgeladene Dateien
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {documentCount !== undefined && (
-                        <tr className="hover:bg-gray-50">
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            1
-                          </td>
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            Sthamer
-                          </td>
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            {documentCount}
-                          </td>
-                        </tr>
-                      )}
-                      {contractSolutionCount !== undefined && (
-                        <tr className="hover:bg-gray-50">
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            2
-                          </td>
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            Contract Automation Solution
-                          </td>
-                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                            {contractSolutionCount}
-                          </td>
-                        </tr>
-                      )}
-                      {dataProcessCount !== undefined && (
-                        <tr className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                            3
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                          Datenprozess
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                            {dataProcessCount}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                <>
+                  {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
+                  {documentCount === undefined &&
+                  contractSolutionCount === undefined &&
+                  dataProcessCount === undefined &&
+                  freeDataProcessCount === undefined ? (
+                    <p className="text-gray-500">
+                      Keine Werkzeugnutzung gefunden
+                    </p>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead className="bg-success-300">
+                          <tr>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Sr. No
+                            </th>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Werkzeug
+                            </th>
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                              Dateien hochgeladen
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {/* Display 0 if the tool is available but count is 0 */}
+                          {documentCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                1
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                              Sthamer
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                {documentCount}
+                              </td>
+                            </tr>
+                          )}
+                          {contractSolutionCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                2
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                Contract Automation Solution
+                              </td>
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                {contractSolutionCount}
+                              </td>
+                            </tr>
+                          )}
+                          {dataProcessCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                3
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                Datenprozess
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                {dataProcessCount}
+                              </td>
+                            </tr>
+                          )}
+                              {freeDataProcessCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                4
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                              Kostenloser Datenprozess
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                {freeDataProcessCount}
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
               )}
             </div>
             <div className="flex justify-end mt-4">
@@ -221,7 +249,7 @@ const NormalUsers = () => {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
-                Schließen
+                Close
               </button>
             </div>
           </div>

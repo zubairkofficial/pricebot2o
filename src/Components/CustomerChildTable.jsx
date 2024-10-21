@@ -22,6 +22,7 @@ const CustomerChildTable = () => {
   const [documentCount, setDocumentCount] = useState(null);
   const [contractSolutionCount, setContractSolutionCount] = useState(null);
   const [dataProcessCount, setDataProcessCount] = useState(null);
+  const [freeDataProcessCount, setFreeDataProcessCount] = useState(null);
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
@@ -99,6 +100,7 @@ const CustomerChildTable = () => {
         setDocumentCount(response.data.document_count);
         setContractSolutionCount(response.data.contract_solution_count);
         setDataProcessCount(response.data.data_process_count);
+        setFreeDataProcessCount(response.data.free_data_process_count);
       } else {
         throw new Error("Failed to fetch user usage data");
       }
@@ -179,7 +181,8 @@ const CustomerChildTable = () => {
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
                   contractSolutionCount === undefined &&
-                  dataProcessCount === undefined ? (
+                  dataProcessCount === undefined &&
+                  freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -237,6 +240,19 @@ const CustomerChildTable = () => {
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                                 {dataProcessCount}
+                              </td>
+                            </tr>
+                          )}
+                              {freeDataProcessCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                4
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                              Kostenloser Datenprozess
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                {freeDataProcessCount}
                               </td>
                             </tr>
                           )}

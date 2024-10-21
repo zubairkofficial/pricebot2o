@@ -33,6 +33,7 @@ const Users = () => {
   const [documentCount, setDocumentCount] = useState(null);
   const [contractSolutionCount, setContractSolutionCount] = useState(null);
   const [dataProcessCount, setDataProcessCount] = useState(null);
+  const [freeDataProcessCount, setFreeDataProcessCount] = useState(null);
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
@@ -52,6 +53,7 @@ const Users = () => {
         setDocumentCount(response.data.document_count);
         setContractSolutionCount(response.data.contract_solution_count);
         setDataProcessCount(response.data.data_process_count);
+        setFreeDataProcessCount(response.data.free_data_process_count);
       } else {
         throw new Error("Failed to fetch user usage data");
       }
@@ -172,12 +174,12 @@ const Users = () => {
 
   return (
     <section className="w-full h-full">
-      {showModal && (
+       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl ">Benutzernutzung</h2>
+              <h2 className="text-xl font-semibold">User Usage</h2>
               <button
                 onClick={handleCloseModal}
                 className="text-gray-500 hover:text-gray-700"
@@ -198,7 +200,7 @@ const Users = () => {
               </button>
             </div>
             <div className="p-4">
-              {loadingModal ? (
+            {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -209,7 +211,8 @@ const Users = () => {
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
                   contractSolutionCount === undefined &&
-                  dataProcessCount === undefined ? (
+                  dataProcessCount === undefined &&
+                  freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -237,7 +240,7 @@ const Users = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                Sthamer
+                              Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -270,6 +273,19 @@ const Users = () => {
                               </td>
                             </tr>
                           )}
+                              {freeDataProcessCount !== undefined && (
+                            <tr className="hover:bg-gray-50">
+                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                                4
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                              Kostenloser Datenprozess
+                              </td>
+                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                                {freeDataProcessCount}
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
@@ -282,7 +298,7 @@ const Users = () => {
                 onClick={handleCloseModal}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
-                Schließen
+                Close
               </button>
             </div>
           </div>

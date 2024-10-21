@@ -92,8 +92,8 @@ function DataProcess() {
         setAllProcessedData(allData);
         Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
     };
+    
     const handleDownload = () => {
-        const MAX_CHAR_LIMIT = 32767;
         const data = [];
     
         // Define the custom headers in your desired order
@@ -148,33 +148,24 @@ function DataProcess() {
             "Section - 9|9.1": "Section - 9|9.1",
             "Section - 10|10.5": "Section - 10|10.5",
             "Section - 15": "Section - 15",
+            // "Section - 14|14.1": "Section - 14|14.1",
+            // "Section - 14|14.2": "Section - 14|14.2",
             "Section - 14": "Section - 14"
         };
     
         // Map the actual data based on the custom headers
         allProcessedData.forEach((fileData) => {
-            let rowData = Array(headers.length).fill(""); // Initialize row data with empty strings
-            
+            const rowData = [];
             headers.forEach((header, index) => {
                 if (index < 3) {
-                    rowData[index] = ""; // Fill initial columns with empty values
+                    rowData.push(""); // Fill initial columns with empty values
                 } else {
                     // Use the header mapping to get the correct data key
                     const key = headerMapping[header];
-                    let cellData = fileData.data[key] || ""; // Use empty string as default value
-    
-                    // If the content exceeds the max character limit, split it across rows
-                    while (cellData.length > MAX_CHAR_LIMIT) {
-                        rowData[index] = cellData.slice(0, MAX_CHAR_LIMIT);
-                        data.push([...rowData]);
-                        cellData = cellData.slice(MAX_CHAR_LIMIT);
-                        rowData = Array(headers.length).fill(""); // Start a new row with empty strings
-                    }
-                    rowData[index] = cellData;
+                    rowData.push(fileData.data[key] || ""); // Use empty string as default value
                 }
             });
-            
-            // Ensure column L is empty
+             // Ensure column L is empty
             rowData[11] = ""; // Adjust index based on header order
     
             data.push(rowData);

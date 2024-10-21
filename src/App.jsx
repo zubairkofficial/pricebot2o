@@ -46,6 +46,8 @@ import LoginCustomer from "./Screens/Auth/LoginCustomer";
 import AllUsers from "./Screens/Admin/User/AllUsers";
 import ApiSettings from "./Screens/Admin/ApiSettings";
 import LinkUsers from "./Screens/Admin/User/LinkUsers";
+import FreeDataProcess from "./Screens/User/FreeDataProcess";
+
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
   let token = Helpers.getItem("token");
@@ -300,6 +302,16 @@ const App = () => {
                 element={
                   <Auth>
                     <DataProcess />
+                  </Auth>
+                }
+              />
+            )}
+             {hasServiceAccess(5) && (
+              <Route
+                path="/free-data-process"
+                element={
+                  <Auth>
+                   <FreeDataProcess/>
                   </Auth>
                 }
               />
