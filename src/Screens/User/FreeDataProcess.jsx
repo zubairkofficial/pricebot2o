@@ -10,7 +10,7 @@ function FreeDataProcess() {
     const { setHeaderData } = useHeader();
 
     useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Free Data Process'), desc: '' });
+        setHeaderData({ title: Helpers.getTranslationValue('Kostenloser Datenprozess'), desc: 'Dieses Tool ist für kostenlose Benutzer unter dem Cretschmar-Administrator verfügbar' });
     }, [setHeaderData]);
 
     const [selectedFiles, setSelectedFiles] = useState([]);
