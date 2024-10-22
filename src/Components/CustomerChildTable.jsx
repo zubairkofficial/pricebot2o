@@ -81,7 +81,7 @@ const CustomerChildTable = () => {
   };
 
   const handleEdit = (userId) => {
-    navigate(`/admin/edit-user/${userId}`);
+    navigate(`/edit-user/${userId}`);
   };
 
   // Function to show the modal and fetch user usage data
@@ -335,7 +335,20 @@ const CustomerChildTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.organization_name}
                     </td>
+              
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
+                    <button
+                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                        onClick={() => handleEdit(user.id)}
+                      >
+                        <FaPencilAlt className="text-black" />
+                      </button>
+                      <button
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
+                        onClick={() => handleDelete(user.id)}
+                      >
+                        <FaTrashAlt className="text-black" />
+                      </button>
                       <button
                         className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
                         onClick={() => handleShowModal(user.id)}

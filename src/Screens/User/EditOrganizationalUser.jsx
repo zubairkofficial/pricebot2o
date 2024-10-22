@@ -185,7 +185,7 @@ const EditOrganizationalUser = () => {
                       {Helpers.getTranslationValue("Services")}
                     </label>
                     <Select
-                      disabled
+                    
                       options={services.map((service) => ({
                         label: service.name,
                         value: service.id,

@@ -97,16 +97,14 @@ function FreeDataProcess() {
     
         // Define the custom headers in your desired order
         const headers = [
-            "Lagerkunde", "Artikel Nr.(Länge beachten)", "Materialkurztext", "Dateiname SDB", "Ausgabedatum bzw. letzte Änderung", "Flammpunkt (numerischer Wert)[°C]", "H Sätze durch Komma getrennt",
+             "Dateiname SDB", "Ausgabedatum bzw. letzte Änderung", "Flammpunkt (numerischer Wert)[°C]", "H Sätze durch Komma getrennt",
             "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)", "LG Klasse", "WGK (numerischer Wert)", "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5"
         ];
         data.push(headers);
     
         // Define a mapping from headers to data keys
         const headerMapping = {
-            "Lagerkunde": "Lagerkunde",
-            "Artikel Nr.(Länge beachten)": "Artikel Nr.\n(Länge beachten)",
-            "Materialkurztext": "Materialkurztext",
+           
             "Dateiname SDB": "Dateiname SDB",
             "Ausgabedatum bzw. letzte Änderung": "Ausgabedatum bzw. letzte Änderung",
             "Flammpunkt (numerischer Wert)[°C]": "Flammpunkt\n(numerischer Wert)\n[°C]",
@@ -118,8 +116,7 @@ function FreeDataProcess() {
             "Zusammenlagerverbot Abschnitt 10.5": "Zusammenlagerverbot\nAbschnitt 10.5"
         };
 
-        const staticRow = ["", "", "", "", "","","14", "1-HZWMSC", "1-HZDWGK", "3-HARIZIN", "1-H2FLSP 3n","", "1-HZUNNR 6n", "2-HECODE", "4-HMKLAS", "4-HMVPAK", "4-HMTNCD", "1-HZGSDE / 4-HMGSDE","4-HMLQTP"];
-        data.push(staticRow);
+       
     
         // Map the actual data based on the custom headers
         allProcessedData.forEach((fileData) => {

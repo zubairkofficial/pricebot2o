@@ -364,7 +364,12 @@ const App = () => {
                     </Auth>
                   }
                 />
-                <Route
+               
+              </>
+            )}
+            {isCustomerAdmin && (
+              <>
+               <Route
                   path="/edit-user/:id"
                   element={
                     <Auth>
@@ -373,10 +378,6 @@ const App = () => {
                     </Auth>
                   }
                 />
-              </>
-            )}
-            {isCustomerAdmin && (
-              <>
                 <Route
                   path="/customer-admin-add-user"
                   element={
