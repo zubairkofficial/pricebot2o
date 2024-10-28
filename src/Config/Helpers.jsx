@@ -4,7 +4,7 @@ import "notyf/notyf.min.css";
 class Helpers {
   static localhost = "http://127.0.0.1:8000";
   static server = "https://dhnapi.cyberifyportfolio.com";
-  static basePath = `${this.server}`;
+  static basePath = `${this.localhost}`;
   static apiUrl = `${this.basePath}/api/`;
 
   static authUser = JSON.parse(localStorage.getItem("user") ?? "{}");
@@ -13,6 +13,8 @@ class Helpers {
     return `${this.basePath}/${name}`;
   };
   
+  // static DeepgramApiKey = '89944cc4f2f9d2cbbbd283eb8f2899ad9ed99192';
+  static DeepgramApiKey = 'cea4d54e757d680f3076514563653829da009a1a';
 
   static getToken = () => {
     const token = localStorage.getItem("token");
