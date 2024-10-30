@@ -94,7 +94,7 @@ const Dashboard = () => {
                           backgroundColor: "#333", // Fallback color if image is not available
                         }}
                       >
-                        <div className="flex flex-col justify-end h-full">
+                        <div className="flex flex-col justify-start h-full">
                           <h3 className="text-lg text-white font-semibold mb-2">
                             {service.name}
                           </h3>
