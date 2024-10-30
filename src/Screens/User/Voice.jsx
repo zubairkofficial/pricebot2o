@@ -97,14 +97,25 @@ const Voice = () => {
   };
 
   const startDeepgramRecognition = async () => {
-    console.log("Using Deepgram for speech recognition on mobile.");
     if (!window.MediaRecorder) {
       alert("MediaRecorder is not supported on this browser.");
       return;
     }
     
     try {
-      const deepgramApiKey = Helpers.DeepgramApiKey;
+      const response = await fetch(
+        `${Helpers.apiUrl}api-keys`,
+        {
+          headers: Helpers.authHeaders.headers,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch Deepgram API key");
+      }
+
+      const data = await response.json();
+      const deepgramApiKey = data.deepgram_key;
       wsRef.current = new WebSocket(`wss://api.deepgram.com/v1/listen?model=nova-2&language=de&numerals=true&punctuate=true`, ["token", deepgramApiKey]);
 
       wsRef.current.onopen = () => {

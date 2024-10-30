@@ -12,10 +12,6 @@ class Helpers {
   static serverImage = (name) => {
     return `${this.basePath}/${name}`;
   };
-  
-  // static DeepgramApiKey = '89944cc4f2f9d2cbbbd283eb8f2899ad9ed99192';
-  static DeepgramApiKey = 'cea4d54e757d680f3076514563653829da009a1a';
-
   static getToken = () => {
     const token = localStorage.getItem("token");
     return token;

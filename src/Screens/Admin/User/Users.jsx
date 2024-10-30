@@ -361,7 +361,7 @@ const Users = () => {
         </div>
 
         {/* <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-full"> */}
-          <div className="relative overflow-x-auto">
+          <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
