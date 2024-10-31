@@ -4,10 +4,10 @@ import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCloudUploadAlt,
+  faDownload,
   faSpinner,
   faCheckCircle,
   faExclamationCircle,
-  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
 import * as XLSX from "xlsx";
@@ -15,12 +15,14 @@ import * as XLSX from "xlsx";
 function FileUpload() {
   const { setHeaderData } = useHeader();
   useEffect(() => {
-    setHeaderData({ title: Helpers.getTranslationValue("files_upload"), desc: "" });
+    setHeaderData({
+      title: Helpers.getTranslationValue("files_upload"),
+      desc: "",
+    });
   }, [setHeaderData]);
 
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [fileStatuses, setFileStatuses] = useState({});
-  const [isEmailSending, setIsEmailSending] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileChange = (event) => {
@@ -38,14 +40,17 @@ function FileUpload() {
       Helpers.toast("error", Helpers.getTranslationValue("file_select_first"));
       return;
     }
-
+    let json = localStorage.getItem("user");
+    let userObj = JSON.parse(json);
+    let userId = userObj.id
     const newStatuses = { ...fileStatuses };
 
-    for (let file of selectedFiles) {
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
       const formData = new FormData();
       formData.append("document", file);
       formData.append("fileName", file.name);
-      formData.append("user_id", JSON.parse(localStorage.getItem("user")).id);
+      formData.append("user_id", userId);
 
       newStatuses[file.name].status = "In Progress";
       setFileStatuses({ ...newStatuses });
@@ -58,22 +63,37 @@ function FileUpload() {
         );
 
         if (response.status === 200) {
-          newStatuses[file.name] = { status: "Completed", data: response.data.data };
+          newStatuses[file.name] = {
+            status: "Completed",
+            data: response.data.data,
+          };
         } else {
-          throw new Error(response.message || Helpers.getTranslationValue("error_file_upload"));
+          throw new Error(
+            response.message || Helpers.getTranslationValue("error_file_upload")
+          );
         }
       } catch (error) {
+        console.error("Error:", error);
+        Helpers.toast(
+          "error",
+          Helpers.getTranslationValue("error_file_upload") + file.name
+        );
         newStatuses[file.name] = { status: "Error", data: error.toString() };
       }
 
       setFileStatuses({ ...newStatuses });
     }
-
-    Helpers.toast("success", Helpers.getTranslationValue("files_processed_msg"));
+    Helpers.toast(
+      "success",
+      Helpers.getTranslationValue("files_processed_msg")
+    );
   };
 
-  const handleSendEmail = async () => {
-    setIsEmailSending(true);
+  const allFilesCompleted =
+    selectedFiles.length > 0 &&
+    Object.values(fileStatuses).every((file) => file.status === "Completed");
+
+  const handleDownload = () => {
     const data = [];
     const allKeys = new Set();
 
@@ -97,36 +117,30 @@ function FileUpload() {
         data.push(row);
       }
     });
+
     const ws = XLSX.utils.aoa_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Processed Files");
-
-    const wbout = XLSX.write(wb, { type: "array", bookType: "xlsx" });
-    const blob = new Blob([wbout], { type: "application/octet-stream" });
-    const formData = new FormData();
-    formData.append("file", blob, "Processed_Files_Data.xlsx");
-
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(`${Helpers.apiUrl}send-processed-file`, formData, {
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
-      });
-      Helpers.toast("success", response.data.message || "Die Datei wurde erfolgreich an Ihre E-Mail-Adresse gesendet.");
-      setIsEmailSending(false);
-    } catch (error) {
-      setIsEmailSending(false);
-      Helpers.toast("error", "There was an error sending the file.");
-    }
+    XLSX.utils.book_append_sheet(wb, ws, "Files");
+    XLSX.writeFile(wb, "Data.xlsx");
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
       case "In Progress":
-        return <FontAwesomeIcon icon={faSpinner} spin className="text-blue-500" />;
+        return (
+          <FontAwesomeIcon icon={faSpinner} spin className="text-blue-500" />
+        );
       case "Completed":
-        return <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />;
+        return (
+          <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />
+        );
       case "Error":
-        return <FontAwesomeIcon icon={faExclamationCircle} className="text-red-500" />;
+        return (
+          <FontAwesomeIcon
+            icon={faExclamationCircle}
+            className="text-red-500"
+          />
+        );
       default:
         return null;
     }
@@ -152,10 +166,12 @@ function FileUpload() {
           {selectedFiles.map((file, index) => (
             <li key={index} className="bg-white p-4 rounded-lg shadow-sm">
               <div className="flex justify-between items-center space-x-2">
-                <span>{file.name} ({file.size} bytes)</span>
+                <span>
+                  {file.name} ({file.size} bytes)
+                </span>
                 <span className="flex items-center space-x-2">
-                  {getStatusIcon(fileStatuses[file.name]?.status)}
-                  <span>{fileStatuses[file.name]?.status}</span>
+                  {getStatusIcon(fileStatuses[file.name].status)}
+                  <span>{fileStatuses[file.name].status}</span>
                 </span>
               </div>
             </li>
@@ -165,22 +181,22 @@ function FileUpload() {
       <div className="flex justify-end gap-1 mt-8 px-10">
         <button
           onClick={handleFileUpload}
-          disabled={Object.values(fileStatuses).some((file) => file.status === "In Progress")}
-          className="text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+          disabled={Object.values(fileStatuses).some(
+            (file) => file.status === "In Progress"
+          )}
+          className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+          style={{ marginRight: "40px" }}
         >
-          {Helpers.getTranslationValue("carry_out")} <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" />
+          {Helpers.getTranslationValue("carry_out")}{" "}
+          <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" />
         </button>
         <button
-          onClick={handleSendEmail}
-          disabled={isEmailSending}
-          className="text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
+          onClick={handleDownload}
+          disabled={!allFilesCompleted}
+          className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
         >
-          {Helpers.getTranslationValue(isEmailSending ? 'sending_email' : 'send_email')}
-          <FontAwesomeIcon
-            icon={isEmailSending ? faSpinner : faEnvelope}
-            spin={isEmailSending}
-            className="ml-2"
-          />
+          {Helpers.getTranslationValue("download")}{" "}
+          <FontAwesomeIcon icon={faDownload} className="ml-2" />
         </button>
       </div>
     </div>
