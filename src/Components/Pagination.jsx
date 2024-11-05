@@ -28,7 +28,7 @@ const Pagination = ({
   return (
     <div className="flex justify-between items-center p-4">
       <div className="text-lg">
-        Showing {Math.min(currentPage * itemsPerPage + 1, totalItems)} to{" "}
+        Showing {Math.min(currentPage * itemsPerPage + 1, totalItems)} to
         {Math.min((currentPage + 1) * itemsPerPage, totalItems)} of {totalItems} entries
       </div>
       <ul className="flex list-none gap-2">

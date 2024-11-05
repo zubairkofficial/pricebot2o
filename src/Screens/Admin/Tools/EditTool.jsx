@@ -23,11 +23,7 @@ const EditTool = () => {
     const fetchTool = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${Helpers.apiUrl}tools/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
+            const response = await axios.get(`${Helpers.apiUrl}tools/${id}`, Helpers.authHeaders);
             
             // Assuming response.data contains the tool data directly
             const toolData = response.data;
@@ -86,12 +82,7 @@ const EditTool = () => {
         }
     
         try {
-            const response = await axios.post(`${Helpers.apiUrl}tools/${id}`, formDataToSend, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const response = await axios.post(`${Helpers.apiUrl}tools/${id}`, formDataToSend, Helpers.authFileHeaders);
             Helpers.toast('success', "Tool updated successfully.");
             navigate("/admin/tools");
         } catch (error) {

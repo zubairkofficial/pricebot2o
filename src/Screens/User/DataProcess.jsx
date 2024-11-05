@@ -51,15 +51,7 @@ function DataProcess() {
             setFileStatuses({ ...newStatuses });
     
             try {
-                const token = localStorage.getItem('token');
-    
-                const response = await axios.post(`${Helpers.apiUrl}data-process`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    timeout: 120000,
-                });
+                const response = await axios.post(`${Helpers.apiUrl}data-process`, formData, Helpers.authFileHeaders);
     
                 if (response.status === 200 && response.data && response.data.data) {
                     newStatuses[file.name].status = "Completed";

@@ -12,7 +12,7 @@ function Transcription() {
   }, [setHeaderData]);
 
   const location = useLocation();
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [text, setText] = useState("");
@@ -30,33 +30,33 @@ function Transcription() {
 
   useEffect(() => {
     if (location.state) {
-      setEmail(location.state.email || "");
+      // setEmail(location.state.email || "");
       setText(location.state.text || "");
       setSummary(location.state.summary || "");
       setSummaryId(location.state.summary_id || "");
     }
   }, [location.state]);
 
-  useEffect(() => {
-    const fetchSendEmail = async () => {
-      try {
-        const response = await axios.get(
-          `${Helpers.apiUrl}getUserData`, // Update the endpoint according to your backend route
-          Helpers.authHeaders
-        );
+  // useEffect(() => {
+  //   const fetchSendEmail = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${Helpers.apiUrl}getUserData`, // Update the endpoint according to your backend route
+  //         Helpers.authHeaders
+  //       );
 
-        const userData = response.data ?? {};
-        // console.log('userData',userData);
+  //       const userData = response.data ?? {};
+  //       // console.log('userData',userData);
         
-        setEmail(userData.send_email || ""); // Set email from the user's data if send_email exists
-      } catch (error) {
-        console.log(error);
-        Helpers.toast('error', error.message);
-      }
-    };
+  //       // setEmail(userData.send_email || ""); // Set email from the user's data if send_email exists
+  //     } catch (error) {
+  //       console.log(error);
+  //       Helpers.toast('error', error.message);
+  //     }
+  //   };
 
-    fetchSendEmail();
-  }, []);
+  //   fetchSendEmail();
+  // }, []);
 
   // useEffect(() => {
   //   const fetchPartnerNumbers = async () => {
@@ -73,11 +73,12 @@ function Transcription() {
 
   useEffect(() => {
     const fetchLatestNumber = async () => {
+      console.log(location.state.summary_id)
       try {
         const response = await axios.get(
           `${Helpers.apiUrl}getLatestNumber/${location.state.summary_id}`, Helpers.authHeaders
         );
-
+        console.log(response)
         const data = response.data ?? {};
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';
@@ -113,7 +114,7 @@ function Transcription() {
     setLoading(true);
     try {
       await axios.post(`${Helpers.apiUrl}sendEmail`, {
-        email,
+        // email,
         transcriptionText: text,
         summary,
         date,
@@ -159,7 +160,7 @@ function Transcription() {
               <div className="flex flex-col items-center">
                 {success ? (
                   <p className="text-center mb-4">
-                    {Helpers.getTranslationValue('transcription_send_to')} {email}!
+                    {Helpers.getTranslationValue('transcription_send_to')} {Helpers.authUser?.email}!
                   </p>
                 ) : (
                   <form onSubmit={handleSubmit} className="w-full">
@@ -243,7 +244,7 @@ function Transcription() {
                         placeholder={Helpers.getTranslationValue('summary')}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">{Helpers.getTranslationValue('Email')}:</label>
                       <input
                         type="email"
@@ -252,7 +253,7 @@ function Transcription() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                    </div>
+                    </div> */}
                     <button
                       type="submit"
                       className="mt-6 py-3.5 flex items-center justify-center text-white font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"

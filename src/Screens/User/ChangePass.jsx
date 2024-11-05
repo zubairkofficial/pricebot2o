@@ -85,8 +85,8 @@ const ChangePassword = () => {
     <section className="bg-white ">
       <div className="flex flex-col lg:flex-row justify-between">
         <div className="w-full px-5 xl:pl-12">
-          <div className="max-w-[450px] m-auto py-6">
-            <div className="bg-white rounded-lg shadow-md">
+          <div className="max-w-2xl m-auto py-6">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-6">{Helpers.getTranslationValue('change_password')}</h2>
               <form onSubmit={handleSubmit}>
                 <div className="mb-4 relative">

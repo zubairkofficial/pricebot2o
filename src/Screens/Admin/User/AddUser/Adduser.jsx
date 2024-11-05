@@ -310,7 +310,7 @@ const AddUser = () => {
                         handleChange("is_user_organizational")(0);
                       }}
                     >
-                      Kundenadministrator{" "}
+                      Kundenadministrator
                     </button>
                   </div>
                 </div>

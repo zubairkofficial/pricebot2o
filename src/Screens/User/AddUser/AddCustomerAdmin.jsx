@@ -213,7 +213,7 @@ const AddCustomerAdmin = () => {
                       }`}
                       onClick={() => handleChange("is_user_organizational")(1)}
                     >
-                      Organisationsbenutzer{" "}
+                      Organisationsbenutzer
                     </button>
                   </div>
                 </div>

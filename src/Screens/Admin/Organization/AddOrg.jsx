@@ -7,14 +7,28 @@ import { useHeader } from '../../../Components/HeaderContext';
 const AddOrg = () => {
     const { setHeaderData } = useHeader();
 
+    const [instructions, setInstructions] = useState([]); // Store list of instructions
+    const [selectedInstructions, setSelectedInstructions] = useState([]); // Store selected instruction IDs
+
     useEffect(() => {
         setHeaderData({ title: Helpers.getTranslationValue('Organizations'), desc: Helpers.getTranslationValue('org_desc') });
+
+        // Fetch available instructions
+        const fetchInstructions = async () => {
+            try {
+                const response = await axios.get(`${Helpers.apiUrl}instructions`, Helpers.authHeaders);
+                setInstructions(response.data); // Assuming response.data contains the instructions array
+            } catch (error) {
+                console.log(error)
+                Helpers.toast('error', Helpers.getTranslationValue('fetch_instructions_error'));
+            }
+        };
+
+        fetchInstructions();
     }, [setHeaderData]);
 
     const [org, setOrg] = useState({
         name: "",
-        street: "",
-        number: "",
         prompt: "",
     });
     const navigate = useNavigate();
@@ -33,7 +47,8 @@ const AddOrg = () => {
         }
 
         try {
-            const response = await axios.post(`${Helpers.apiUrl}add-org`, org, Helpers.authHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}add-org`, 
+                { ...org, instructions: selectedInstructions }, Helpers.authHeaders);
 
             if (response.status !== 200) {
                 throw new Error(Helpers.getTranslationValue('add_org_error'));
@@ -43,6 +58,7 @@ const AddOrg = () => {
                 name: "",
                 prompt: "",
             });
+            setSelectedInstructions([]);
 
             Helpers.toast("success", Helpers.getTranslationValue('add_org_msg'));
             navigate("/admin/orgs");
@@ -56,7 +72,7 @@ const AddOrg = () => {
             <div className="bg-white col-span-4 shadow-md rounded-lg p-6 w-full min-w-full">
                 <h5 className="text-xl font-semibold mb-4">{Helpers.getTranslationValue('add_org')}</h5>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-                    <div>
+                    <div className="col-span-4">
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Name')}</label>
                         <input
                             type="text"
@@ -68,30 +84,6 @@ const AddOrg = () => {
                             onChange={handleChange}
                         />
                     </div>
-                    {/* <div>
-                        <label htmlFor="number" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Number')}</label>
-                        <input
-                            type="text"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            id="number"
-                            name="number"
-                            placeholder={Helpers.getTranslationValue('Number')}
-                            value={org.number}
-                            onChange={handleChange}
-                        />
-                    </div> */}
-                    {/* <div className="col-span-2">
-                        <label htmlFor="street" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('street')}</label>
-                        <textarea
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            id="street"
-                            name="street"
-                            rows={3}
-                            placeholder={Helpers.getTranslationValue('street')}
-                            value={org.street}
-                            onChange={handleChange}
-                        />
-                    </div> */}
                     <div className="col-span-4">
                         <label htmlFor="prompt" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Prompt')}</label>
                         <textarea
@@ -104,6 +96,23 @@ const AddOrg = () => {
                             onChange={handleChange}
                         />
                     </div>
+                    <div className="col-span-4">
+                        <label htmlFor="instructions" className="block text-sm font-medium text-gray-700">{Helpers.getTranslationValue('Select Instructions')}</label>
+                        <select
+                            id="instructions"
+                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            multiple
+                            value={selectedInstructions}
+                            onChange={(e) => setSelectedInstructions(Array.from(e.target.selectedOptions, option => option.value))}
+                        >
+                            {instructions.map((instruction) => (
+                                <option key={instruction.id} value={instruction.id}>
+                                    {instruction.title}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className="col-span-2 flex justify-start">
                         <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {Helpers.getTranslationValue('add_org')}

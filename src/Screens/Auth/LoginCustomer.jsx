@@ -149,7 +149,7 @@ const CustomerLogin = () => {
               >
                 <b>
                   <span className="font">Registrieren Sie sich hier</span>
-                </b>{" "}
+                </b>
               </Link>
             </p>
           </div>

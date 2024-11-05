@@ -58,9 +58,7 @@ const Translations = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
-                </div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
             </div>
         );
     }
@@ -118,7 +116,7 @@ const Translations = () => {
                                     </div>
                                 </div>
                                 <Link to="/admin/add-trans"
-                                    className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
+                                    className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
                                     {Helpers.getTranslationValue("add_trans")}
                                 </Link>

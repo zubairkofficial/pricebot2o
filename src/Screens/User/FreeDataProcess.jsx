@@ -52,15 +52,7 @@ function FreeDataProcess() {
             setFileStatuses({ ...newStatuses });
 
             try {
-                const token = localStorage.getItem('token');
-
-                const response = await axios.post(`${Helpers.apiUrl}freeDataProcess`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    timeout: 120000,
-                });
+                const response = await axios.post(`${Helpers.apiUrl}freeDataProcess`, formData, Helpers.authFileHeaders);
 
                 if (response.status === 200 && response.data && response.data.data) {
                     newStatuses[file.name].status = "Completed";
@@ -155,13 +147,7 @@ function FreeDataProcess() {
 
         // Send the file to the backend
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`${Helpers.apiUrl}send-processed-file`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await axios.post(`${Helpers.apiUrl}send-processed-file`, formData,Helpers.authFileHeaders);
             Helpers.toast("success", response.data.message || "Die Datei wurde erfolgreich an Ihre E-Mail-Adresse gesendet.");
 
             // Reset the form after download

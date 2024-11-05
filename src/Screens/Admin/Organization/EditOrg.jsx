@@ -8,13 +8,13 @@ const EditOrg = () => {
     const { setHeaderData } = useHeader();
     const { id } = useParams();
     const [org, setOrg] = useState(null);
+    const [instructions, setInstructions] = useState([]); // All available instructions
+    const [selectedInstructions, setSelectedInstructions] = useState([]); // Instructions assigned to this org
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
-        street: "",  // Empty by default
-        number: "",  // Empty by default
         prompt: "",
     });
     const navigate = useNavigate();
@@ -22,6 +22,7 @@ const EditOrg = () => {
     useEffect(() => {
         setHeaderData({ title: Helpers.getTranslationValue('Organizations'), desc: Helpers.getTranslationValue('org_desc') });
         fetchOrg();
+        fetchInstructions(); // Fetch available instructions
     }, [id]);
 
     const fetchOrg = async () => {
@@ -33,14 +34,22 @@ const EditOrg = () => {
             setOrg(response.data);
             setFormData({
                 name: response.data.name,
-                street: "",  // Set to empty by default
-                number: "",  // Set to empty by default
                 prompt: response.data.prompt,
             });
+            setSelectedInstructions(response.data?.instructions.map(inst => inst.id)); // Pre-select assigned instructions
             setLoading(false);
         } catch (error) {
             setError(error.message);
             setLoading(false);
+        }
+    };
+
+    const fetchInstructions = async () => {
+        try {
+            const response = await axios.get(`${Helpers.apiUrl}instructions`, Helpers.authHeaders);
+            setInstructions(response.data); // Assuming response.data is an array of instructions
+        } catch (error) {
+            setError(Helpers.getTranslationValue('fetch_instructions_error'));
         }
     };
 
@@ -52,10 +61,19 @@ const EditOrg = () => {
         }));
     };
 
+    const handleInstructionsChange = (e) => {
+        const values = Array.from(e.target.selectedOptions, option => option.value);
+        setSelectedInstructions(values);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${Helpers.apiUrl}update-org/${id}`, formData, Helpers.authHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}update-org/${id}`, {
+                ...formData,
+                instructions: selectedInstructions
+            }, Helpers.authHeaders);
+
             if (response.status !== 200) {
                 throw new Error(Helpers.getTranslationValue('org_update_error'));
             }
@@ -69,9 +87,7 @@ const EditOrg = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
-                </div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
             </div>
         );
     }
@@ -103,16 +119,34 @@ const EditOrg = () => {
                                 <textarea
                                     name="prompt"
                                     placeholder={Helpers.getTranslationValue('Prompt')}
-                                    className="block w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
+                                    className="block p-1 w-full sm:text-sm border-gray-300 rounded-md shadow-sm"
                                     value={formData.prompt}
                                     onChange={handleChange}
                                     rows="3"
                                 />
+                                <div>
+                                    <label htmlFor="instructions" className="block text-sm font-medium text-gray-700">
+                                        {Helpers.getTranslationValue('Select Instructions')}
+                                    </label>
+                                    <select
+                                        id="instructions"
+                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        multiple
+                                        value={selectedInstructions}
+                                        onChange={handleInstructionsChange}
+                                    >
+                                        {instructions.map((instruction) => (
+                                            <option key={instruction.id} value={instruction.id}>
+                                                {instruction.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
                                         {Helpers.getTranslationValue('Cancel')}
                                     </button>
-                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                    <button type="submit" className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
                                         {Helpers.getTranslationValue('save_changes')}
                                     </button>
                                 </div>
@@ -126,7 +160,7 @@ const EditOrg = () => {
                                         <Link to="/admin/orgs" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">
                                             {Helpers.getTranslationValue('Back')}
                                         </Link>
-                                        <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                        <button onClick={() => setIsEditing(true)} className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
                                             {Helpers.getTranslationValue('Edit')}
                                         </button>
                                     </div>

@@ -65,9 +65,7 @@ const EditTrans = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-                    <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
-                </div>
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
             </div>
         );
     }
@@ -108,7 +106,7 @@ const EditTrans = () => {
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
                                         {Helpers.getTranslationValue('Cancel')}</button>
-                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">
+                                    <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium hover:bg-success-400 focus:outline-none">
                                         {Helpers.getTranslationValue('save_changes')}</button>
                                 </div>
                             </form>
@@ -119,7 +117,7 @@ const EditTrans = () => {
                                     <p><strong>{Helpers.getTranslationValue("value")}:</strong> {trans.value}</p>
                                     <div className="flex justify-end space-x-3">
                                         <Link to="/admin/translations" className=" bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none">{Helpers.getTranslationValue('Back')}</Link>
-                                        <button onClick={() => setIsEditing(true)} className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">{Helpers.getTranslationValue('Edit')}</button>
+                                        <button onClick={() => setIsEditing(true)} className="bg-success-300 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white hover:bg-success-400 focus:outline-none">{Helpers.getTranslationValue('Edit')}</button>
                                     </div>
                                 </div>
                             </>

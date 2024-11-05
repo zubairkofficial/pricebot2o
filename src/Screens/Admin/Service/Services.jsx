@@ -76,11 +76,9 @@ const Services = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full" role="status">
-          <span className="visually-hidden">{Helpers.getTranslationValue('Is_loading')}</span>
+        <div className="flex justify-center items-center h-screen">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
         </div>
-      </div>
     );
   }
 
@@ -129,7 +127,7 @@ const Services = () => {
 
         </div>
         <button
-          className="text-white h-10 px-5 mb-2 text-black transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
+          className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
           onClick={handleAdd}>
           Dienst hinzufügen
         </button>
@@ -167,7 +165,7 @@ const Services = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{service.link}</td>
                
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <button className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 p-2" onClick={() => handleEdit(service.id)}>
+                  <button className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600" onClick={() => handleEdit(service.id)}>
                     <FaPencilAlt />
                   </button>
                   <button className={`p-2 rounded-lg text-white ${service.status ? 'bg-gray-500 hover:bg-gray-600' : 'bg-success-300 hover:bg-success-400'}`} onClick={() => handleServiceStatus(service.id)}>

@@ -30,7 +30,7 @@ const Voice = () => {
     isGenerateSummaryBtnVisible: false,
     userTranscript: "",
     summary_id: "",
-    isListening: false,
+    isListening: false, // Manual listening state for mobile
   });
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -44,18 +44,43 @@ const Voice = () => {
     setState((prev) => ({ ...prev, userTranscript: transcript }));
   }, [transcript]);
 
+  const handleTranscribeClick = async () => {
+    if (!state.file) {
+      setState((prev) => ({ ...prev, errorMessage: Helpers.getTranslationValue('select_file_first') }));
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("audio", state.file);
+
+    try {
+      setState((prev) => ({ ...prev, transcribing: true, errorMessage: "" }));
+      const response = await axios.post(`${Helpers.apiUrl}transcribe`, formData, Helpers.authFileHeaders);
+
+      if (response.status !== 200) throw new Error(response.message || Helpers.getTranslationValue('voice_assistant_file_upload_error'));
+
+      setState((prev) => ({
+        ...prev,
+        transcriptionText: response.data.transcription.results.channels[0].alternatives[0].transcript,
+        transcribing: false,
+      }));
+    } catch (error) {
+      setState((prev) => ({ ...prev, errorMessage: error.message || Helpers.getTranslationValue('error_transcribing_file'), transcribing: false }));
+    }
+  };
+
   const handleGenerateSummary = async (text, type) => {
     try {
       setState((prev) => ({ ...prev, isSummaryGenerating: true }));
       const response = await axios.post(`${Helpers.apiUrl}generateSummary`, { recordedText: text }, Helpers.authHeaders);
 
-      if (response.status !== 200 || response.data.status !==200) throw new Error(response.data.message || Helpers.getTranslationValue('fail_to_generate_summary'));
+      if (response.status !== 200) throw new Error(response.data.message || Helpers.getTranslationValue('fail_to_generate_summary'));
 
       setState((prev) => ({
         ...prev,
-        summary : response.data.summary,
+        [type === 'voice' ? 'summary' : 'transcriptionSummary']: response.data.summary,
         summary_id: response.data.summary_id,
-        showSummary:true,
+        [type === 'voice' ? 'showSummary' : 'showTranscriptionSummary']: true,
         isEmailButtonVisible: true,
         isSummaryGenerating: false,
       }));
@@ -78,9 +103,7 @@ const Voice = () => {
     }
 
     try {
-      const response = await fetch(
-        `${Helpers.apiUrl}api-keys`, Helpers.authHeaders
-      );
+      const response = await fetch(`${Helpers.apiUrl}api-keys`, Helpers.authHeaders);
 
       if (!response.ok) {
         throw new Error("Failed to fetch Deepgram API key");
@@ -141,6 +164,8 @@ const Voice = () => {
     }
   };
 
+  const handleFileChange = (e) => setState((prev) => ({ ...prev, file: e.target.files[0] }));
+
   const handleNextPageClick = (summary_id, text, summary) => {
     navigate("/transcription", { state: { summary_id, text, summary } });
   };
@@ -171,39 +196,21 @@ const Voice = () => {
 
   return (
     <section className="bg-white">
-        {Helpers.authUser?.organization?.instructions.length > 0 && (
-      <div className="flex justify-center mb-6">
-        <div className="max-w-4xl w-full bg-gray-100 p-4 rounded-lg shadow-sm">
-          <h5 className="text-lg font-semibold mb-4 text-left">{Helpers.getTranslationValue('instructions')}</h5>
-          <div className="flex flex-wrap justify-left gap-2">
-            {Helpers.authUser?.organization?.instructions.map((instruction) => (
-              <button 
-                key={instruction.id} 
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                {instruction.title}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    )}
       <div className="flex flex-col lg:flex-row justify-between">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
           <div className="max-w-4xl mx-auto py-4">
-            <div className="bg-white p-6 rounded-lg shadow-md ">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-bold mb-6">{Helpers.getTranslationValue('voice_recording')}</h2>
-              {state.isListening || (state.transcriptionText || state.userTranscript) !== "" ? (
-                <div className="relative mb-4">
-                  <textarea
-                    placeholder={Helpers.getTranslationValue('voice_recording')}
-                    className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
-                    readOnly={state.isListening}
-                    value={state.transcriptionText || state.userTranscript}
-                    onChange={(e) => setState((prev) => ({ ...prev, userTranscript: e.target.value }))}
-                  />
-                </div>
-              ) : null}
+              <div className="relative mb-4">
+                <textarea
+                  placeholder={Helpers.getTranslationValue('voice_recording')}
+                  className="text-base border border-blackgray-600 h-32 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
+                  readOnly={state.isListening}
+                  rows={8}
+                  value={state.transcriptionText || state.userTranscript}
+                  onChange={(e) => setState((prev) => ({ ...prev, userTranscript: e.target.value }))}
+                />
+              </div>
               {state.errorMessage && <div className="text-blue-500 mb-4 text-sm">{state.errorMessage}</div>}
               {state.showSummary && (
                 <div className="mb-4">
@@ -246,6 +253,20 @@ const Voice = () => {
                   </span>
                 )}
               </button>
+              <div className="mb-4">
+                <input
+                  type="file"
+                  onChange={handleFileChange}
+                  className="text-base border border-blackgray-600 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
+                />
+                <button
+                  onClick={handleTranscribeClick}
+                  className="h-10 px-5 transition-colors text-white duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-4"
+                  disabled={state.transcribing}
+                >
+                  {Helpers.getTranslationValue(state.transcribing ? "transcribe..." : "transcribe_file")}
+                </button>
+              </div>
             </div>
           </div>
         </div>

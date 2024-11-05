@@ -50,25 +50,15 @@ const ChangeLogo = () => {
     formData.append('logo', logo);
 
     try {
-        const response = await axios.post(
-            `${Helpers.apiUrl}update-logo`,
-            formData,
-            {
-                headers: {
-                    "Authorization": `Bearer ${Helpers.getToken()}`,
-                    "Content-Type": "multipart/form-data",
-                }
-            }
-        );
-        // Helpers.toast('success', response.data.message);
-        Helpers.toast("success", Helpers.getTranslationValue('change_logo_success'));
-        // Update the logo in the layout immediately
-        updateLogo(Helpers.serverImage(response.data.logo));
+      const response = await axios.post(`${Helpers.apiUrl}update-logo`, formData, Helpers.authFileHeaders);
+      Helpers.toast("success", Helpers.getTranslationValue('change_logo_success'));
+      // Update the logo in the layout immediately
+      updateLogo(Helpers.serverImage(response.data.logo));
 
-        navigate("/settings");
+      navigate("/settings");
     } catch (error) {
-        setErrors(error.response.data.errors || {});
-        Helpers.toast('error', error.response.data.errors.message || 'Failed to update logo');
+      setErrors(error.response.data.errors || {});
+      Helpers.toast('error', error.response.data.errors.message || 'Failed to update logo');
     }
 
     setLoading(false);
@@ -76,7 +66,7 @@ const ChangeLogo = () => {
 
   return (
     <div className="mt-10">
-      <div className="max-w-[450px] m-auto py-6">
+      <div className="max-w-2xl m-auto py-6">
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold mb-6">{Helpers.getTranslationValue('change_logo')}</h2>
           <form onSubmit={handleSubmit}>

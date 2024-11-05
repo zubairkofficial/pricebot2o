@@ -39,12 +39,7 @@ const AddTool = () => {
         }
     
         try {
-            const response = await axios.post(`${Helpers.apiUrl}tools`, formDataToSend, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure token is included
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
+            const response = await axios.post(`${Helpers.apiUrl}tools`, formDataToSend, Helpers.authFileHeaders);
             Helpers.toast('success', "Tool Saved Successfully.");
             navigate("/admin/tools");
         } catch (error) {

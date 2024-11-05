@@ -28,6 +28,9 @@ const Users = () => {
   const navigate = useNavigate();
   const successMessage = location.state?.successMessage;
 
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [documentCount, setDocumentCount] = useState(null);
@@ -130,21 +133,28 @@ const Users = () => {
   const handleEdit = (userId) => {
     navigate(`/admin/edit-user/${userId}`);
   };
-
-  const handleDelete = async (id) => {
+  const handleDeleteClick = (id) => {
+    setUserToDelete(id);
+    setShowDeleteConfirmModal(true);
+  };
+  
+  const confirmDeleteUser = async () => {
     try {
       const response = await axios.delete(
-        `${Helpers.apiUrl}delete/${id}`,
+        `${Helpers.apiUrl}delete/${userToDelete}`,
         Helpers.authHeaders
       );
       if (response.status !== 200) {
         throw new Error(Helpers.getTranslationValue("user_delete_error"));
       }
-      setUsers(users.filter((user) => user.id !== id));
-      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+      setUsers(users.filter((user) => user.id !== userToDelete));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== userToDelete));
       Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
     } catch (error) {
       setError(error.message);
+    } finally {
+      setShowDeleteConfirmModal(false);
+      setUserToDelete(null);
     }
   };
 
@@ -174,7 +184,35 @@ const Users = () => {
 
   return (
     <section className="w-full h-full">
-       {showModal && (
+
+      {showDeleteConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 shadow-md max-w-sm w-1/2">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              {Helpers.getTranslationValue("Sind Sie sicher?")}
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {Helpers.getTranslationValue("Möchten Sie diesen Benutzer wirklich löschen?")}
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowDeleteConfirmModal(false)}
+                className="px-4 py-2 mr-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              >
+                {Helpers.getTranslationValue("Abbrechen")}
+              </button>
+              <button
+                onClick={confirmDeleteUser}
+                className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
+              >
+                <FaTrashAlt className="text-black" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
@@ -200,7 +238,7 @@ const Users = () => {
               </button>
             </div>
             <div className="p-4">
-            {loadingModal ? (
+              {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -210,9 +248,9 @@ const Users = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -240,7 +278,7 @@ const Users = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                              Sthamer
+                                Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -273,13 +311,13 @@ const Users = () => {
                               </td>
                             </tr>
                           )}
-                              {freeDataProcessCount !== undefined && (
+                          {freeDataProcessCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 4
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                              Kostenloser Datenprozess
+                                Kostenloser Datenprozess
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                                 {freeDataProcessCount}
@@ -361,92 +399,92 @@ const Users = () => {
         </div>
 
         {/* <div className="bg-white p-4 rounded-lg shadow-md w-full max-w-full"> */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    #
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Name")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Email")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Services")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Voice Protocol Organization")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Actions")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Organisationen")}
-                  </th>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  #
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Name")}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Email")}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Services")}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Voice Protocol Organization")}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Actions")}
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {Helpers.getTranslationValue("Organisationen")}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentUsers.map((user, index) => (
+                <tr key={user.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {indexOfFirstUser + index + 1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.email}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.services.map((service) => service).join(", ")}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {user.organization_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
+                    <button
+                      className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                      onClick={() => handleEdit(user.id)}
+                    >
+                      <FaPencilAlt className="text-black" />
+                    </button>
+                    <button
+                      className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
+                      onClick={() => handleDeleteClick(user.id)}
+                    >
+                      <FaTrashAlt className="text-black" />
+                    </button>
+                    <button
+                      className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
+                      onClick={() => handleShowModal(user.id)}
+                    >
+                      <FaEye className="text-black" />
+                    </button>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  items-center">
+                    <button
+                      className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 ml-2"
+                      onClick={() => handleViewChildren(user.id)}
+                    >
+                      <FaUsers className="text-black" />
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {currentUsers.map((user, index) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {indexOfFirstUser + index + 1}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.services.map((service) => service).join(", ")}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.organization_name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
-                      <button
-                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
-                        onClick={() => handleEdit(user.id)}
-                      >
-                        <FaPencilAlt className="text-black" />
-                      </button>
-                      <button
-                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
-                        onClick={() => handleDelete(user.id)}
-                      >
-                        <FaTrashAlt className="text-black" />
-                      </button>
-                      <button
-                        className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
-                        onClick={() => handleShowModal(user.id)}
-                      >
-                        <FaEye className="text-black" />
-                      </button>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  items-center">
-                      <button
-                        className="bg-purple-500 text-white p-2 rounded-lg hover:bg-purple-600 ml-2"
-                        onClick={() => handleViewChildren(user.id)}
-                      >
-                        <FaUsers className="text-black" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalItems={filteredUsers.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={(page) => setCurrentPage(page)}
-          />
+              ))}
+            </tbody>
+          </table>
         </div>
+
+        <Pagination
+          currentPage={currentPage}
+          totalItems={filteredUsers.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
       {/* </div> */}
     </section>
   );

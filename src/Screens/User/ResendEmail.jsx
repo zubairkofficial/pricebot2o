@@ -222,7 +222,7 @@ function ResendEmail() {
                         placeholder={Helpers.getTranslationValue('summary')}
                       />
                     </div>
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                       <label className="">{Helpers.getTranslationValue('Email')}:</label>
                       <input
                         type="email"
@@ -231,7 +231,7 @@ function ResendEmail() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                    </div>
+                    </div> */}
                     <button
                       type="submit"
                       className="mt-6 py-3.5 flex items-center justify-center text-white  font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg w-full"

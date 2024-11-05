@@ -44,9 +44,12 @@ import CustomerChildTable from "./Components/CustomerChildTable";
 import NormalUsers from "./Screens/Admin/User/NormalUsers";
 import LoginCustomer from "./Screens/Auth/LoginCustomer";
 import AllUsers from "./Screens/Admin/User/AllUsers";
-import ApiSettings from "./Screens/Admin/ApiSettings";
 import LinkUsers from "./Screens/Admin/User/LinkUsers";
 import FreeDataProcess from "./Screens/User/FreeDataProcess";
+import InstructionsPage from "./Screens/Admin/Instruction/InstructionsPage";
+import InstructionForm from "./Screens/Admin/Instruction/InstructionForm";
+import SettingsPage from "./Screens/Admin/Setting/SettingsPage";
+import SettingForm from "./Screens/Admin/Setting/SettingForm";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -134,12 +137,11 @@ const NotFound = () => {
               to="/"
               class="bg-success-300 text-sm font-bold text-white rounded-lg px-10 py-3"
             >
-              {" "}
-              Go Back{" "}
-            </Link>{" "}
-          </div>{" "}
-        </div>{" "}
-      </div>{" "}
+              Go Back
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
@@ -182,9 +184,7 @@ const App = () => {
   };
   const fetchTranslations = async () => {
     try {
-      const response = await axios.get(`${Helpers.apiUrl}get-trans`, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.get(`${Helpers.apiUrl}get-trans`, Helpers.authHeaders);
       Helpers.setItem("translationData", response.data, true);
     } catch (error) {
       console.error("Error fetching translations:", error);
@@ -195,415 +195,78 @@ const App = () => {
     <BrowserRouter>
       <HeaderProvider>
         <Routes>
-          <Route
-            path="/login"
-            element={
-              <Auth isAuth={false}>
-                {" "}
-                <Login />{" "}
-              </Auth>
-            }
-          />
-          <Route
-            path="/cretschmar-login"
-            element={
-              <Auth isAuth={false}>
-                {" "}
-                <LoginCustomer />{" "}
-              </Auth>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <Auth isAuth={false}>
-                {" "}
-                <Register />{" "}
-              </Auth>
-            }
-          />
+          <Route path="/login" element={<Auth isAuth={false}><Login /></Auth>} />
+          <Route path="/cretschmar-login" element={<Auth isAuth={false}><LoginCustomer /></Auth>} />
+          <Route path="/register" element={<Auth isAuth={false}><Register /></Auth>} />
+
           <Route path="/" element={<UserLayout />}>
-            <Route
-              path="/"
-              element={
-                <Auth>
-                  {" "}
-                  <UserDashboard />{" "}
-                </Auth>
-              }
-            />
-
-            {/* File Upload for service ID 1 */}
-            {hasServiceAccess(1) && (
-              <Route
-                path="/fileupload"
-                element={
-                  <Auth>
-                    <FileUpload />
-                  </Auth>
-                }
-              />
-            )}
-
-            {/* Voice, Transcription, Sent Emails, and Resend Email for service ID 2 */}
+            <Route path="/" element={<Auth><UserDashboard /></Auth>} />
+            {hasServiceAccess(1) && <Route path="/fileupload" element={<Auth><FileUpload /></Auth>} />}
             {hasServiceAccess(2) && (
               <>
-                <Route
-                  path="/voice"
-                  element={
-                    <Auth>
-                      <Voice />
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/transcription"
-                  element={
-                    <Auth>
-                      <Transcription />
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/sent-emails"
-                  element={
-                    <Auth>
-                      <SentEmails />
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/resend-email/:userId"
-                  element={
-                    <Auth>
-                      <ResendEmail />
-                    </Auth>
-                  }
-                />
+                <Route path="/voice" element={<Auth><Voice /></Auth>} />
+                <Route path="/transcription" element={<Auth><Transcription /></Auth>} />
+                <Route path="/sent-emails" element={<Auth><SentEmails /></Auth>} />
+                <Route path="/resend-email/:userId" element={<Auth><ResendEmail /></Auth>} />
               </>
             )}
+            {hasServiceAccess(3) && <Route path="/contract_automation_solution" element={<Auth><ContractAutomationSolution /></Auth>} />}
+            {hasServiceAccess(4) && <Route path="/data_process" element={<Auth><DataProcess /></Auth>} />}
+            {hasServiceAccess(5) && <Route path="/free-data-process" element={<Auth><FreeDataProcess /></Auth>} />}
 
-            {/* Contract Automation Solution for service ID 3 */}
-            {hasServiceAccess(3) && (
-              <Route
-                path="/contract_automation_solution"
-                element={
-                  <Auth>
-                    <ContractAutomationSolution />
-                  </Auth>
-                }
-              />
-            )}
+            <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
+            <Route path="/change-logo" element={<Auth><ChangeLogo /></Auth>} />
+            <Route path="/settings" element={<Auth><Settings /></Auth>} />
 
-            {/* Data Process for service ID 4 */}
-            {hasServiceAccess(4) && (
-              <Route
-                path="/data_process"
-                element={
-                  <Auth>
-                    <DataProcess />
-                  </Auth>
-                }
-              />
-            )}
-             {hasServiceAccess(5) && (
-              <Route
-                path="/free-data-process"
-                element={
-                  <Auth>
-                   <FreeDataProcess/>
-                  </Auth>
-                }
-              />
-            )}
-            <Route
-              path="/changePass"
-              element={
-                <Auth>
-                  {" "}
-                  <ChangePass />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/change-logo"
-              element={
-                <Auth>
-                  {" "}
-                  <ChangeLogo />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <Auth>
-                  {" "}
-                  <Settings />{" "}
-                </Auth>
-              }
-            />
             {isOrganizationalUser && (
               <>
-                {" "}
-                <Route
-                  path="/add-org-user"
-                  element={
-                    <Auth>
-                      {" "}
-                      <AddOrganizationalUser />{" "}
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/org-user-table"
-                  element={
-                    <Auth>
-                      {" "}
-                      <OrganizationalUserTable />{" "}
-                    </Auth>
-                  }
-                />
-               
+                <Route path="/add-org-user" element={<Auth><AddOrganizationalUser /></Auth>} />
+                <Route path="/org-user-table" element={<Auth><OrganizationalUserTable /></Auth>} />
               </>
             )}
+
             {isCustomerAdmin && (
               <>
-               <Route
-                  path="/edit-user/:id"
-                  element={
-                    <Auth>
-                      {" "}
-                      <EditOrganizationalUser />{" "}
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/customer-admin-add-user"
-                  element={
-                    <Auth>
-                      <AddCustomerAdmin /> {/* Add Customer Admin component */}
-                    </Auth>
-                  }
-                />{" "}
-                <Route
-                  path="/customer-user-table"
-                  element={
-                    <Auth>
-                      <CustomerUserTable /> {/* Add Customer Admin component */}
-                    </Auth>
-                  }
-                />
-                <Route
-                  path="/customer-child-table/:userId"
-                  element={
-                    <Auth>
-                      <CustomerChildTable />{" "}
-                      {/* Add Customer Admin component */}
-                    </Auth>
-                  }
-                />
+                <Route path="/edit-user/:id" element={<Auth><EditOrganizationalUser /></Auth>} />
+                <Route path="/customer-admin-add-user" element={<Auth><AddCustomerAdmin /></Auth>} />
+                <Route path="/customer-user-table" element={<Auth><CustomerUserTable /></Auth>} />
+                <Route path="/customer-child-table/:userId" element={<Auth><CustomerChildTable /></Auth>} />
               </>
             )}
           </Route>
+
           <Route path="/admin/" element={<AdminLayout />}>
-            <Route
-              path="dashboard"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Users  />{" "}
-                </Auth>
-              }
-            />
-              <Route
-              path="show-all-users"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <AllUsers />{" "}
-                </Auth>
-              }
-            />
-              <Route
-              path="link-user"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <LinkUsers />{" "}
-                </Auth>
-              }
-            />
-
-            <Route
-              path="add-user"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Adduser />{" "}
-                </Auth>
-              }
-            />
-            {/* <Route
-              path="customer-requests"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <CustomerRequest />{" "}
-                </Auth>
-              }
-            /> */}
-            <Route
-              path="user-children/:customerId"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <OrganizationUsers />{" "}
-                </Auth>
-              }
-            />
-
-
-<Route
-              path="api-settings"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <ApiSettings />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="normal-child-users/:userId"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <NormalUsers />{" "}
-                </Auth>
-              }
-            />
-
-            <Route
-              path="edit-user/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Edituser />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="services"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Services />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="add-service"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <AddService />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="edit-service/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <EditService />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="orgs"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Orgs />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="add-org"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <AddOrg />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="edit-org/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <EditOrg />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="translations"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Trans />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="add-trans"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <AddTrans />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="edit-trans/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <EditTrans />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="tools"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <Tools />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="add-tool"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <AddTool />{" "}
-                </Auth>
-              }
-            />
-            <Route
-              path="edit-tool/:id"
-              element={
-                <Auth isAdmin={true}>
-                  {" "}
-                  <EditTool />{" "}
-                </Auth>
-              }
-            />
+            <Route path="dashboard" element={<Auth isAdmin={true}><Users /></Auth>} />
+            <Route path="show-all-users" element={<Auth isAdmin={true}><AllUsers /></Auth>} />
+            <Route path="link-user" element={<Auth isAdmin={true}><LinkUsers /></Auth>} />
+            <Route path="add-user" element={<Auth isAdmin={true}><Adduser /></Auth>} />
+            <Route path="user-children/:customerId" element={<Auth isAdmin={true}><OrganizationUsers /></Auth>} />
+            <Route path="normal-child-users/:userId" element={<Auth isAdmin={true}><NormalUsers /></Auth>} />
+            <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /></Auth>} />
+            <Route path="services" element={<Auth isAdmin={true}><Services /></Auth>} />
+            <Route path="add-service" element={<Auth isAdmin={true}><AddService /></Auth>} />
+            <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /></Auth>} />
+            <Route path="orgs" element={<Auth isAdmin={true}><Orgs /></Auth>} />
+            <Route path="add-org" element={<Auth isAdmin={true}><AddOrg /></Auth>} />
+            <Route path="edit-org/:id" element={<Auth isAdmin={true}><EditOrg /></Auth>} />
+            <Route path="translations" element={<Auth isAdmin={true}><Trans /></Auth>} />
+            <Route path="add-trans" element={<Auth isAdmin={true}><AddTrans /></Auth>} />
+            <Route path="edit-trans/:id" element={<Auth isAdmin={true}><EditTrans /></Auth>} />
+            <Route path="tools" element={<Auth isAdmin={true}><Tools /></Auth>} />
+            <Route path="add-tool" element={<Auth isAdmin={true}><AddTool /></Auth>} />
+            <Route path="edit-tool/:id" element={<Auth isAdmin={true}><EditTool /></Auth>} />
+            <Route path="settings" element={<Auth isAdmin={true}><SettingsPage /></Auth>} />
+            <Route path="add-setting" element={<Auth isAdmin={true}><SettingForm isEdit={false} /></Auth>} />
+            <Route path="edit-setting/:id" element={<Auth isAdmin={true}><SettingForm isEdit={true} /></Auth>} />
+            <Route path="instructions" element={<Auth isAdmin={true}><InstructionsPage /></Auth>} />
+            <Route path="add-instruction" element={<Auth isAdmin={true}><InstructionForm /></Auth>} />
+            <Route path="edit-instruction/:id" element={<Auth isAdmin={true}><InstructionForm isEdit={true} /></Auth>} />
           </Route>
-          <Route path="*" element={<NotFound />} />{" "}
-        </Routes>{" "}
-      </HeaderProvider>{" "}
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+
+      </HeaderProvider>
     </BrowserRouter>
   );
 };

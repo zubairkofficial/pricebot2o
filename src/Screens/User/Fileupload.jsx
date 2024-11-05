@@ -187,7 +187,7 @@ function FileUpload() {
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
           style={{ marginRight: "40px" }}
         >
-          {Helpers.getTranslationValue("carry_out")}{" "}
+          {Helpers.getTranslationValue("carry_out")}
           <FontAwesomeIcon icon={faCloudUploadAlt} className="ml-2" />
         </button>
         <button
@@ -195,7 +195,7 @@ function FileUpload() {
           disabled={!allFilesCompleted}
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
         >
-          {Helpers.getTranslationValue("download")}{" "}
+          {Helpers.getTranslationValue("download")}
           <FontAwesomeIcon icon={faDownload} className="ml-2" />
         </button>
       </div>
