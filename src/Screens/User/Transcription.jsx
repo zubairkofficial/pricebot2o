@@ -48,7 +48,7 @@ function Transcription() {
   //       const userData = response.data ?? {};
   //       // console.log('userData',userData);
         
-  //       // setEmail(userData.send_email || ""); // Set email from the user's data if send_email exists
+  //       // setEmail(userData.email || ""); // Set email from the user's data if email exists
   //     } catch (error) {
   //       console.log(error);
   //       Helpers.toast('error', error.message);
@@ -90,7 +90,7 @@ function Transcription() {
         if (dateStr) {
           const parts = dateStr.split("-");
           if (parts.length === 3) {
-            parsedDate = `20${parts[2]}-${parts[1]}-${parts[0]}`;
+            parsedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
           }
         }
         setDate(parsedDate);

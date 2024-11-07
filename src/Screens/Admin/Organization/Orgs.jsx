@@ -94,7 +94,7 @@ const Orgs = () => {
                                     <div className="relative">
                                         <input
                                             type="text"
-                                            className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                                            className="border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
                                             id="search"
                                             placeholder={Helpers.getTranslationValue('org_search')}
                                             value={searchTerm}

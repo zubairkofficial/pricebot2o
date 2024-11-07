@@ -83,7 +83,7 @@ const Translations = () => {
                                     <div className="relative">
                                         <input
                                             type="text"
-                                            className="w-1/2 border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
+                                            className="border border-darkblack-300 rounded-lg p-2 focus:border-blue-500 focus:ring-0"
                                             id="search"
                                             placeholder={Helpers.getTranslationValue('trans_search')}
                                             value={searchTerm}
@@ -115,11 +115,11 @@ const Translations = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Link to="/admin/add-trans"
+                                {/* <Link to="/admin/add-trans"
                                     className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
                                 >
                                     {Helpers.getTranslationValue("add_trans")}
-                                </Link>
+                                </Link> */}
                             </div>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
