@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faStopCircle } from "@fortawesome/free-solid-svg-icons";
+import { faMicrophone, faStopCircle, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
@@ -31,6 +31,7 @@ const Voice = () => {
     userTranscript: "",
     summary_id: "",
     isListening: false,
+    isPaused: false,
   });
 
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -49,13 +50,13 @@ const Voice = () => {
       setState((prev) => ({ ...prev, isSummaryGenerating: true }));
       const response = await axios.post(`${Helpers.apiUrl}generateSummary`, { recordedText: text }, Helpers.authHeaders);
 
-      if (response.status !== 200 || response.data.status !==200) throw new Error(response.data.message || Helpers.getTranslationValue('fail_to_generate_summary'));
+      if (response.status !== 200 || response.data.status !== 200) throw new Error(response.data.message || Helpers.getTranslationValue('fail_to_generate_summary'));
 
       setState((prev) => ({
         ...prev,
-        summary : response.data.summary,
+        summary: response.data.summary,
         summary_id: response.data.summary_id,
-        showSummary:true,
+        showSummary: true,
         isEmailButtonVisible: true,
         isSummaryGenerating: false,
       }));
@@ -146,7 +147,7 @@ const Voice = () => {
   };
 
   const handleStartListening = () => {
-    setState((prev) => ({ ...prev, isGenerateSummaryBtnVisible: false }));
+    setState((prev) => ({ ...prev, isGenerateSummaryBtnVisible: false, isPaused: false }));
     resetTranscript();
     if (isMobile) {
       startDeepgramRecognition();
@@ -156,38 +157,53 @@ const Voice = () => {
     }
   };
 
+  useEffect(() => {
+    if (!state.isPaused) {
+      setState((prev) => ({ ...prev, userTranscript: transcript }));
+    }
+  }, [transcript, state.isPaused]);
+
   const handleStopListening = () => {
     if (isMobile) {
       stopDeepgramRecognition();
-      setState((prev) => ({ ...prev, isListening: false }));
     } else {
       SpeechRecognition.stopListening();
-      setState((prev) => ({ ...prev, isListening: false }));
     }
+    setState((prev) => ({ ...prev, isListening: false, isPaused: false }));
     if (state.transcriptionText || transcript) {
       setState((prev) => ({ ...prev, isGenerateSummaryBtnVisible: true }));
     }
   };
 
+  const handlePauseListening = () => {
+    if (state.isPaused) {
+      SpeechRecognition.startListening({ continuous: true, language: 'de-DE' });
+      setState((prev) => ({ ...prev, isPaused: false }));
+    } else {
+      SpeechRecognition.stopListening();
+      setState((prev) => ({ ...prev, isPaused: true }));
+    }
+  };
+
   return (
     <section className="bg-white">
-        {Helpers.authUser?.organization?.instructions.length > 0 && (
-      <div className="flex justify-center mb-6">
-        <div className="max-w-4xl w-full bg-gray-100 p-4 rounded-lg shadow-sm">
-          <h5 className="text-lg font-semibold mb-4 text-left">{Helpers.getTranslationValue('instructions')}</h5>
-          <div className="flex flex-wrap justify-left gap-2">
-            {Helpers.authUser?.organization?.instructions.map((instruction) => (
-              <button 
-                key={instruction.id} 
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                {instruction.title}
-              </button>
-            ))}
+      {Helpers.authUser?.organization?.instructions.length > 0 && (
+        <div className="flex justify-center mb-6">
+          <div className="max-w-4xl w-full bg-gray-100 p-4 rounded-lg shadow-sm">
+            <h5 className="text-lg font-semibold mb-4 text-left">{Helpers.getTranslationValue('instructions')}</h5>
+            <div className="flex flex-wrap justify-left gap-2">
+              {Helpers.authUser?.organization?.instructions.map((instruction) => (
+                <button
+                  key={instruction.id}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300"
+                >
+                  {instruction.title}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
       <div className="flex flex-col lg:flex-row justify-between">
         <div className="xl:w-full lg:w-88 px-5 xl:pl-12">
           <div className="max-w-4xl mx-auto py-4">
@@ -246,6 +262,24 @@ const Voice = () => {
                   </span>
                 )}
               </button>
+              {state.isListening && (
+                <button
+                  onClick={handlePauseListening}
+                  className={`h-10 px-5 mx-2 transition-colors text-white duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-300 mt-2 mb-3 ${state.isPaused ? "bg-gray-500" : "bg-success-300 hover:bg-success-300"}`}
+                >
+                  {state.isPaused ? (
+                    <span className="flex items-center">
+                      <FontAwesomeIcon icon={faPlay} className="mr-2" />
+                      {Helpers.getTranslationValue('unpause')}
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      <FontAwesomeIcon icon={faPause} className="mr-2" />
+                      {Helpers.getTranslationValue('pause')}
+                    </span>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </div>

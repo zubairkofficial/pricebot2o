@@ -80,7 +80,7 @@ const AddTrans = () => {
                         />
                     </div>
                     <div className="col-span-2 flex justify-start">
-                        <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="submit" className="text-white bg-success-300 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium hover:bg-success-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             {Helpers.getTranslationValue("add_trans")}
                         </button>
                     </div>
