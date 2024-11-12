@@ -31,7 +31,6 @@ const AddCustomerAdmin = () => {
     const user_id = user.id;
     const user_services = user.services;
     const user_org_id = user.org_id;
-    console.log("User", user_org_id);
     setUser((prevUser) => ({
       ...prevUser,
       creator_id: user_id,

@@ -94,7 +94,6 @@ const AddUser = () => {
         Helpers.authHeaders
       );
       setOrganizationalUsers(response.data.organization_users || []);
-      console.log(response.data);
       setShowOrgUsersDropdown(true); // Show the organizational users dropdown after fetching the data
     } catch (error) {
       Helpers.toast("error", error.message);
@@ -140,7 +139,6 @@ const AddUser = () => {
     try {
       let payload;
       let apiUrl;
-      console.log(selectedCustomer);
 
       // Conditionally build payload and select API route
       if (user.is_user_organizational === 0 && user.is_user_customer === 0) {

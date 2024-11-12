@@ -46,7 +46,6 @@ function Transcription() {
   //       );
 
   //       const userData = response.data ?? {};
-  //       // console.log('userData',userData);
         
   //       // setEmail(userData.email || ""); // Set email from the user's data if email exists
   //     } catch (error) {
@@ -73,12 +72,10 @@ function Transcription() {
 
   useEffect(() => {
     const fetchLatestNumber = async () => {
-      console.log(location.state.summary_id)
       try {
         const response = await axios.get(
           `${Helpers.apiUrl}getLatestNumber/${location.state.summary_id}`, Helpers.authHeaders
         );
-        console.log(response)
         const data = response.data ?? {};
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';

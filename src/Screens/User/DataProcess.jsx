@@ -4,7 +4,8 @@ import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudUploadAlt, faSpinner, faCheckCircle, faExclamationCircle, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from '../../Components/HeaderContext';
-import * as XLSX from "xlsx";
+import ExcelJS from 'exceljs';
+import saveAs from 'file-saver';
 
 function DataProcess() {
     const { setHeaderData } = useHeader();
@@ -40,36 +41,34 @@ function DataProcess() {
         let userId = userObj.id
         const newStatuses = { ...fileStatuses };
         let allData = [];
-    
+
         for (let i = 0; i < selectedFiles.length; i++) {
             const file = selectedFiles[i];
             const formData = new FormData();
             formData.append("documents[]", file);
             formData.append("user_id", userId);
-    
+
             newStatuses[file.name] = { status: "In Progress" };
             setFileStatuses({ ...newStatuses });
-    
+
             try {
                 const response = await axios.post(`${Helpers.apiUrl}data-process`, formData, Helpers.authFileHeaders);
-    
+
                 if (response.status === 200 && response.data && response.data.data) {
+                    console.log(response.data.data[0])
                     newStatuses[file.name].status = "Completed";
                     setFileStatuses({ ...newStatuses });
-    
+
                     // Parse and process data from the response
                     const parsedData = response.data.data.map(item => {
                         try {
-                            // console.log("Raw item data:", item); // Log raw item data
-    
-                            // If item is an object, use it directly
                             return { data: item || {} };
                         } catch (parseError) {
                             console.error("Error processing item:", item, parseError);
                             return { data: {} }; // Return empty object in case of error
                         }
                     });
-    
+
                     allData = allData.concat(parsedData);
                 } else {
                     throw new Error(response.message || Helpers.getTranslationValue('error_file_upload'));
@@ -80,30 +79,51 @@ function DataProcess() {
                 setFileStatuses({ ...newStatuses });
             }
         }
-    
+
         setAllProcessedData(allData);
         Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
     };
-    const handleDownload = () => {
+    
+    const handleDownload = async () => {
         const MAX_CHAR_LIMIT = 32767;
-        const data = [];
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Processed Data");
     
         // Define the custom headers in your desired order
         const headers = [
-            "Lagerkunde", "Artikel Nr.(Länge beachten)", "Materialkurztext", "Produktname", "Hersteller", "Dateiname SDB", "Ausgabedatum bzw. letzte Änderung", "LG Klasse", "WGK(numerischer Wert)", "H Sätze durch Komma getrennt",
-            "Flammpunkt (numerischer Wert)[°C]", "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017", "UN Nr", "Gefahrensymbole", "Gefahrgutklasse (Länge beachten)", "Verpackungsgruppe","Tunnelcode",
-            "N.A.G./NOS technische Benennung (Gefahraus-löser)", "LQ (Spalte eingefügt)", "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)",
-            "Freigabe Störrfallbeauftragter", "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5", "Main Ingredients", "Section - PreText",
-            "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1", "Section - 7|7.2",
-            "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14"
+            "Lagerkunde", "Artikel Nr.(Länge beachten)", "Materialkurztext", "Produktname", "Hersteller", "Dateiname SDB",
+            "Ausgabedatum bzw. letzte Änderung", "LG Klasse", "WGK(numerischer Wert)", "H Sätze durch Komma getrennt",
+            "Flammpunkt (numerischer Wert)[°C]", "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017", "UN Nr", "Gefahrensymbole",
+            "Gefahrgutklasse (Länge beachten)", "Verpackungsgruppe", "Tunnelcode", "N.A.G./NOS technische Benennung (Gefahraus-löser)",
+            "LQ (Spalte eingefügt)", "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)", "Freigabe Störrfallbeauftragter",
+            "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5", "Main Ingredients", "Section - PreText",
+            "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1",
+            "Section - 7|7.2", "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14", "Section-Missing-Count"
         ];
-        data.push(headers);
     
-        // Add static row starting from column D and skipping column L
-        const staticRow = ["", "", "", "", "","","14", "1-HZWMSC", "1-HZDWGK", "3-HARIZIN", "1-H2FLSP 3n","", "1-HZUNNR 6n", "2-HECODE", "4-HMKLAS", "4-HMVPAK", "4-HMTNCD", "1-HZGSDE / 4-HMGSDE","4-HMLQTP"];
-        data.push(staticRow);
+        // Add headers to the worksheet with styles
+        worksheet.addRow(headers);
+        worksheet.getRow(1).eachCell((cell) => {
+            cell.font = { bold: true, size: 14 };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FFFF00' }
+            };
+            cell.border = {
+                top: { style: 'thick' },
+                bottom: { style: 'thick' },
+                left: { style: 'thick' },
+                right: { style: 'thick' }
+            };
+        });
     
-        // Define a mapping from headers to data keys
+        // Add the static row data below the header row
+        const staticRow = ["", "", "", "", "", "", "14", "1-HZWMSC", "1-HZDWGK", "3-HARIZIN", "1-H2FLSP 3n", "", "1-HZUNNR 6n",
+                           "2-HECODE", "4-HMKLAS", "4-HMVPAK", "4-HMTNCD", "1-HZGSDE / 4-HMGSDE", "4-HMLQTP"];
+        worksheet.addRow(staticRow);
+    
         const headerMapping = {
             "Lagerkunde": "Lagerkunde",
             "Artikel Nr.(Länge beachten)": "Artikel Nr.\n(Länge beachten)",
@@ -113,14 +133,14 @@ function DataProcess() {
             "Dateiname SDB": "Dateiname SDB",
             "Ausgabedatum bzw. letzte Änderung": "Ausgabedatum bzw. letzte Änderung",
             "LG Klasse": "LG Klasse",
-            "WGK(numerischer Wert)": "WGK\n(numerischer Wert)", // Make sure this matches the API response key
+            "WGK(numerischer Wert)": "WGK\n(numerischer Wert)",
             "H Sätze durch Komma getrennt": "H Sätze\ndurch Komma getrennt",
-            "Flammpunkt (numerischer Wert)[°C]": "Flammpunkt\n(numerischer Wert)\n[°C]", // Mapping "Flammpunkt" from data
-            "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017" : "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017",
+            "Flammpunkt (numerischer Wert)[°C]": "Flammpunkt\n(numerischer Wert)\n[°C]",
+            "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017": "Nr./Kategorie gem. Anhang I, 12. BImSchV 2017",
             "UN Nr": "UN Nr",
             "Gefahrensymbole": "Gefahrensymbole",
             "Gefahrgutklasse (Länge beachten)": "Gefahrgutklasse (Länge beachten)",
-            "Verpackungsgruppe" : "Verpackungsgruppe",
+            "Verpackungsgruppe": "Verpackungsgruppe",
             "Tunnelcode": "Tunnelcode",
             "N.A.G./NOS technische Benennung (Gefahraus-löser)": "N.A.G./NOS\ntechnische Benennung\n(Gefahraus-löser)",
             "LQ (Spalte eingefügt)": "LQ (Spalte eingefügt)",
@@ -140,81 +160,42 @@ function DataProcess() {
             "Section - 9|9.1": "Section - 9|9.1",
             "Section - 10|10.5": "Section - 10|10.5",
             "Section - 15": "Section - 15",
-            "Section - 14": "Section - 14"
+            "Section - 14": "Section - 14",
+            "Section-Missing-Count": "Section-Missing-Count"
         };
     
-        // Map the actual data based on the custom headers
+        // Add data rows and apply yellow fill if `Section-Missing-Count` > 0
         allProcessedData.forEach((fileData) => {
-            let rowData = Array(headers.length).fill(""); // Initialize row data with empty strings
-            
-            headers.forEach((header, index) => {
-                if (index < 3) {
-                    rowData[index] = ""; // Fill initial columns with empty values
-                } else {
-                    // Use the header mapping to get the correct data key
-                    const key = headerMapping[header];
-                    let cellData = fileData.data[key] || ""; // Use empty string as default value
+            let rowData = headers.map(header => fileData.data[headerMapping[header]] || "");
+            const sectionMissingCount = parseInt(rowData[headers.indexOf("Section-Missing-Count")] || 0);
     
-                    // If the content exceeds the max character limit, split it across rows
-                    while (cellData.length > MAX_CHAR_LIMIT) {
-                        rowData[index] = cellData.slice(0, MAX_CHAR_LIMIT);
-                        data.push([...rowData]);
-                        cellData = cellData.slice(MAX_CHAR_LIMIT);
-                        rowData = Array(headers.length).fill(""); // Start a new row with empty strings
-                    }
-                    rowData[index] = cellData;
-                }
-            });
-            
-            // Ensure column L is empty
-            rowData[11] = ""; // Adjust index based on header order
+            const newRow = worksheet.addRow(rowData);
     
-            data.push(rowData);
-        });
-    
-        const ws = XLSX.utils.aoa_to_sheet(data);
-    
-        // Ensure header row is bold and has custom styling
-        const headerStyle = {
-            font: { bold: true, sz: 14 }, // Bold and increase the font size
-            alignment: { horizontal: 'center', vertical: 'center' },
-            border: {
-                top: { style: "thick" }, // Use 'thick' for better visibility
-                bottom: { style: "thick" },
-                left: { style: "thick" },
-                right: { style: "thick" },
-            },
-            fill: {
-                fgColor: { rgb: "FFFF00" } // Optional: background color for the header
-            }
-        };
-    
-        headers.forEach((header, index) => {
-            const cell = ws[XLSX.utils.encode_cell({ r: 0, c: index })]; // Get the header cell
-            if (cell) {
-                cell.s = headerStyle;
+            // Apply yellow fill if `Section-Missing-Count` > 0
+            if (sectionMissingCount > 0) {
+                newRow.eachCell((cell) => {
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFFF00' }
+                    };
+                });
             }
         });
     
-        // Adjust column widths
-        ws["!cols"] = [
-            { wch: 5 }, // A
-            { wch: 5 }, // B
-            { wch: 5 }, // C
-            { wch: 20 }, // D (Starting point)
-            ...Array(headers.length - 4).fill({ wch: 30 }), // Filler for data columns
-            { wch: 5 }, // Column L (should remain empty)
-            { wch: 30 } // Following columns
+        // Set column widths
+        worksheet.columns = [
+            { width: 5 }, { width: 5 }, { width: 5 }, { width: 20 },
+            ...Array(headers.length - 4).fill({ width: 30 }),
+            { width: 5 }, { width: 30 }
         ];
     
-        // Increase row height for better visibility
-        ws['!rows'] = [{ hpx: 40 }]; // Set the height of the first row (headers) to 40 pixels
+        // Write the workbook to a file
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        const link = document.createElement("a");
+        saveAs(blob, "Processed_Files_Data.xlsx");
     
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Processed Data");
-        XLSX.writeFile(wb, "Processed_Files_Data.xlsx");
-    
-        // Reset the form after download
         setSelectedFiles([]);
         setFileStatuses({});
         setAllProcessedData([]);
@@ -222,9 +203,6 @@ function DataProcess() {
             fileInputRef.current.value = '';
         }
     };
-    
-  
-    
 
     const getStatusIcon = (status) => {
         switch (status) {

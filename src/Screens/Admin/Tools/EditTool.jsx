@@ -27,7 +27,6 @@ const EditTool = () => {
             
             // Assuming response.data contains the tool data directly
             const toolData = response.data;
-            console.log('tooldata', toolData);
     
             // Set formData with the fetched tool data
             setFormData({

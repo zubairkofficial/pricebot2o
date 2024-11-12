@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import Helpers from "../Config/Helpers";
+import Helpers from "../../Config/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudUploadAlt, faSpinner, faCheckCircle, faExclamationCircle, faDownload } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from '../../Components/HeaderContext';
@@ -51,11 +51,10 @@ function DataProcess() {
             setFileStatuses({ ...newStatuses });
     
             try {
-                const token = localStorage.getItem('token');
-    
                 const response = await axios.post(`${Helpers.apiUrl}data-process`, formData, Helpers.authFileHeaders);
     
                 if (response.status === 200 && response.data && response.data.data) {
+                    console.log(response.data)
                     newStatuses[file.name].status = "Completed";
                     setFileStatuses({ ...newStatuses });
     
@@ -83,8 +82,8 @@ function DataProcess() {
         setAllProcessedData(allData);
         Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
     };
-    
     const handleDownload = () => {
+        const MAX_CHAR_LIMIT = 32767;
         const data = [];
     
         // Define the custom headers in your desired order
@@ -94,7 +93,7 @@ function DataProcess() {
             "N.A.G./NOS technische Benennung (Gefahraus-löser)", "LQ (Spalte eingefügt)", "Hinweise/Bemerkungen/Sicherheitsbetrachtung (stoffspezifisch)",
             "Freigabe Störrfallbeauftragter", "Maßnahmen Lagerung Abschnitt 7.2", "Zusammenlagerverbot Abschnitt 10.5", "Main Ingredients", "Section - PreText",
             "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1", "Section - 7|7.2",
-            "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14"
+            "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14","Section-Missing-Count"
         ];
         data.push(headers);
     
@@ -139,24 +138,34 @@ function DataProcess() {
             "Section - 9|9.1": "Section - 9|9.1",
             "Section - 10|10.5": "Section - 10|10.5",
             "Section - 15": "Section - 15",
-            // "Section - 14|14.1": "Section - 14|14.1",
-            // "Section - 14|14.2": "Section - 14|14.2",
-            "Section - 14": "Section - 14"
+            "Section - 14": "Section - 14",
+            "Section-Missing-Count": "Section-Missing-Count"
         };
     
         // Map the actual data based on the custom headers
         allProcessedData.forEach((fileData) => {
-            const rowData = [];
+            let rowData = Array(headers.length).fill(""); // Initialize row data with empty strings
+            
             headers.forEach((header, index) => {
                 if (index < 3) {
-                    rowData.push(""); // Fill initial columns with empty values
+                    rowData[index] = ""; // Fill initial columns with empty values
                 } else {
                     // Use the header mapping to get the correct data key
                     const key = headerMapping[header];
-                    rowData.push(fileData.data[key] || ""); // Use empty string as default value
+                    let cellData = fileData.data[key] || ""; // Use empty string as default value
+    
+                    // If the content exceeds the max character limit, split it across rows
+                    while (cellData.length > MAX_CHAR_LIMIT) {
+                        rowData[index] = cellData.slice(0, MAX_CHAR_LIMIT);
+                        data.push([...rowData]);
+                        cellData = cellData.slice(MAX_CHAR_LIMIT);
+                        rowData = Array(headers.length).fill(""); // Start a new row with empty strings
+                    }
+                    rowData[index] = cellData;
                 }
             });
-             // Ensure column L is empty
+            
+            // Ensure column L is empty
             rowData[11] = ""; // Adjust index based on header order
     
             data.push(rowData);

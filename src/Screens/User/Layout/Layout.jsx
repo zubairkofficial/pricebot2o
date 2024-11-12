@@ -14,8 +14,6 @@ const Layout = () => {
 
   const handleSidebarToggle = () => {
     setToggleSidebar(!sidebarToggle);
-
-    // console.log(sidebarToggle);
   };
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const Layout = () => {
           setLogo(Helpers.serverImage(response.data.logo));
         }
       } catch (error) {
-        console.log("No logo found or error fetching logo");
+        console.log("No logo found or error fetching logo",error);
       }
     };
 

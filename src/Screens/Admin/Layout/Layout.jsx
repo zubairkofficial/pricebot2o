@@ -12,8 +12,6 @@ const Layout = () => {
 
   const handleSidebarToggle = () => {
     setToggleSidebar(!sidebarToggle);
-
-    // console.log(sidebarToggle);
   };
   const handleLogout = async () => {
     const token = localStorage.getItem("token");

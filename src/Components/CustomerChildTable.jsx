@@ -27,8 +27,7 @@ const CustomerChildTable = () => {
   const [modalError, setModalError] = useState(null);
 
   useEffect(() => {
-    fetchCustomerNormalUsers(); // Use the new API
-    console.log("User id from params", userId);
+    fetchCustomerNormalUsers(); 
   }, [userId]);
 
   useEffect(() => {
