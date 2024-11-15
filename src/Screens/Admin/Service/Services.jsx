@@ -126,11 +126,11 @@ const Services = () => {
           </div>
 
         </div>
-        {/* <button
+        <button
           className="text-white h-10 px-5 mb-2 transition-colors duration-150 bg-success-300 rounded-lg focus:shadow-outline hover:bg-success-400 flex items-center justify-center"
           onClick={handleAdd}>
           Dienst hinzufügen
-        </button> */}
+        </button>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">

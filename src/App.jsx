@@ -50,6 +50,11 @@ import InstructionsPage from "./Screens/Admin/Instruction/InstructionsPage";
 import InstructionForm from "./Screens/Admin/Instruction/InstructionForm";
 import SettingsPage from "./Screens/Admin/Setting/SettingsPage";
 import SettingForm from "./Screens/Admin/Setting/SettingForm";
+import DeliveryBills from "./Screens/User/DeliveryBills";
+import InvoiceDetails from "./Screens/User/InvoiceDetails";
+import PastInvoices from "./Screens/User/PastInvoices";
+import InvoiceRecords from "./Screens/User/InvoiceRecords";
+import DetialsWithDate from "./Screens/User/DetialsWithDate";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -213,6 +218,13 @@ const App = () => {
             {hasServiceAccess(3) && <Route path="/contract_automation_solution" element={<Auth><ContractAutomationSolution /></Auth>} />}
             {hasServiceAccess(4) && <Route path="/data_process" element={<Auth><DataProcess /></Auth>} />}
             {hasServiceAccess(5) && <Route path="/free-data-process" element={<Auth><FreeDataProcess /></Auth>} />}
+
+            <Route path="/delivery-bills" element={<Auth><DeliveryBills /></Auth>} />
+            <Route path="/invoice-details" element={<Auth><InvoiceDetails /></Auth>} />
+            <Route path="/past-invoices" element={<Auth><PastInvoices /></Auth>} />
+            <Route path="/invoice-records" element={<Auth><InvoiceRecords /></Auth>} />
+            <Route path="/details-with-date/:uploadDate" element={<Auth><DetialsWithDate /></Auth>} />
+
 
             <Route path="/changePass" element={<Auth><ChangePass /></Auth>} />
             <Route path="/change-logo" element={<Auth><ChangeLogo /></Auth>} />
