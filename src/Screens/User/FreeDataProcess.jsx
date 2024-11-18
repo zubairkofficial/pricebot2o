@@ -133,21 +133,21 @@ function FreeDataProcess() {
             data.push(rowData);
         });
 
-        // Create and configure the Excel sheet
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Processed Data");
-
+    
         // Convert workbook to a Blob for upload
         const wbout = XLSX.write(wb, { type: "array", bookType: "xlsx" });
-        const blob = new Blob([wbout], { type: "application/octet-stream" });
-
+        const blob = new Blob([wbout], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    
         const formData = new FormData();
-        formData.append("file", blob, "Processed_Files_Data.xlsx");
-
+        formData.append("file", blob, "Processed_Files_Data.xlsx"); // Ensure the filename has the correct extension
+    
         // Send the file to the backend
         try {
-            const response = await axios.post(`${Helpers.apiUrl}send-processed-file`, formData,Helpers.authFileHeaders);
+            const response = await axios.post(`${Helpers.apiUrl}send-processed-file`, formData, Helpers.authFileHeaders);
+    
             Helpers.toast("success", response.data.message || "Die Datei wurde erfolgreich an Ihre E-Mail-Adresse gesendet.");
 
             // Reset the form after download

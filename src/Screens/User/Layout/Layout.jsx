@@ -409,7 +409,7 @@ const Layout = () => {
                         </li>
                       )}
                       <li className="item py-[11px] px-[43px]">
-                        <Link to="/changePass">
+                        <Link to="/settings">
                           <span className="item-ico">
                             <svg
                               width="16"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Helpers from "../../../Config/Helpers";
+import Select from "react-dropdown-select";
 import axios from "axios";
 import { useHeader } from '../../../Components/HeaderContext';
 
@@ -61,9 +62,12 @@ const EditOrg = () => {
         }));
     };
 
-    const handleInstructionsChange = (e) => {
-        const values = Array.from(e.target.selectedOptions, option => option.value);
-        setSelectedInstructions(values);
+    const handleInstructionsChange = (values) => {
+        console.log(values)
+        setSelectedInstructions((prev) => ({
+            ...prev,
+            selectedInstructions: values.map((v) => v.value),
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -124,24 +128,26 @@ const EditOrg = () => {
                                     onChange={handleChange}
                                     rows="3"
                                 />
-                                <div>
-                                    <label htmlFor="instructions" className="block text-sm font-medium text-gray-700">
-                                        {Helpers.getTranslationValue('Select Instructions')}
-                                    </label>
-                                    <select
-                                        id="instructions"
-                                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                        multiple
-                                        value={selectedInstructions}
-                                        onChange={handleInstructionsChange}
-                                    >
-                                        {instructions.map((instruction) => (
-                                            <option key={instruction.id} value={instruction.id}>
-                                                {instruction.title}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <Select
+                                    id="instructions"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    multi                                    
+                                    dropdownHeight="80px"
+                                    dropdownHandle
+                                    options={instructions.map((instruction) => ({
+                                        label: instruction.title,
+                                        value: instruction.id,
+                                    }))}
+                                    values={instructions
+                                        .filter((instruction) => selectedInstructions.includes(instruction.id))
+                                        .map((instruction) => ({
+                                            label: instruction.title,
+                                            value: instruction.id,
+                                        }))
+                                    }
+                                    onChange={(values) => setSelectedInstructions(values.map((v) => v.value))}
+                                />
+
                                 <div className="flex justify-end space-x-3">
                                     <button type="button" className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none" onClick={() => setIsEditing(false)}>
                                         {Helpers.getTranslationValue('Cancel')}

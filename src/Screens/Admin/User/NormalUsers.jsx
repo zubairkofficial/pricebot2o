@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FaEye } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
@@ -14,6 +14,7 @@ const NormalUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   // Modal state management for viewing user usage
   const [showModal, setShowModal] = useState(false);
@@ -52,7 +53,7 @@ const NormalUsers = () => {
       if (response.status !== 200) {
         throw new Error("Failed to fetch normal users.");
       }
-  
+
       // Ensure data is an array
       const usersData = Array.isArray(response.data.normal_users)
         ? response.data.normal_users
@@ -65,7 +66,7 @@ const NormalUsers = () => {
       setLoading(false);
     }
   };
-  
+
 
   const handleShowModal = async (userId) => {
     setSelectedUserId(userId);
@@ -151,7 +152,7 @@ const NormalUsers = () => {
               </button>
             </div>
             <div className="p-4">
-            {loadingModal ? (
+              {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -161,9 +162,9 @@ const NormalUsers = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -191,7 +192,7 @@ const NormalUsers = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                              Sthamer
+                                Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -224,13 +225,13 @@ const NormalUsers = () => {
                               </td>
                             </tr>
                           )}
-                              {freeDataProcessCount !== undefined && (
+                          {freeDataProcessCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 4
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                              Kostenloser Datenprozess
+                                Kostenloser Datenprozess
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                                 {freeDataProcessCount}
@@ -269,6 +270,11 @@ const NormalUsers = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+          </div>
+          <div className="flex justify-end mb-5 space-x-4">
+            <button onClick={() => { navigate(-1) }} className="mt-4 btn p-2 m-1 bg-gray-500 hover:bg-gray-600 text-white rounded-md">
+              {Helpers.getTranslationValue("Back")}
+            </button>
           </div>
         </div>
 

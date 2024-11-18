@@ -186,13 +186,13 @@ const OrganizationUsers = () => {
                         </td>
                       </tr>
                     )}
-                          {selectedUser.serviceIds.includes(5) && (
+                    {selectedUser.serviceIds.includes(5) && (
                       <tr className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                           4
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                        Kostenloser Datenprozess
+                          Kostenloser Datenprozess
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                           {selectedUser.freeDataProcessCount}
@@ -226,6 +226,11 @@ const OrganizationUsers = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          <div className="flex justify-end mb-5 space-x-4">
+            <button onClick={() => { navigate(-1) }} className="mt-4 btn p-2 m-1 bg-gray-500 hover:bg-gray-600 text-white rounded-md">
+              {Helpers.getTranslationValue("Back")}
+            </button>
           </div>
         </div>
 

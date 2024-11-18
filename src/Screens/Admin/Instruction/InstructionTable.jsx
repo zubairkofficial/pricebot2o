@@ -3,12 +3,15 @@ import axios from "axios";
 import Helpers from "../../../Config/Helpers";
 import { Link, useNavigate } from "react-router-dom";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import Pagination from "../../../Components/Pagination";
 
 const InstructionTable = () => {
     const [instructions, setInstructions] = useState([]);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const itemsPerPage = 10;
     useEffect(() => {
         fetchInstructions();
     }, []);
@@ -32,6 +35,11 @@ const InstructionTable = () => {
         }
     };
 
+    const indexOfLastInst = (currentPage + 1) * itemsPerPage;
+    const indexOfFirstInst = currentPage * itemsPerPage;
+    const currentInsts = instructions.slice(indexOfFirstInst, indexOfLastInst);
+
+
     return (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6">
             {error && <p className="text-red-500">{error}</p>}
@@ -47,7 +55,7 @@ const InstructionTable = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                    {instructions.map((instruction) => (
+                    {currentInsts.map((instruction) => (
                         <tr key={instruction.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{instruction.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm">{instruction.title}</td>
@@ -56,7 +64,7 @@ const InstructionTable = () => {
                                     onClick={() => navigate(`/admin/edit-instruction/${instruction.id}`)}
                                     className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600 mr-2"
                                 >
-                                   <FaPencilAlt />
+                                    <FaPencilAlt />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(instruction.id)}
@@ -69,6 +77,12 @@ const InstructionTable = () => {
                     ))}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                totalItems={instructions.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={(page) => setCurrentPage(page)}
+            />
         </div>
     );
 };
