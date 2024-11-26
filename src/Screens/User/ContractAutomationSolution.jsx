@@ -13,17 +13,47 @@ import { useHeader } from "../../Components/HeaderContext";
 function ContractAutomationSolution() {
   const { setHeaderData } = useHeader();
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileStatuses, setFileStatuses] = useState({});
+  const [selectedDoctype, setSelectedDoctype] = useState("wind"); // Default to 'wind'
+  const fileInputRef = useRef(null);
+  const [canUpload, setCanUpload] = useState(true);
+
   useEffect(() => {
     setHeaderData({
       title: Helpers.getTranslationValue("Automatisierte Vertragserstellung"),
       desc: "",
     });
-  }, [setHeaderData]);
+    const checkUsageCount = async () => {
+      try {
+        const response = await axios.get(
+          `${Helpers.apiUrl}check-usage-count/ContractSolutions`, Helpers.authHeaders
+        );
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [fileStatuses, setFileStatuses] = useState({});
-  const [selectedDoctype, setSelectedDoctype] = useState("wind"); // Default to 'wind'
-  const fileInputRef = useRef(null);
+        if (response.status === 200) {
+          const { available_count } = response.data;
+          if (available_count <= 0) {
+            setCanUpload(false);
+            Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+          } else {
+            setCanUpload(true);
+          }
+        }
+      } catch (error) {
+        // Check if the error is a 403 status
+        if (error.response && error.response.status === 403) {
+          setCanUpload(false); // Disable the file selection
+          Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+        } else {
+          // Handle other errors
+          Helpers.toast("error", Helpers.getTranslationValue("error_check_usage"));
+          setCanUpload(false); // Optionally disable if there's an unknown error
+        }
+      }
+    };
+
+    checkUsageCount();
+  }, [setHeaderData]);
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -158,6 +188,7 @@ function ContractAutomationSolution() {
           className="form-control mb-4 border border-bgray-300 w-full rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf"
           multiple
+          disabled={!canUpload}
           ref={fileInputRef}
           onChange={handleFileChange}
         />
@@ -184,7 +215,7 @@ function ContractAutomationSolution() {
           onClick={handleFileUpload}
           disabled={Object.values(fileStatuses).some(
             (file) => file.status === "In Progress"
-          )}
+          ) || !canUpload}
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
           style={{ marginRight: "40px" }}
         >

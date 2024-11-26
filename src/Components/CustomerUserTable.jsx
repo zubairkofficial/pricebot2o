@@ -377,6 +377,9 @@ const CustomerUserTable = () => {
                     {Helpers.getTranslationValue("Voice Protocol Organization")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("Verfügbare Dokumente")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {Helpers.getTranslationValue("Actions")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -401,6 +404,9 @@ const CustomerUserTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.organization_name}
+                    </td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
+                      {user.allCount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
                       <button

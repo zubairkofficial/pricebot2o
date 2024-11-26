@@ -18,12 +18,10 @@ const AddCustomerAdmin = () => {
 
   // const [services, setServices] = useState([]);
   const [organizationUsers, setOrganizationUsers] = useState([]);
-  const [selectedOrganizationUser, setSelectedOrganizationUser] = useState("");
+  const [selectedOrganizationUser, setSelectedOrganizationUser] = useState({});
+  const [customerUsersCount, setCustomerUsersCount] = useState(0);
 
   const navigate = useNavigate();
-  const userObj = localStorage.getItem("user");
-  const user1 = JSON.parse(userObj);
-  const customerId = user1.id;
 
   useEffect(() => {
     const userObj = localStorage.getItem("user");
@@ -48,7 +46,7 @@ const AddCustomerAdmin = () => {
         `${Helpers.apiUrl}active-services`,
         Helpers.authHeaders
       );
- //    setServices(response.data);
+      //    setServices(response.data);
     } catch (error) {
       Helpers.toast("error", error.message);
     }
@@ -57,34 +55,51 @@ const AddCustomerAdmin = () => {
   const fetchOrganizationUsers = async () => {
     try {
       const response = await axios.get(
-        `${Helpers.apiUrl}getAllOrganizationalUsersForCustomer/${customerId}`,
+        `${Helpers.apiUrl}getAllOrganizationalUsersForCustomer/${Helpers.authUser.id}`,
         Helpers.authHeaders
       );
       setOrganizationUsers(response.data.organization_users);
+      console.log(response.data.organization_users)
+      setCustomerUsersCount(
+        response.data.organization_users
+          .map(user => user.current_usage)  // Extract `current_usage` for each user
+          .reduce((acc, usage) => acc + usage, 0)  // Sum up all the `current_usage` values
+      );
     } catch (error) {
       Helpers.toast("error", error.message);
     }
   };
-
+  console.log("Users", organizationUsers)
   const handleChange = (name) => (value) => {
     setUser({ ...user, [name]: value });
   };
 
+  console.log(selectedOrganizationUser)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Retrieve data dynamically from localStorage
     const userObj = localStorage.getItem("user");
     const userData = JSON.parse(userObj);
-
     // Construct payload directly
     const payload = {
-      ...user, // This spreads the original user object data (presumably from state or props)
+      ...user, // This spreads the original user object data
       creator_id: userData.id, // Dynamically set creator_id from localStorage
       services: userData.services, // Dynamically set services from localStorage
       org_id: userData.org_id, // Dynamically set org_id from localStorage
       is_user_organizational: user.is_user_organizational ? 1 : 0, // Set flag based on organizational user type
-      orgi_id: selectedOrganizationUser || null, // Optional organization user ID
+      orgi_id: selectedOrganizationUser.id || null, // Optional organization user ID
+      ...(user.is_user_organizational
+        ? {
+          counterLimit: user.counterLimit || 0, // Append Counter Limit
+          currentUsage: user.currentUsage || 0, // Append Current Usage
+          expirationDate: user.expirationDate || "2099-12-31", // Append Expiration Date
+        }
+        : {
+          counterLimit: selectedOrganizationUser.counter_limit || 0, // Append Counter Limit
+          currentUsage: selectedOrganizationUser.current_usage || 0, // Append Current Usage
+          expirationDate: selectedOrganizationUser.expiration_date || "2099-12-31",
+        }),
     };
 
     try {
@@ -119,14 +134,17 @@ const AddCustomerAdmin = () => {
     }
   };
 
+
   useEffect(() => {
     fetchOrganizationUsers();
     fetchServices();
   }, []);
 
   const handleSelectOrganizationalUser = (selectedValues) => {
+
     const selectedUserId = selectedValues[0]?.value;
     setSelectedOrganizationUser(selectedUserId);
+
   };
 
   return (
@@ -198,24 +216,80 @@ const AddCustomerAdmin = () => {
                   <div className="custom-switch-toggle">
                     <button
                       type="button"
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 0 ? "active" : ""
-                      }`}
+                      className={`custom-switch-button ${user.is_user_organizational === 0 ? "active" : ""
+                        }`}
                       onClick={() => handleChange("is_user_organizational")(0)}
                     >
                       Normaler Benutzer
                     </button>
                     <button
                       type="button"
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 1 ? "active" : ""
-                      }`}
+                      className={`custom-switch-button ${user.is_user_organizational === 1 ? "active" : ""
+                        }`}
                       onClick={() => handleChange("is_user_organizational")(1)}
                     >
                       Organisationsbenutzer
                     </button>
                   </div>
                 </div>
+                {user.is_user_organizational === 1 && (
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <label
+                        htmlFor="counterLimit"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Anzahl verfügbarer Dokumente (Paketvolumen)
+                      </label>
+                      <input
+                        id="counterLimit"
+                        name="counterLimit"
+                        type="number"
+                        required
+                        placeholder="Enter Counter Limit"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                        value={user.counterLimit || ""}
+                        onChange={(e) => handleChange("counterLimit")(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="currentUsage"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Aktueller Verbrauch
+                      </label>
+                      <input
+                        id="currentUsage"
+                        name="currentUsage"
+                        type="number"
+                        disabled
+                        placeholder="Enter Current Usage"
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                        value={customerUsersCount || 0}
+                        onChange={(e) => handleChange("currentUsage")(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="expirationDate"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Verbrauch bis max Datum
+                      </label>
+                      <input
+                        id="expirationDate"
+                        name="expirationDate"
+                        type="date"
+                        required
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                        value={user.expirationDate || "2099-12-31"}
+                        onChange={(e) => handleChange("expirationDate")(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+
 
                 {/* Normal User - Organizational User Selection */}
                 {user.is_user_organizational === 0 && (
@@ -230,9 +304,9 @@ const AddCustomerAdmin = () => {
                       options={
                         organizationUsers && organizationUsers.length > 0
                           ? organizationUsers.map((orgUser) => ({
-                              label: orgUser.name,
-                              value: orgUser.id,
-                            }))
+                            label: orgUser.name,
+                            value: orgUser,
+                          }))
                           : []
                       }
                       onChange={handleSelectOrganizationalUser}

@@ -119,11 +119,11 @@ const Layout = () => {
                       </div>
                     </Link>
                   </li>
-                  <li class="item py-[11px] text-bgray-900">
+                  <li className="item py-[11px] text-bgray-900">
                     <Link to="/admin/orgs">
-                      <div class="flex items-center justify-between">
-                        <div class="flex space-x-2.5 items-center">
-                          <span class="item-ico">
+                      <div className="flex items-center justify-between">
+                        <div className="flex space-x-2.5 items-center">
+                          <span className="item-ico">
                             <svg
                               width="18"
                               height="20"
@@ -134,48 +134,48 @@ const Layout = () => {
                               <path
                                 d="M18 16V6C18 3.79086 16.2091 2 14 2H4C1.79086 2 0 3.79086 0 6V16C0 18.2091 1.79086 20 4 20H14C16.2091 20 18 18.2091 18 16Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>
-                          <span class="item-text text-lg font-medium leading-none">
+                          <span className="item-text text-lg font-medium leading-none">
                             {Helpers.getTranslationValue("organizations")}
                           </span>
                         </div>
                       </div>
                     </Link>
                   </li>
-                  <li class="item py-[11px] text-bgray-900">
+                  <li className="item py-[11px] text-bgray-900">
                     <Link to="/admin/instructions">
-                      <div class="flex items-center justify-between">
-                        <div class="flex space-x-2.5 items-center">
-                          <span class="item-ico">
+                      <div className="flex items-center justify-between">
+                        <div className="flex space-x-2.5 items-center">
+                          <span className="item-ico">
                             <svg
                               width="18"
                               height="20"
@@ -186,48 +186,48 @@ const Layout = () => {
                               <path
                                 d="M18 16V6C18 3.79086 16.2091 2 14 2H4C1.79086 2 0 3.79086 0 6V16C0 18.2091 1.79086 20 4 20H14C16.2091 20 18 18.2091 18 16Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>
-                          <span class="item-text text-lg font-medium leading-none">
+                          <span className="item-text text-lg font-medium leading-none">
                             {Helpers.getTranslationValue("instructions")}
                           </span>
                         </div>
                       </div>
                     </Link>
                   </li>
-                  <li class="item py-[11px] text-bgray-900">
+                  <li className="item py-[11px] text-bgray-900">
                     <Link to="/admin/services">
-                      <div class="flex items-center justify-between">
-                        <div class="flex space-x-2.5 items-center">
-                          <span class="item-ico">
+                      <div className="flex items-center justify-between">
+                        <div className="flex space-x-2.5 items-center">
+                          <span className="item-ico">
                             <svg
                               width="20"
                               height="20"
@@ -238,21 +238,21 @@ const Layout = () => {
                               <path
                                 d="M0 4C0 1.79086 1.79086 0 4 0H16C18.2091 0 20 1.79086 20 4V16C20 18.2091 18.2091 20 16 20H4C1.79086 20 0 18.2091 0 16V4Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
                                 d="M14 9C12.8954 9 12 9.89543 12 11L12 13C12 14.1046 12.8954 15 14 15C15.1046 15 16 14.1046 16 13V11C16 9.89543 15.1046 9 14 9Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M6 5C4.89543 5 4 5.89543 4 7L4 13C4 14.1046 4.89543 15 6 15C7.10457 15 8 14.1046 8 13L8 7C8 5.89543 7.10457 5 6 5Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>
-                          <span class="item-text text-lg font-medium leading-none">
+                          <span className="item-text text-lg font-medium leading-none">
                             {Helpers.getTranslationValue("Services")}
                           </span>
                         </div>
@@ -478,9 +478,9 @@ const Layout = () => {
                           </span>
                         </Link>
                       </li>
-                      <li class="item py-[11px] px-[43px]">
+                      <li className="item py-[11px] px-[43px]">
                         <Link to="/admin/orgs">
-                          <span class="item-ico">
+                          <span className="item-ico">
                             <svg
                               width="18"
                               height="20"
@@ -491,41 +491,41 @@ const Layout = () => {
                               <path
                                 d="M18 16V6C18 3.79086 16.2091 2 14 2H4C1.79086 2 0 3.79086 0 6V16C0 18.2091 1.79086 20 4 20H14C16.2091 20 18 18.2091 18 16Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>
                         </Link>
                       </li>
-                      <li class="item py-[11px] px-[43px]">
+                      <li className="item py-[11px] px-[43px]">
                         <Link to="/admin/instructions">
-                          <span class="item-ico">
+                          <span className="item-ico">
                             <svg
                               width="18"
                               height="20"
@@ -536,41 +536,41 @@ const Layout = () => {
                               <path
                                 d="M18 16V6C18 3.79086 16.2091 2 14 2H4C1.79086 2 0 3.79086 0 6V16C0 18.2091 1.79086 20 4 20H14C16.2091 20 18 18.2091 18 16Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
+                                fillRule="evenodd"
+                                clipRule="evenodd"
                                 d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>
                         </Link>
                       </li>
-                      <li class="item py-[11px] px-[43px]">
+                      <li className="item py-[11px] px-[43px]">
                         <Link to="/admin/services">
-                          <span class="item-ico">
+                          <span className="item-ico">
                             <svg
                               width="20"
                               height="20"
@@ -581,17 +581,17 @@ const Layout = () => {
                               <path
                                 d="M0 4C0 1.79086 1.79086 0 4 0H16C18.2091 0 20 1.79086 20 4V16C20 18.2091 18.2091 20 16 20H4C1.79086 20 0 18.2091 0 16V4Z"
                                 fill="#1A202C"
-                                class="path-1"
+                                className="path-1"
                               />
                               <path
                                 d="M14 9C12.8954 9 12 9.89543 12 11L12 13C12 14.1046 12.8954 15 14 15C15.1046 15 16 14.1046 16 13V11C16 9.89543 15.1046 9 14 9Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                               <path
                                 d="M6 5C4.89543 5 4 5.89543 4 7L4 13C4 14.1046 4.89543 15 6 15C7.10457 15 8 14.1046 8 13L8 7C8 5.89543 7.10457 5 6 5Z"
                                 fill="#567BD9"
-                                class="path-2"
+                                className="path-2"
                               />
                             </svg>
                           </span>

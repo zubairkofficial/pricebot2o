@@ -82,26 +82,49 @@ const Dashboard = () => {
               filteredServices.length > 0 ? (
                 filteredServices.map((service) => (
                   <div key={service.id} className="w-full p-2">
-                    <Link to={`/${service.link}`} className="block text-decoration-none relative">
+                    {service.status === 1 ? ( // Check if the service is enabled
+                      <Link
+                        to={`/${service.link}`}
+                        className="block text-decoration-none relative"
+                      >
+                        <div
+                          className="shadow-sm rounded-lg p-5 transition-opacity opacity-90"
+                          style={{
+                            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${Helpers.basePath}/images/${service.image})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            cursor: "pointer",
+                            height: "200px",
+                            backgroundColor: "#333", // Fallback color if image is not available
+                          }}
+                        >
+                          <div className="flex flex-col justify-start h-full">
+                            <h3 className="text-lg text-white font-semibold mb-2">
+                              {service.name}
+                            </h3>
+                            <p className="text-white text-base">{service.description}</p>
+                          </div>
+                        </div>
+                      </Link>
+                    ) : (
                       <div
-                        className="shadow-sm rounded-lg p-5 transition-opacity opacity-90"
+                        className="shadow-sm rounded-lg p-5 transition-opacity opacity-50 cursor-not-allowed"
                         style={{
                           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${Helpers.basePath}/images/${service.image})`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",
-                          cursor: "pointer",
                           height: "200px",
                           backgroundColor: "#333", // Fallback color if image is not available
                         }}
                       >
                         <div className="flex flex-col justify-start h-full">
-                          <h3 className="text-lg text-white font-semibold mb-2">
+                          <h3 className="text-lg text-gray-400 font-semibold mb-2">
                             {service.name}
                           </h3>
-                          <p className="text-white text-base">{service.description}</p>
+                          <p className="text-gray-400 text-base">{service.description}</p>
                         </div>
                       </div>
-                    </Link>
+                    )}
                   </div>
                 ))
               ) : (
@@ -122,7 +145,7 @@ const Dashboard = () => {
         )}
       </div>
     </div>
-  );
+  );  
 };
 
 export default Dashboard;

@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faStopCircle, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useHeader } from "../../Components/HeaderContext";
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import SummaryFormatter from "../../Components/SummaryFormatter";
 
 const Voice = () => {
   const { setHeaderData } = useHeader();
@@ -62,6 +63,7 @@ const Voice = () => {
       }));
 
       Helpers.toast('success', Helpers.getTranslationValue('summary_generated_successfully'));
+      console.log("Response", response);
     } catch (error) {
       setState((prev) => ({
         ...prev,
@@ -224,7 +226,10 @@ const Voice = () => {
               {state.showSummary && (
                 <div className="mb-4">
                   <h5 className="text-lg font-semibold">{Helpers.getTranslationValue('summary')}:</h5>
-                  <p>{state.summary}</p>
+                  <p>{state.showSummary && (
+                    <SummaryFormatter summary={state.summary} />
+                  )}
+                  </p>
                 </div>
               )}
               {!state.isListening && state.isGenerateSummaryBtnVisible && (

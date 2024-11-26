@@ -42,7 +42,7 @@ const AddOrg = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${Helpers.apiUrl}add-org`,
                 {
                     ...formData,
@@ -50,14 +50,13 @@ const AddOrg = () => {
                 },
                 Helpers.authHeaders
             );
-
-            if (response.status !== 201) {
-                throw new Error(Helpers.getTranslationValue('org_add_error'));
-            }
+            // Redirect to /admin/orgs on success
             Helpers.toast("success", Helpers.getTranslationValue('org_add_success'));
             navigate("/admin/orgs");
         } catch (error) {
-            setError(error.message);
+            const errorMessage =
+                error.response?.data?.message || Helpers.getTranslationValue('org_add_error');
+            setError(errorMessage);
         }
     };
 

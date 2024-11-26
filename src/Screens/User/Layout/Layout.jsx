@@ -28,7 +28,7 @@ const Layout = () => {
           setLogo(Helpers.serverImage(response.data.logo));
         }
       } catch (error) {
-        console.log("No logo found or error fetching logo",error);
+        console.log("No logo found or error fetching logo", error);
       }
     };
 
@@ -137,38 +137,38 @@ const Layout = () => {
                 <ul className="mt-2.5">
                   {(isUserCustomer === 1 ||
                     (isUserOrganizational === 0 && isUserCustomer === 0)) && (
-                    <li className="item py-[11px] text-black ">
-                      <Link to="/">
-                        <div className="flex items-center justify-between">
-                          <div className="flex space-x-2.5 items-center">
-                            <span className="item-ico">
-                              <svg
-                                width="18"
-                                height="21"
-                                viewBox="0 0 18 21"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  className="path-1"
-                                  d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
-                                  fill="#1A202C"
-                                />
-                                <path
-                                  className="path-2"
-                                  d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
-                                  fill="#567BD9"
-                                />
-                              </svg>
-                            </span>
-                            <span className="item-text text-lg font-medium leading-none">
-                              {Helpers.getTranslationValue("Dashboard")}
-                            </span>
+                      <li className="item py-[11px] text-black ">
+                        <Link to="/">
+                          <div className="flex items-center justify-between">
+                            <div className="flex space-x-2.5 items-center">
+                              <span className="item-ico">
+                                <svg
+                                  width="18"
+                                  height="21"
+                                  viewBox="0 0 18 21"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    className="path-1"
+                                    d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
+                                    fill="#1A202C"
+                                  />
+                                  <path
+                                    className="path-2"
+                                    d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
+                                    fill="#567BD9"
+                                  />
+                                </svg>
+                              </span>
+                              <span className="item-text text-lg font-medium leading-none">
+                                {Helpers.getTranslationValue("Dashboard")}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    </li>
-                  )}
+                        </Link>
+                      </li>
+                    )}
                   {isUserOrganizational === 1 && (
                     <li className="item py-[11px] text-black ">
                       <a
@@ -191,22 +191,22 @@ const Layout = () => {
                                   className="path-1"
                                 ></path>
                                 <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
                                   d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                   fill="#567BD9"
                                   className="path-2"
                                 ></path>
                                 <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
                                   d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                   fill="#567BD9"
                                   className="path-2"
                                 ></path>
                                 <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
                                   d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                   fill="#567BD9"
                                   className="path-2"
@@ -329,31 +329,31 @@ const Layout = () => {
                       {(isUserCustomer === 1 ||
                         (isUserOrganizational === 0 &&
                           isUserCustomer === 0)) && (
-                        <li className="item py-[11px] px-[43px]">
-                          <Link to="/">
-                            <span className="item-ico">
-                              <svg
-                                width="18"
-                                height="21"
-                                viewBox="0 0 18 21"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  className="path-1"
-                                  d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
-                                  fill="#1A202C"
-                                />
-                                <path
-                                  className="path-2"
-                                  d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
-                                  fill="#567BD9"
-                                />
-                              </svg>
-                            </span>
-                          </Link>
-                        </li>
-                      )}
+                          <li className="item py-[11px] px-[43px]">
+                            <Link to="/">
+                              <span className="item-ico">
+                                <svg
+                                  width="18"
+                                  height="21"
+                                  viewBox="0 0 18 21"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    className="path-1"
+                                    d="M0 8.84719C0 7.99027 0.366443 7.17426 1.00691 6.60496L6.34255 1.86217C7.85809 0.515019 10.1419 0.515019 11.6575 1.86217L16.9931 6.60496C17.6336 7.17426 18 7.99027 18 8.84719V17C18 19.2091 16.2091 21 14 21H4C1.79086 21 0 19.2091 0 17V8.84719Z"
+                                    fill="#1A202C"
+                                  />
+                                  <path
+                                    className="path-2"
+                                    d="M5 17C5 14.7909 6.79086 13 9 13C11.2091 13 13 14.7909 13 17V21H5V17Z"
+                                    fill="#567BD9"
+                                  />
+                                </svg>
+                              </span>
+                            </Link>
+                          </li>
+                        )}
                       {isUserOrganizational === 1 && (
                         <li className="item py-[11px] text-black ">
                           <a
@@ -373,33 +373,33 @@ const Layout = () => {
                                     <path
                                       d="M18 16V6C18 3.79086 16.2091 2 14 2H4C1.79086 2 0 3.79086 0 6V16C0 18.2091 1.79086 20 4 20H14C16.2091 20 18 18.2091 18 16Z"
                                       fill="#1A202C"
-                                      class="path-1"
+                                      className="path-1"
                                     ></path>
                                     <path
-                                      fill-rule="evenodd"
-                                      clip-rule="evenodd"
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
                                       d="M4.25 8C4.25 7.58579 4.58579 7.25 5 7.25H13C13.4142 7.25 13.75 7.58579 13.75 8C13.75 8.41421 13.4142 8.75 13 8.75H5C4.58579 8.75 4.25 8.41421 4.25 8Z"
                                       fill="#567BD9"
-                                      class="path-2"
+                                      className="path-2"
                                     ></path>
                                     <path
-                                      fill-rule="evenodd"
-                                      clip-rule="evenodd"
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
                                       d="M4.25 12C4.25 11.5858 4.58579 11.25 5 11.25H13C13.4142 11.25 13.75 11.5858 13.75 12C13.75 12.4142 13.4142 12.75 13 12.75H5C4.58579 12.75 4.25 12.4142 4.25 12Z"
                                       fill="#567BD9"
-                                      class="path-2"
+                                      className="path-2"
                                     ></path>
                                     <path
-                                      fill-rule="evenodd"
-                                      clip-rule="evenodd"
+                                      fillRule="evenodd"
+                                      clipRule="evenodd"
                                       d="M4.25 16C4.25 15.5858 4.58579 15.25 5 15.25H9C9.41421 15.25 9.75 15.5858 9.75 16C9.75 16.4142 9.41421 16.75 9 16.75H5C4.58579 16.75 4.25 16.4142 4.25 16Z"
                                       fill="#567BD9"
-                                      class="path-2"
+                                      className="path-2"
                                     ></path>
                                     <path
                                       d="M11 0H7C5.89543 0 5 0.895431 5 2C5 3.10457 5.89543 4 7 4H11C12.1046 4 13 3.10457 13 2C13 0.895431 12.1046 0 11 0Z"
                                       fill="#567BD9"
-                                      class="path-2"
+                                      className="path-2"
                                     ></path>
                                   </svg>
                                 </span>

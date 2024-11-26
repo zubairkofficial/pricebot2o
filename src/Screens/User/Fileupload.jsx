@@ -14,16 +14,49 @@ import * as XLSX from "xlsx";
 
 function FileUpload() {
   const { setHeaderData } = useHeader();
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [fileStatuses, setFileStatuses] = useState({});
+  const [canUpload, setCanUpload] = useState(true); // State to track if upload is allowed
+  const fileInputRef = useRef(null);
+
   useEffect(() => {
     setHeaderData({
       title: Helpers.getTranslationValue("files_upload"),
       desc: "",
     });
+    const checkUsageCount = async () => {
+      try {
+        const response = await axios.get(
+          `${Helpers.apiUrl}check-usage-count/Document`,
+          Helpers.authHeaders
+        );
+
+        if (response.status === 200) {
+          const { available_count } = response.data;
+          if (available_count <= 0) {
+            setCanUpload(false);
+            Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+          } else {
+            setCanUpload(true);
+          }
+        }
+      } catch (error) {
+        // Check if the error is a 403 status
+        if (error.response && error.response.status === 403) {
+          setCanUpload(false); // Disable the file selection
+          Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+        } else {
+          // Handle other errors
+          Helpers.toast("error", Helpers.getTranslationValue("error_check_usage"));
+          setCanUpload(false); // Optionally disable if there's an unknown error
+        }
+      }
+    };
+
+    checkUsageCount();
   }, [setHeaderData]);
 
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [fileStatuses, setFileStatuses] = useState({});
-  const fileInputRef = useRef(null);
+
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
@@ -40,9 +73,10 @@ function FileUpload() {
       Helpers.toast("error", Helpers.getTranslationValue("file_select_first"));
       return;
     }
+
     let json = localStorage.getItem("user");
     let userObj = JSON.parse(json);
-    let userId = userObj.id
+    let userId = userObj.id;
     const newStatuses = { ...fileStatuses };
 
     for (let i = 0; i < selectedFiles.length; i++) {
@@ -159,6 +193,7 @@ function FileUpload() {
           multiple
           ref={fileInputRef}
           onChange={handleFileChange}
+          disabled={!canUpload} // Disable input if upload is not allowed
         />
       </div>
       <div className="px-10">
@@ -183,7 +218,7 @@ function FileUpload() {
           onClick={handleFileUpload}
           disabled={Object.values(fileStatuses).some(
             (file) => file.status === "In Progress"
-          )}
+          ) || !canUpload}
           className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
           style={{ marginRight: "40px" }}
         >

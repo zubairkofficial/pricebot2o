@@ -10,14 +10,43 @@ import saveAs from 'file-saver';
 function DataProcess() {
     const { setHeaderData } = useHeader();
 
-    useEffect(() => {
-        setHeaderData({ title: Helpers.getTranslationValue('Data Process'), desc: '' });
-    }, [setHeaderData]);
-
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [fileStatuses, setFileStatuses] = useState({});
+    const [canUpload, setCanUpload] = useState(true);
     const [allProcessedData, setAllProcessedData] = useState([]);
     const fileInputRef = useRef(null);
+    useEffect(() => {
+        setHeaderData({ title: Helpers.getTranslationValue('Data Process'), desc: '' });
+        const checkUsageCount = async () => {
+            try {
+                const response = await axios.get(
+                    `${Helpers.apiUrl}check-usage-count/DataProcess`, Helpers.authHeaders
+                );
+
+                if (response.status === 200) {
+                    const { available_count } = response.data;
+                    if (available_count <= 0) {
+                        setCanUpload(false);
+                        Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+                    } else {
+                        setCanUpload(true);
+                    }
+                }
+            } catch (error) {
+                // Check if the error is a 403 status
+                if (error.response && error.response.status === 403) {
+                    setCanUpload(false); // Disable the file selection
+                    Helpers.toast("error", Helpers.getTranslationValue("error_usage_limit"));
+                } else {
+                    // Handle other errors
+                    Helpers.toast("error", Helpers.getTranslationValue("error_check_usage"));
+                    setCanUpload(false); // Optionally disable if there's an unknown error
+                }
+            }
+        };
+
+        checkUsageCount();
+    }, [setHeaderData]);
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -83,12 +112,12 @@ function DataProcess() {
         setAllProcessedData(allData);
         Helpers.toast("success", Helpers.getTranslationValue('files_processed_msg'));
     };
-    
+
     const handleDownload = async () => {
         const MAX_CHAR_LIMIT = 32767;
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Processed Data");
-    
+
         // Define the custom headers in your desired order
         const headers = [
             "Lagerkunde", "Artikel Nr.(Länge beachten)", "Materialkurztext", "Produktname", "Hersteller", "Dateiname SDB",
@@ -100,7 +129,7 @@ function DataProcess() {
             "Section - 1", "Section - 2", "Section - 2|2.2", "Section - 3", "Section - 5|5.1", "Section - 7|7.2--15|15.1",
             "Section - 7|7.2", "Section - 9|9.1", "Section - 10|10.5", "Section - 15", "Section - 14", "Section-Missing-Count"
         ];
-    
+
         // Add headers to the worksheet with styles
         worksheet.addRow(headers);
         worksheet.getRow(1).eachCell((cell) => {
@@ -118,12 +147,12 @@ function DataProcess() {
                 right: { style: 'thick' }
             };
         });
-    
+
         // Add the static row data below the header row
         const staticRow = ["", "", "", "", "", "", "14", "1-HZWMSC", "1-HZDWGK", "3-HARIZIN", "1-H2FLSP 3n", "", "1-HZUNNR 6n",
-                           "2-HECODE", "4-HMKLAS", "4-HMVPAK", "4-HMTNCD", "1-HZGSDE / 4-HMGSDE", "4-HMLQTP"];
+            "2-HECODE", "4-HMKLAS", "4-HMVPAK", "4-HMTNCD", "1-HZGSDE / 4-HMGSDE", "4-HMLQTP"];
         worksheet.addRow(staticRow);
-    
+
         const headerMapping = {
             "Lagerkunde": "Lagerkunde",
             "Artikel Nr.(Länge beachten)": "Artikel Nr.\n(Länge beachten)",
@@ -163,14 +192,14 @@ function DataProcess() {
             "Section - 14": "Section - 14",
             "Section-Missing-Count": "Section-Missing-Count"
         };
-    
+
         // Add data rows and apply yellow fill if `Section-Missing-Count` > 0
         allProcessedData.forEach((fileData) => {
             let rowData = headers.map(header => fileData.data[headerMapping[header]] || "");
             const sectionMissingCount = parseInt(rowData[headers.indexOf("Section-Missing-Count")] || 0);
-    
+
             const newRow = worksheet.addRow(rowData);
-    
+
             // Apply yellow fill if `Section-Missing-Count` > 0
             if (sectionMissingCount > 0) {
                 newRow.eachCell((cell) => {
@@ -182,20 +211,20 @@ function DataProcess() {
                 });
             }
         });
-    
+
         // Set column widths
         worksheet.columns = [
             { width: 5 }, { width: 5 }, { width: 5 }, { width: 20 },
             ...Array(headers.length - 4).fill({ width: 30 }),
             { width: 5 }, { width: 30 }
         ];
-    
+
         // Write the workbook to a file
         const buffer = await workbook.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
         const link = document.createElement("a");
         saveAs(blob, "Processed_Files_Data.xlsx");
-    
+
         setSelectedFiles([]);
         setFileStatuses({});
         setAllProcessedData([]);
@@ -226,6 +255,7 @@ function DataProcess() {
                     className="form-control mb-4 border border-bgray-300 w-full rounded-lg px-4 py-3.5 placeholder:placeholder:text-base"
                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf"
                     multiple
+                    disabled={!canUpload}
                     ref={fileInputRef}
                     onChange={handleFileChange}
                 />
@@ -248,7 +278,7 @@ function DataProcess() {
             <div className="flex justify-end gap-1 mt-8 px-10">
                 <button
                     onClick={handleFileUpload}
-                    disabled={Object.values(fileStatuses).some(file => file.status === "In Progress")}
+                    disabled={Object.values(fileStatuses).some(file => file.status === "In Progress") || !canUpload}
                     className="flex justify-end text-white py-3 px-6 font-bold bg-success-300 hover:bg-success-300 transition-all rounded-lg"
                     style={{ marginRight: '40px' }}
                 >

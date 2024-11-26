@@ -27,7 +27,7 @@ const CustomerChildTable = () => {
   const [modalError, setModalError] = useState(null);
 
   useEffect(() => {
-    fetchCustomerNormalUsers(); 
+    fetchCustomerNormalUsers();
   }, [userId]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const CustomerChildTable = () => {
   };
 
   const handleEdit = (userId) => {
-    navigate(`/edit-user/${userId}`);
+    navigate(`/edit-customer-user/${userId}`);
   };
 
   // Function to show the modal and fetch user usage data
@@ -169,7 +169,7 @@ const CustomerChildTable = () => {
               </button>
             </div>
             <div className="p-4">
-            {loadingModal ? (
+              {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -179,9 +179,9 @@ const CustomerChildTable = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -209,7 +209,7 @@ const CustomerChildTable = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                              Sthamer
+                                Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -242,13 +242,13 @@ const CustomerChildTable = () => {
                               </td>
                             </tr>
                           )}
-                              {freeDataProcessCount !== undefined && (
+                          {freeDataProcessCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 4
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                              Kostenloser Datenprozess
+                                Kostenloser Datenprozess
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                                 {freeDataProcessCount}
@@ -273,7 +273,7 @@ const CustomerChildTable = () => {
           </div>
         </div>
       )}
-      
+
       {/* Table and Search Logic */}
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex justify-between space-x-2 mb-4">
@@ -288,6 +288,11 @@ const CustomerChildTable = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+          </div>
+          <div className="flex justify-end mb-5 space-x-4">
+            <button onClick={() => { navigate(-1) }} className="mt-4 btn p-2 m-1 bg-gray-500 hover:bg-gray-600 text-white rounded-md">
+              {Helpers.getTranslationValue("Back")}
+            </button>
           </div>
         </div>
 
@@ -334,9 +339,9 @@ const CustomerChildTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.organization_name}
                     </td>
-              
+
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
-                    <button
+                      <button
                         className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
                         onClick={() => handleEdit(user.id)}
                       >

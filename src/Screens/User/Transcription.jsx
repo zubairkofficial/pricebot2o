@@ -79,7 +79,7 @@ function Transcription() {
         const data = response.data ?? {};
         const dateStr = data.Datum ?? '';
         const theme = data.Thema ?? '';
-        const author = data.BM ?? '';
+        const author = data.auther ?? '';
         // const branchManager = data.Niederlassungsleiter ?? '';
         const participants = data.Teilnehmer ?? '';
 
@@ -206,9 +206,9 @@ function Transcription() {
                       <label className="">{Helpers.getTranslationValue('participant')}:</label>
                       <input
                         type="text"
-                        placeholder={Helpers.getTranslationValue('participant')}
+                        placeholder={Helpers.authUser?.name}
                         className="border border-bgray-300 h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-base"
-                        value={participants}
+                        value={Helpers.authUser?.name}
                         onChange={(e) => setParticipants(e.target.value)}
                       />
                     </div>

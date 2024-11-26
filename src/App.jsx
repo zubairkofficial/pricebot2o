@@ -55,6 +55,7 @@ import InvoiceDetails from "./Screens/User/InvoiceDetails";
 import PastInvoices from "./Screens/User/PastInvoices";
 import InvoiceRecords from "./Screens/User/InvoiceRecords";
 import DetialsWithDate from "./Screens/User/DetialsWithDate";
+import EditCustomerUser from "./Screens/User/AddUser/EditCustomerUser";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -133,14 +134,14 @@ const NotFound = () => {
   }, [Navigate]);
 
   return (
-    <section class="bg-no-repeat bg-cover bg-notfound-light">
-      <div class="flex items-center justify-center min-h-screen">
-        <div class="max-w-2xl mx-auto">
+    <section className="bg-no-repeat bg-cover bg-notfound-light">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="max-w-2xl mx-auto">
           <img src="/assets/images/illustration/404.svg" alt="" />
-          <div class="flex justify-center mt-10">
+          <div className="flex justify-center mt-10">
             <Link
               to="/"
-              class="bg-success-300 text-sm font-bold text-white rounded-lg px-10 py-3"
+              className="bg-success-300 text-sm font-bold text-white rounded-lg px-10 py-3"
             >
               Go Back
             </Link>
@@ -162,13 +163,13 @@ const App = () => {
 
     // Retrieve is_user_customer from localStorage
 
-    if (isUserOrg === "1") {
+    if (isUserOrg == "1") {
       setIsOrganizationalUser(true);
     } else {
       setIsOrganizationalUser(false);
     }
 
-    if (isUserCustomer === "1") {
+    if (isUserCustomer == "1") {
       setIsCustomerAdmin(true); // Set Customer Admin to true if is_user_customer is 1
     } else {
       setIsCustomerAdmin(false);
@@ -241,6 +242,7 @@ const App = () => {
               <>
                 <Route path="/edit-user/:id" element={<Auth><EditOrganizationalUser /></Auth>} />
                 <Route path="/customer-admin-add-user" element={<Auth><AddCustomerAdmin /></Auth>} />
+                <Route path="/edit-customer-user/:id" element={<Auth><EditCustomerUser /></Auth>} />
                 <Route path="/customer-user-table" element={<Auth><CustomerUserTable /></Auth>} />
                 <Route path="/customer-child-table/:userId" element={<Auth><CustomerChildTable /></Auth>} />
               </>
