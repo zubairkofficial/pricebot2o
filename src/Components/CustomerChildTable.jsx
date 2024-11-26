@@ -79,8 +79,8 @@ const CustomerChildTable = () => {
     }
   };
 
-  const handleEdit = (userId) => {
-    navigate(`/edit-customer-user/${userId}`);
+  const handleEdit = (userId) => {    
+    navigate(`/edit-user/${userId}`);
   };
 
   // Function to show the modal and fetch user usage data

@@ -132,7 +132,7 @@ const CustomerUserTable = () => {
   };
 
   const handleEdit = (userId) => {
-    navigate(`/edit-user/${userId}`);
+    navigate(`/edit-customer-user/${userId}`);
   };
 
   const handleDelete = async (id) => {
