@@ -79,7 +79,7 @@ const CustomerChildTable = () => {
     }
   };
 
-  const handleEdit = (userId) => {    
+  const handleEdit = (userId) => {
     navigate(`/edit-user/${userId}`);
   };
 
@@ -317,6 +317,12 @@ const CustomerChildTable = () => {
                     {Helpers.getTranslationValue("Voice Protocol Organization")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("Verbrauchte Dokumente")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("Zählerlimit")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Aktionen
                   </th>
                 </tr>
@@ -339,7 +345,12 @@ const CustomerChildTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.organization_name}
                     </td>
-
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.allCount}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user.counter_limit}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
                       <button
                         className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"

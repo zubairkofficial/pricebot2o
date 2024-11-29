@@ -11,6 +11,7 @@ const AddUser = () => {
   const [organizationalUsers, setOrganizationalUsers] = useState([]);
   const [customerAdmins, setCustomerAdmins] = useState([]); // State to hold customer admins
   const [showOrgUsersDropdown, setShowOrgUsersDropdown] = useState(false); // Control visibility of second dropdown
+  const [customerUsersCount, setCustomerUsersCount] = useState(0);
   const [selectedCustomer, setSelectedCustomer] = useState({
     id: "",
     org_id: "",
@@ -95,6 +96,11 @@ const AddUser = () => {
       );
       setOrganizationalUsers(response.data.organization_users || []);
       setShowOrgUsersDropdown(true); // Show the organizational users dropdown after fetching the data
+      setCustomerUsersCount(
+        response.data.organization_users
+          .map(user => user.current_usage)  // Extract `current_usage` for each user
+          .reduce((acc, usage) => acc + usage, 0)  // Sum up all the `current_usage` values
+      );
     } catch (error) {
       Helpers.toast("error", error.message);
     }
@@ -176,7 +182,18 @@ const AddUser = () => {
           creator_id: user.creator_id,
           is_user_organizational: user.is_user_organizational,
           org_id: selectedCustomer.org_id,
-          services: selectedCustomer.services.map((service)=> service),
+          services: selectedCustomer.services.map((service) => service), 
+          ...(user.is_user_organizational
+            ? {
+              counterLimit: user.counterLimit || 0, // Append Counter Limit
+              currentUsage: user.currentUsage || 0, // Append Current Usage
+              expirationDate: user.expirationDate || "2099-12-31", // Append Expiration Date
+            }
+            : {
+              counterLimit: selectedCustomer.counter_limit || 0, // Append Counter Limit
+              currentUsage: selectedCustomer.current_usage || 0, // Append Current Usage
+              expirationDate: selectedCustomer.expiration_date || "2099-12-31",
+            }),
         };
         apiUrl = `${Helpers.apiUrl}auth/register`;
       }
@@ -273,12 +290,11 @@ const AddUser = () => {
                   <div className="custom-switch-toggle">
                     <button
                       type="button"
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 0 &&
-                        user.is_user_customer === 0
+                      className={`custom-switch-button ${user.is_user_organizational === 0 &&
+                          user.is_user_customer === 0
                           ? "active"
                           : ""
-                      }`}
+                        }`}
                       onClick={() => {
                         handleChange("is_user_organizational")(0);
                         handleChange("is_user_customer")(0);
@@ -288,9 +304,8 @@ const AddUser = () => {
                     </button>
                     <button
                       type="button"
-                      className={`custom-switch-button ${
-                        user.is_user_organizational === 1 ? "active" : ""
-                      }`}
+                      className={`custom-switch-button ${user.is_user_organizational === 1 ? "active" : ""
+                        }`}
                       onClick={() => {
                         handleChange("is_user_organizational")(1);
                         handleChange("is_user_customer")(0);
@@ -300,9 +315,8 @@ const AddUser = () => {
                     </button>
                     <button
                       type="button"
-                      className={`custom-switch-button ${
-                        user.is_user_customer === 1 ? "active" : ""
-                      }`}
+                      className={`custom-switch-button ${user.is_user_customer === 1 ? "active" : ""
+                        }`}
                       onClick={() => {
                         handleChange("is_user_customer")(1);
                         handleChange("is_user_organizational")(0);
@@ -357,24 +371,80 @@ const AddUser = () => {
 
                 {/* Organizational user selects customer admin */}
                 {user.is_user_organizational === 1 && (
-                  <div>
-                    <label
-                      htmlFor="customer_admin"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      {Helpers.getTranslationValue("Wählen Sie den Kundenadministrator")}
-                    </label>
-                    <Select
-                      options={customerAdmins.map((admin) => ({
-                        label: admin.name,
-                        value: admin.id,
-                      }))}
-                      onChange={handleSelectCustomerAdmin}
-                      className="mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <label
+                        htmlFor="customer_admin"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        {Helpers.getTranslationValue("Wählen Sie den Kundenadministrator")}
+                      </label>
+                      <Select
+                        options={customerAdmins.map((admin) => ({
+                          label: admin.name,
+                          value: admin.id,
+                        }))}
+                        onChange={handleSelectCustomerAdmin}
+                        className="mt-4 text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-0 p-2"
+                      />
+                    </div>
+                    <div className="mt-4 space-y-4">
+                      <div>
+                        <label
+                          htmlFor="counterLimit"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Anzahl verfügbarer Dokumente (Paketvolumen)
+                        </label>
+                        <input
+                          id="counterLimit"
+                          name="counterLimit"
+                          type="number"
+                          required
+                          placeholder="Geben Sie das Zählerlimit ein"
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                          value={user.counterLimit || ""}
+                          onChange={(e) => handleChange("counterLimit")(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="currentUsage"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Aktueller Verbrauch
+                        </label>
+                        <input
+                          id="currentUsage"
+                          name="currentUsage"
+                          type="number"
+                          disabled
+                          placeholder="Enter Current Usage"
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                          value={customerUsersCount || 0}
+                          onChange={(e) => handleChange("currentUsage")(e.target.value)}
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="expirationDate"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Verbrauch bis max Datum
+                        </label>
+                        <input
+                          id="expirationDate"
+                          name="expirationDate"
+                          type="date"
+                          required
+                          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
+                          value={user.expirationDate || "2099-12-31"}
+                          onChange={(e) => handleChange("expirationDate")(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </>
                 )}
-
                 {/* Customer admin service selection */}
                 {user.is_user_customer === 1 && (
                   <>

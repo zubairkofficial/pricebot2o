@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [services, setServices] = useState([]);
   const [shouldDisplayServices, setShouldDisplayServices] = useState(false); // State to determine whether to show services
   const [loading, setLoading] = useState(true); // State for loading indicator
-  
+
   // Fetch the user roles from localStorage and set conditions for showing services
   useEffect(() => {
     const isUserOrg = parseInt(localStorage.getItem("is_user_org"), 10) || 0;
@@ -49,15 +49,19 @@ const Dashboard = () => {
         Helpers.authHeaders
       );
       if (response.status !== 200) {
+        console.log('respo', response.data);
         throw new Error(Helpers.getTranslationValue("services_fetch_error"));
       }
       setServices(response.data);
     } catch (error) {
-      Helpers.toast("error", error.message);
+      // Show proper error message from backend or fallback to default
+      const errorMessage = error.response ? error.response.data.message : Helpers.getTranslationValue("services_fetch_error");
+      Helpers.toast("error", errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
 
   // Function to check if the service is enabled for the user
   const isServiceEnabled = (serviceId) => {
@@ -145,7 +149,7 @@ const Dashboard = () => {
         )}
       </div>
     </div>
-  );  
+  );
 };
 
 export default Dashboard;

@@ -59,7 +59,6 @@ const AddCustomerAdmin = () => {
         Helpers.authHeaders
       );
       setOrganizationUsers(response.data.organization_users);
-      console.log(response.data.organization_users)
       setCustomerUsersCount(
         response.data.organization_users
           .map(user => user.current_usage)  // Extract `current_usage` for each user
@@ -246,7 +245,7 @@ const AddCustomerAdmin = () => {
                         name="counterLimit"
                         type="number"
                         required
-                        placeholder="Enter Counter Limit"
+                        placeholder="Geben Sie das Zählerlimit ein"
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
                         value={user.counterLimit || ""}
                         onChange={(e) => handleChange("counterLimit")(e.target.value)}

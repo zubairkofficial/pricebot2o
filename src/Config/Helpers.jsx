@@ -4,6 +4,7 @@ import "notyf/notyf.min.css";
 class Helpers {
   static localhost = "http://127.0.0.1:8000";
   static server = "https://dhnapi.cyberifyportfolio.com";
+  static testServer = "https://dhntestapi.cyberifyportfolio.com";
   static basePath = `${this.localhost}`;
   static apiUrl = `${this.basePath}/api/`;
 
@@ -100,7 +101,7 @@ class Helpers {
       script.src = scriptPath;
       script.async = true;
 
-      script.onload = () => resolve(script); 
+      script.onload = () => resolve(script);
       script.onerror = () =>
         reject(new Error(`Script load error: ${scriptPath}`));
 

@@ -204,7 +204,7 @@ const CustomerUserTable = () => {
               </button>
             </div>
             <div className="p-4">
-            {loadingModal ? (
+              {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -214,9 +214,9 @@ const CustomerUserTable = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -244,7 +244,7 @@ const CustomerUserTable = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                              Sthamer
+                                Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -277,13 +277,13 @@ const CustomerUserTable = () => {
                               </td>
                             </tr>
                           )}
-                              {freeDataProcessCount !== undefined && (
+                          {freeDataProcessCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 4
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                              Kostenloser Datenprozess
+                                Kostenloser Datenprozess
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-600 font-bold">
                                 {freeDataProcessCount}
@@ -357,7 +357,7 @@ const CustomerUserTable = () => {
         </div>
 
         <div className="rounded-lg">
-          <div className="overflow-x-auto">
+          <div className="overflow-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -377,7 +377,13 @@ const CustomerUserTable = () => {
                     {Helpers.getTranslationValue("Voice Protocol Organization")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {Helpers.getTranslationValue("Verfügbare Dokumente")}
+                    {Helpers.getTranslationValue("Anzahl verfügbarer Dokumente")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("Organisationsbenutzer")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    {Helpers.getTranslationValue("Verbrauchte Dokumente")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     {Helpers.getTranslationValue("Actions")}
@@ -406,8 +412,15 @@ const CustomerUserTable = () => {
                       {user.organization_name}
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
+                      {user.counter_limit}
+                    </td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
+                      {user.all_organization_count ?? 'Nill'}
+                    </td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500">
                       {user.allCount}
                     </td>
+
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
                       <button
                         className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"

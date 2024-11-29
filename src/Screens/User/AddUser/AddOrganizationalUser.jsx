@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
- // Import react-switch or use a custom toggle
+// Import react-switch or use a custom toggle
 import axios from "axios";
 
 import Helpers from "../../../Config/Helpers";
@@ -29,12 +29,12 @@ const AddOrganizationalUser = () => {
     // Set the creator_id (user_id) in the state
     setUser((prevUser) => ({
       ...prevUser,
-      creator_id: user_id, 
+      creator_id: user_id,
       services: user_services,
       org_id: user_org_id,// Set the creator_id from localStorage
     }));
 
-    fetchServices();
+    // fetchServices();
     fetchOrgs();
   }, []);
 
@@ -46,7 +46,8 @@ const AddOrganizationalUser = () => {
       );
       setServices(response.data);
     } catch (error) {
-      Helpers.toast("error", error.message);
+      const errorMessage = error.response ? error.response.data.message : Helpers.getTranslationValue("services_fetch_error");
+      Helpers.toast("error", errorMessage);
     }
   };
 
@@ -68,7 +69,7 @@ const AddOrganizationalUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       // Post request with user data including creator_id
       const response = await axios.post(
@@ -95,7 +96,7 @@ const AddOrganizationalUser = () => {
       }
     }
   };
-  
+
 
 
 
@@ -160,7 +161,7 @@ const AddOrganizationalUser = () => {
                   onChange={(e) => handleChange("password")(e.target.value)}
                 />
 
-               
+
 
                 <div className="flex justify-end mt-4">
                   <button

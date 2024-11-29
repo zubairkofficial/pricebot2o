@@ -39,8 +39,7 @@ const OrganizationalUserTable = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${Helpers.apiUrl}getOrganizationUsers?page=${
-          currentPage + 1
+        `${Helpers.apiUrl}getOrganizationUsers?page=${currentPage + 1
         }&limit=${itemsPerPage}`,
         Helpers.authHeaders
       );
@@ -163,7 +162,7 @@ const OrganizationalUserTable = () => {
   return (
     <section className="w-full h-full">
       {/* Modal for displaying user usage */}
-       {showModal && (
+      {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="fixed inset-0 bg-gray-100 opacity-75"></div>
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-md p-6">
@@ -189,7 +188,7 @@ const OrganizationalUserTable = () => {
               </button>
             </div>
             <div className="p-4">
-            {loadingModal ? (
+              {loadingModal ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
                 </div>
@@ -199,9 +198,9 @@ const OrganizationalUserTable = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -229,7 +228,7 @@ const OrganizationalUserTable = () => {
                                 1
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                              Sthamer
+                                Sthamer
                               </td>
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 {documentCount}
@@ -262,7 +261,7 @@ const OrganizationalUserTable = () => {
                               </td>
                             </tr>
                           )}
-                              {freeDataProcessCount !== undefined && (
+                          {freeDataProcessCount !== undefined && (
                             <tr className="hover:bg-gray-50">
                               <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
                                 4
@@ -353,13 +352,20 @@ const OrganizationalUserTable = () => {
                     Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
+                    E-Mail
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Dienstleistungen
                   </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Organisation
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Verbrauchte Dokumente
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Zählerlimit
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Aktionen
@@ -384,6 +390,12 @@ const OrganizationalUserTable = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {user.organization_name}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.allCount}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.counter_limit}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
                         {/* <button

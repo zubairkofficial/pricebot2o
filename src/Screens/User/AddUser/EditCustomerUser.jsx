@@ -178,7 +178,7 @@ const EditCustomerUser = () => {
                                                 id="counterLimit"
                                                 name="counterLimit"
                                                 type="number"
-                                                placeholder="Enter Counter Limit"
+                                                placeholder="Geben Sie das Zählerlimit ein"
                                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
                                                 value={formData.counterLimit}
                                                 onChange={handleChange}
