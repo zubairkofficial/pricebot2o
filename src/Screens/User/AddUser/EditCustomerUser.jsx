@@ -43,7 +43,6 @@ const EditCustomerUser = () => {
                 services: user.services,
                 org_id: user.org_id,
                 counterLimit: user.counter_limit || 0,
-                currentUsage: user.current_usage || 0,
                 expirationDate: user.expiration_date || "2099-12-31"
             });
             setIsLoading(false);

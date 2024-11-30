@@ -15,24 +15,24 @@ const Dashboard = () => {
   }, [setHeaderData]);
 
   const [services, setServices] = useState([]);
-  const [shouldDisplayServices, setShouldDisplayServices] = useState(false); // State to determine whether to show services
+  // const [shouldDisplayServices, setShouldDisplayServices] = useState(false); // State to determine whether to show services
   const [loading, setLoading] = useState(true); // State for loading indicator
 
   // Fetch the user roles from localStorage and set conditions for showing services
-  useEffect(() => {
-    const isUserOrg = parseInt(localStorage.getItem("is_user_org"), 10) || 0;
-    const isUserCustomer = parseInt(localStorage.getItem("is_user_customer"), 10) || 0;
+  // useEffect(() => {
+  //   const isUserOrg = parseInt(localStorage.getItem("is_user_org"), 10) || 0;
+  //   const isUserCustomer = parseInt(localStorage.getItem("is_user_customer"), 10) || 0;
 
-    // Logic for showing services:
-    // 1. Show services if both `is_user_org` and `is_user_customer` are 1
-    // 2. Show services if both `is_user_org` and `is_user_customer` are 0
-    // 3. Hide services if only `is_user_org` is 1
-    if ((isUserOrg === 1 && isUserCustomer === 1) || (isUserOrg === 0 && isUserCustomer === 0)) {
-      setShouldDisplayServices(true);
-    } else if (isUserOrg === 1 && isUserCustomer === 0) {
-      setShouldDisplayServices(false);
-    }
-  }, []);
+  //   // Logic for showing services:
+  //   // 1. Show services if both `is_user_org` and `is_user_customer` are 1
+  //   // 2. Show services if both `is_user_org` and `is_user_customer` are 0
+  //   // 3. Hide services if only `is_user_org` is 1
+  //   if ((isUserOrg === 1 && isUserCustomer === 1) || (isUserOrg === 0 && isUserCustomer === 0)) {
+  //     setShouldDisplayServices(true);
+  //   } else if (isUserOrg === 1 && isUserCustomer === 0) {
+  //     setShouldDisplayServices(false);
+  //   }
+  // }, []);
 
   // Fetch the user services (assumes it's stored in Helpers.authUser)
   const userServices = Helpers.authUser?.services || [];
@@ -49,7 +49,6 @@ const Dashboard = () => {
         Helpers.authHeaders
       );
       if (response.status !== 200) {
-        console.log('respo', response.data);
         throw new Error(Helpers.getTranslationValue("services_fetch_error"));
       }
       setServices(response.data);
@@ -82,8 +81,7 @@ const Dashboard = () => {
         ) : (
           <>
             {/* Render services only if shouldDisplayServices is true */}
-            {shouldDisplayServices ? (
-              filteredServices.length > 0 ? (
+            {              filteredServices.length > 0 ? (
                 filteredServices.map((service) => (
                   <div key={service.id} className="w-full p-2">
                     {service.status === 1 ? ( // Check if the service is enabled
@@ -137,14 +135,14 @@ const Dashboard = () => {
                     Sie haben keinen Zugriff auf Dienste.
                   </p>
                 </div>
-              )
-            ) : (
+              )}
+            {/* ) : (
               <div className="flex items-center justify-center h-96 w-full">
                 <p className="text-center text-xl text-black">
                   Organisatorische Benutzer haben keinen Zugriff auf Dienste.
                 </p>
               </div>
-            )}
+            )} */}
           </>
         )}
       </div>

@@ -68,12 +68,10 @@ const AddCustomerAdmin = () => {
       Helpers.toast("error", error.message);
     }
   };
-  console.log("Users", organizationUsers)
   const handleChange = (name) => (value) => {
     setUser({ ...user, [name]: value });
   };
 
-  console.log(selectedOrganizationUser)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,12 +89,10 @@ const AddCustomerAdmin = () => {
       ...(user.is_user_organizational
         ? {
           counterLimit: user.counterLimit || 0, // Append Counter Limit
-          currentUsage: user.currentUsage || 0, // Append Current Usage
           expirationDate: user.expirationDate || "2099-12-31", // Append Expiration Date
         }
         : {
           counterLimit: selectedOrganizationUser.counter_limit || 0, // Append Counter Limit
-          currentUsage: selectedOrganizationUser.current_usage || 0, // Append Current Usage
           expirationDate: selectedOrganizationUser.expiration_date || "2099-12-31",
         }),
     };

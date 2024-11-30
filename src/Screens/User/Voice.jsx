@@ -63,7 +63,6 @@ const Voice = () => {
       }));
 
       Helpers.toast('success', Helpers.getTranslationValue('summary_generated_successfully'));
-      console.log("Response", response);
     } catch (error) {
       setState((prev) => ({
         ...prev,

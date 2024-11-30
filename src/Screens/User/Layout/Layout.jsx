@@ -135,8 +135,8 @@ const Layout = () => {
                   {Helpers.getTranslationValue("Menu")}
                 </h4>
                 <ul className="mt-2.5">
-                  {(isUserCustomer === 1 ||
-                    (isUserOrganizational === 0 && isUserCustomer === 0)) && (
+                  {/* {(isUserCustomer === 1 ||
+                    (isUserOrganizational === 0 && isUserCustomer === 0)) && ( */}
                       <li className="item py-[11px] text-black ">
                         <Link to="/">
                           <div className="flex items-center justify-between">
@@ -168,7 +168,7 @@ const Layout = () => {
                           </div>
                         </Link>
                       </li>
-                    )}
+                    {/* )} */}
                   {isUserOrganizational === 1 && (
                     <li className="item py-[11px] text-black ">
                       <a
@@ -326,9 +326,9 @@ const Layout = () => {
                 <div className="nav-wrapper mb-[36px]">
                   <div className="item-wrapper mb-5">
                     <ul className="mt-2.5 flex justify-center items-center flex-col">
-                      {(isUserCustomer === 1 ||
+                      {/* {(isUserCustomer === 1 ||
                         (isUserOrganizational === 0 &&
-                          isUserCustomer === 0)) && (
+                          isUserCustomer === 0)) && ( */}
                           <li className="item py-[11px] px-[43px]">
                             <Link to="/">
                               <span className="item-ico">
@@ -353,7 +353,7 @@ const Layout = () => {
                               </span>
                             </Link>
                           </li>
-                        )}
+                        {/* )} */}
                       {isUserOrganizational === 1 && (
                         <li className="item py-[11px] text-black ">
                           <a

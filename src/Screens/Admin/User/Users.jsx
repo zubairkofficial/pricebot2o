@@ -60,7 +60,6 @@ const Users = () => {
         Helpers.authHeaders
       );
       if (response.status === 200) {
-        console.log(response.data);
         setDocumentCount(response.data.document_count);
         setContractSolutionCount(response.data.contract_solution_count);
         setDataProcessCount(response.data.data_process_count);

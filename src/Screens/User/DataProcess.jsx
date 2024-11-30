@@ -84,7 +84,6 @@ function DataProcess() {
                 const response = await axios.post(`${Helpers.apiUrl}data-process`, formData, Helpers.authFileHeaders);
 
                 if (response.status === 200 && response.data && response.data.data) {
-                    console.log(response.data.data[0])
                     newStatuses[file.name].status = "Completed";
                     setFileStatuses({ ...newStatuses });
 

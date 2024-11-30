@@ -37,16 +37,18 @@ const Login = () => {
         localStorage.removeItem("translationData");
         const loginTimestamp = new Date().getTime();
         Helpers.setItem("loginTimestamp", loginTimestamp);
-  
+
         // Extract is_user_customer and is_user_org from response data
         const isUserOrg = response.data.user.is_user_organizational;
         const isUserCustomer = response.data.user.is_user_customer;
-  
+
         if (response.data.user.user_type === 1) {
           window.location.href = "/admin/dashboard";
-        } else if ((isUserCustomer === 0 || isUserCustomer === null || isUserCustomer === undefined) && isUserOrg === 1) {
-          window.location.href = "/org-user-table";
-        } else {
+        }
+        //  else if ((isUserCustomer === 0 || isUserCustomer === null || isUserCustomer === undefined) && isUserOrg === 1) {
+        //   window.location.href = "/org-user-table";
+        // } else {
+        else {
           window.location.href = "/";
         }
         setIsLoading(false);
@@ -65,7 +67,7 @@ const Login = () => {
         setIsLoading(false);
       });
   };
-  
+
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);

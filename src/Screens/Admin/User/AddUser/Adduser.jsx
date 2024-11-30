@@ -136,6 +136,7 @@ const AddUser = () => {
     setUser((prevUser) => ({
       ...prevUser,
       creator_id: selectedUserId,
+      selectedOrgUser: selectedUser,
     }));
   };
 
@@ -145,7 +146,6 @@ const AddUser = () => {
     try {
       let payload;
       let apiUrl;
-
       // Conditionally build payload and select API route
       if (user.is_user_organizational === 0 && user.is_user_customer === 0) {
         // Normal user
@@ -158,7 +158,16 @@ const AddUser = () => {
           creator_id: user.creator_id,
           parent_id: selectedCustomer.id, // The customer admin (ID)
           org_id: selectedCustomer.org_id, // Use org_id from selected customer admin
-          services: selectedCustomer.services.map((service) => service), // Properly map the service IDs
+          services: selectedCustomer.services.map((service) => service),
+          ...(user.is_user_organizational === 1
+            ? {
+                counterLimit: user?.selectedOrgUser?.counter_limit ?? 0, // Use nullish coalescing to fallback to 0
+                expirationDate: user?.selectedOrgUser?.expiration_date ?? "2099-12-31", // Use nullish coalescing to fallback to default date
+              }
+            : {
+                counterLimit: selectedCustomer?.counter_limit ?? 0, // Fallback to 0 if undefined
+                expirationDate: selectedCustomer?.expiration_date ?? "2099-12-31", // Fallback to default date
+              }),
         };
         apiUrl = `${Helpers.apiUrl}register_user`;
       } else if (user.is_user_customer === 1) {
@@ -182,18 +191,7 @@ const AddUser = () => {
           creator_id: user.creator_id,
           is_user_organizational: user.is_user_organizational,
           org_id: selectedCustomer.org_id,
-          services: selectedCustomer.services.map((service) => service), 
-          ...(user.is_user_organizational
-            ? {
-              counterLimit: user.counterLimit || 0, // Append Counter Limit
-              currentUsage: user.currentUsage || 0, // Append Current Usage
-              expirationDate: user.expirationDate || "2099-12-31", // Append Expiration Date
-            }
-            : {
-              counterLimit: selectedCustomer.counter_limit || 0, // Append Counter Limit
-              currentUsage: selectedCustomer.current_usage || 0, // Append Current Usage
-              expirationDate: selectedCustomer.expiration_date || "2099-12-31",
-            }),
+          services: selectedCustomer.services.map((service) => service),
         };
         apiUrl = `${Helpers.apiUrl}auth/register`;
       }
@@ -291,9 +289,9 @@ const AddUser = () => {
                     <button
                       type="button"
                       className={`custom-switch-button ${user.is_user_organizational === 0 &&
-                          user.is_user_customer === 0
-                          ? "active"
-                          : ""
+                        user.is_user_customer === 0
+                        ? "active"
+                        : ""
                         }`}
                       onClick={() => {
                         handleChange("is_user_organizational")(0);

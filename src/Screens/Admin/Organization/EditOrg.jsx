@@ -63,7 +63,6 @@ const EditOrg = () => {
     };
 
     const handleInstructionsChange = (values) => {
-        console.log(values)
         setSelectedInstructions((prev) => ({
             ...prev,
             selectedInstructions: values.map((v) => v.value),
