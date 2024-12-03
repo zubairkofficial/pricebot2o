@@ -99,9 +99,9 @@ const EditUser = () => {
 
   if (loading)
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+      </div>
     );
 
   if (error)
@@ -259,6 +259,13 @@ const EditUser = () => {
                     onClick={() => setIsEditing(false)}
                   >
                     {Helpers.getTranslationValue('Back')}
+                  </Link>
+                  <Link
+                    to={`/admin/reset-user-password/${user.id}`} // Use curly braces and backticks for template literals
+                    className="bg-blue-500 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-100 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={() => setIsEditing(false)}
+                  >
+                    {Helpers.getTranslationValue('Passwort zurücksetzen')}
                   </Link>
                   <button
                     type="submit"

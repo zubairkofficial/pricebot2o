@@ -161,13 +161,13 @@ const AddUser = () => {
           services: selectedCustomer.services.map((service) => service),
           ...(user.is_user_organizational === 1
             ? {
-                counterLimit: user?.selectedOrgUser?.counter_limit ?? 0, // Use nullish coalescing to fallback to 0
-                expirationDate: user?.selectedOrgUser?.expiration_date ?? "2099-12-31", // Use nullish coalescing to fallback to default date
-              }
+              counterLimit: user?.selectedOrgUser?.counter_limit ?? 0, // Use nullish coalescing to fallback to 0
+              expirationDate: user?.selectedOrgUser?.expiration_date ?? "2099-12-31", // Use nullish coalescing to fallback to default date
+            }
             : {
-                counterLimit: selectedCustomer?.counter_limit ?? 0, // Fallback to 0 if undefined
-                expirationDate: selectedCustomer?.expiration_date ?? "2099-12-31", // Fallback to default date
-              }),
+              counterLimit: selectedCustomer?.counter_limit ?? 0, // Fallback to 0 if undefined
+              expirationDate: selectedCustomer?.expiration_date ?? "2099-12-31", // Fallback to default date
+            }),
         };
         apiUrl = `${Helpers.apiUrl}register_user`;
       } else if (user.is_user_customer === 1) {
@@ -191,6 +191,8 @@ const AddUser = () => {
           creator_id: user.creator_id,
           is_user_organizational: user.is_user_organizational,
           org_id: selectedCustomer.org_id,
+          counterLimit: user.counterLimit,
+          expirationDate: user.expirationDate || "2099-12-31",
           services: selectedCustomer.services.map((service) => service),
         };
         apiUrl = `${Helpers.apiUrl}auth/register`;

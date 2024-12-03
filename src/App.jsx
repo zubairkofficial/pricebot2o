@@ -56,6 +56,10 @@ import PastInvoices from "./Screens/User/PastInvoices";
 import InvoiceRecords from "./Screens/User/InvoiceRecords";
 import DetialsWithDate from "./Screens/User/DetialsWithDate";
 import EditCustomerUser from "./Screens/User/AddUser/EditCustomerUser";
+import EditOrganizationalUserPage from "./Screens/User/AddUser/EditOrganizationalUser";
+import ResetUserPassword from "./Screens/Admin/User/ResetUserPassword";
+import ResetOrganizationalUserPassword from "./Screens/Admin/User/AddUser/ResetOrganizationalUserPassword";
+import ResetNormalUserPassword from "./Screens/Admin/User/AddUser/ResetNormalUserPassword";
 
 const Auth = ({ children, isAuth = true, isAdmin = false }) => {
   let user = Helpers.getItem("user", true);
@@ -234,6 +238,9 @@ const App = () => {
             {isOrganizationalUser && (
               <>
                 <Route path="/add-org-user" element={<Auth><AddOrganizationalUser /></Auth>} />
+                <Route path="/edit-user/:id" element={<Auth><EditOrganizationalUserPage /></Auth>} />;
+                <Route path="/reset-normal-user-password/:id" element={<Auth><ResetNormalUserPassword /></Auth>} />;
+
                 <Route path="/org-user-table" element={<Auth><OrganizationalUserTable /></Auth>} />
               </>
             )}
@@ -245,6 +252,8 @@ const App = () => {
                 <Route path="/edit-customer-user/:id" element={<Auth><EditCustomerUser /></Auth>} />
                 <Route path="/customer-user-table" element={<Auth><CustomerUserTable /></Auth>} />
                 <Route path="/customer-child-table/:userId" element={<Auth><CustomerChildTable /></Auth>} />
+                <Route path="/reset-customer-password/:id" element={<Auth><ResetOrganizationalUserPassword /></Auth>} />
+
               </>
             )}
           </Route>
@@ -257,6 +266,8 @@ const App = () => {
             <Route path="user-children/:customerId" element={<Auth isAdmin={true}><OrganizationUsers /></Auth>} />
             <Route path="normal-child-users/:userId" element={<Auth isAdmin={true}><NormalUsers /></Auth>} />
             <Route path="edit-user/:id" element={<Auth isAdmin={true}><Edituser /></Auth>} />
+            <Route path="reset-user-password/:id" element={<Auth isAdmin={true}><ResetUserPassword /></Auth>} />
+
             <Route path="services" element={<Auth isAdmin={true}><Services /></Auth>} />
             <Route path="add-service" element={<Auth isAdmin={true}><AddService /></Auth>} />
             <Route path="edit-service/:id" element={<Auth isAdmin={true}><EditService /></Auth>} />

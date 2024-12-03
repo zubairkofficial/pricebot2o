@@ -170,7 +170,7 @@ const OrganizationalUserTable = () => {
               <h2 className="text-xl font-semibold">User Usage</h2>
               <button
                 onClick={handleCloseModal}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-900 hover:text-gray-700"
               >
                 <svg
                   className="w-6 h-6"
@@ -209,13 +209,13 @@ const OrganizationalUserTable = () => {
                       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                         <thead className="bg-success-300">
                           <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-gray-50">
                               Sr. No
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-gray-50">
                               Werkzeug
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-gray-50">
                               Dateien hochgeladen
                             </th>
                           </tr>
@@ -398,7 +398,7 @@ const OrganizationalUserTable = () => {
                         {user.counter_limit}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
-                        {/* <button
+                        <button
                           className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
                           onClick={() => handleEdit(user.id)} // Edit Button
                         >
@@ -409,7 +409,7 @@ const OrganizationalUserTable = () => {
                           onClick={() => handleDelete(user.id)} // Delete Button
                         >
                           <FaTrashAlt className="text-black" />
-                        </button> */}
+                        </button>
                         <button
                           className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
                           onClick={() => handleShowModal(user.id)} // View Document Usage

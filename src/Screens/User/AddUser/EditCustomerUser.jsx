@@ -38,6 +38,7 @@ const EditCustomerUser = () => {
             setAvailableServices(response.data.services);
             setOrganizations(response.data.orgs);
             setFormData({
+                id: user.id,
                 name: user.name,
                 email: user.email,
                 services: user.services,
@@ -273,11 +274,18 @@ const EditCustomerUser = () => {
                                 </div>
                                 <div className="flex justify-end space-x-3">
                                     <Link
-                                        to="/admin/dashboard"
+                                        to="/customer-user-table"
                                         className="bg-gray-200 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         onClick={() => setIsEditing(false)}
                                     >
                                         {Helpers.getTranslationValue('Back')}
+                                    </Link>
+                                    <Link
+                                        to={`/reset-customer-password/${formData.id}`} // Use curly braces and backticks for template literals
+                                        className="mr-2 py-2 px-4 text-white bg-success-300 hover:bg-success-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        onClick={() => setIsEditing(false)}
+                                    >
+                                        {Helpers.getTranslationValue('Passwort zurücksetzen')}
                                     </Link>
                                     <button
                                         type="submit"

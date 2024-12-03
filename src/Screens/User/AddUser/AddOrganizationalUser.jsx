@@ -14,6 +14,8 @@ const AddOrganizationalUser = () => {
     org_id: "",
     services: [],
     showPassword: false,
+    counterLimit: Helpers.authUser.counter_limit,
+    expirationDate: Helpers.authUser.expiration_date,
   });
   const [services, setServices] = useState([]);
   const [orgs, setOrgs] = useState([]);
