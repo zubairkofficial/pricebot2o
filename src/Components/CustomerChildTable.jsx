@@ -190,13 +190,13 @@ const CustomerChildTable = () => {
                       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                         <thead className="bg-success-300">
                           <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Sr. No
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Werkzeug
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Dateien hochgeladen
                             </th>
                           </tr>

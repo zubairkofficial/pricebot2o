@@ -74,7 +74,28 @@ const OrganizationUsers = () => {
     setShowModal(false);
     setSelectedUser(null);
   };
+  const handleEdit = (userId) => {
+    // alert(userId)
+    navigate(`/admin/edit-user/${userId}`);
+  };
 
+  const handleDelete = async (id) => {
+    try {
+      // alert(id)
+      const response = await axios.delete(
+        `${Helpers.apiUrl}delete/${id}`,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue("user_delete_error"));
+      }
+      setUsers(users.filter((user) => user.id !== id));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+      Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   const handleViewUsers = (id) => {
     navigate(`/admin/normal-child-users/${id}`);
   };
@@ -299,6 +320,18 @@ const OrganizationUsers = () => {
                       {user.allCount}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
+                      <button
+                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                        onClick={() => handleEdit(user.id)}
+                      >
+                        <FaPencilAlt className="text-black" />
+                      </button>
+                      <button
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
+                        onClick={() => handleDelete(user.id)}
+                      >
+                        <FaTrashAlt className="text-black" />
+                      </button>
                       <button
                         className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
                         onClick={() => handleShowModal(user)}

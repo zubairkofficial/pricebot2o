@@ -43,7 +43,7 @@ const Users = () => {
   const [loadingModal, setLoadingModal] = useState(true);
   const [modalError, setModalError] = useState(null);
 
-  const handleTotalModal = async(user)=>{
+  const handleTotalModal = async (user) => {
     setShowTotalModal(true);
     setLoadingTotalModal(true);
     SetTotalModalUser(user);
@@ -265,13 +265,13 @@ const Users = () => {
                       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                         <thead className="bg-success-300">
                           <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Sr. No
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Werkzeug
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Dateien hochgeladen
                             </th>
                           </tr>
@@ -355,7 +355,7 @@ const Users = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">User Usage</h2>
               <button
-                onClick={()=>{setShowTotalModal(false);}}
+                onClick={() => { setShowTotalModal(false); }}
                 className="text-gray-500 hover:text-gray-700"
               >
                 <svg
@@ -374,91 +374,91 @@ const Users = () => {
               </button>
             </div>
             <div className="p-4">
-                  {totalModalUser.total_document_count === 0 &&
-                    totalModalUser.total_contract_solution_count === 0 &&
-                    totalModalUser.total_data_process_count === 0 &&
-                    totalModalUser.total_free_data_process_count === 0 ? (
-                    <p className="text-gray-500">
-                      Keine Werkzeugnutzung gefunden
-                    </p>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                        <thead className="bg-success-300">
-                          <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                              Sr. No
-                            </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                              Werkzeug
-                            </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
-                              Dateien hochgeladen
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {/* Display 0 if the tool is available but count is 0 */}
-                          {totalModalUser.total_document_count !== 0 && (
-                            <tr className="hover:bg-gray-50">
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                1
-                              </td>
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                Sthamer
-                              </td>
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                {totalModalUser.total_document_count}
-                              </td>
-                            </tr>
-                          )}
-                          {totalModalUser.total_contract_solution_count !== 0 && (
-                            <tr className="hover:bg-gray-50">
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                2
-                              </td>
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                Contract Automation Solution
-                              </td>
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                {totalModalUser.total_contract_solution_count}
-                              </td>
-                            </tr>
-                          )}
-                          {totalModalUser.total_data_process_count !== 0 && (
-                            <tr className="hover:bg-gray-50">
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                3
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                                Datenprozess
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                                {totalModalUser.total_data_process_count}
-                              </td>
-                            </tr>
-                          )}
-                          {totalModalUser.total_free_data_process_count !== 0 && (
-                            <tr className="hover:bg-gray-50">
-                              <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
-                                4
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                                Kostenloser Datenprozess
-                              </td>
-                              <td className="px-6 py-4 text-sm text-gray-600 font-bold">
-                                {totalModalUser.total_free_data_process_count}
-                              </td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+              {totalModalUser.total_document_count === 0 &&
+                totalModalUser.total_contract_solution_count === 0 &&
+                totalModalUser.total_data_process_count === 0 &&
+                totalModalUser.total_free_data_process_count === 0 ? (
+                <p className="text-gray-500">
+                  Keine Werkzeugnutzung gefunden
+                </p>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead className="bg-success-300">
+                      <tr>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-blue-500">
+                          Sr. No
+                        </th>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-blue-500">
+                          Werkzeug
+                        </th>
+                        <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-800 bg-blue-500">
+                          Dateien hochgeladen
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Display 0 if the tool is available but count is 0 */}
+                      {totalModalUser.total_document_count !== 0 && (
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            1
+                          </td>
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            Sthamer
+                          </td>
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            {totalModalUser.total_document_count}
+                          </td>
+                        </tr>
+                      )}
+                      {totalModalUser.total_contract_solution_count !== 0 && (
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            2
+                          </td>
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            Contract Automation Solution
+                          </td>
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            {totalModalUser.total_contract_solution_count}
+                          </td>
+                        </tr>
+                      )}
+                      {totalModalUser.total_data_process_count !== 0 && (
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            3
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                            Datenprozess
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                            {totalModalUser.total_data_process_count}
+                          </td>
+                        </tr>
+                      )}
+                      {totalModalUser.total_free_data_process_count !== 0 && (
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-6 py-4 border-b text-sm text-gray-600 font-bold">
+                            4
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                            Kostenloser Datenprozess
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600 font-bold">
+                            {totalModalUser.total_free_data_process_count}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
             <div className="flex justify-end mt-4">
               <button
-                onClick={()=>{setShowTotalModal(false);}}
+                onClick={() => { setShowTotalModal(false); }}
                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Close
@@ -571,7 +571,7 @@ const Users = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.organization_name}
-                  </td>  
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ">
                     <button
                       className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
@@ -579,7 +579,7 @@ const Users = () => {
                     >
                       <FaEye className="text-black" />
                     </button>
-                  </td>                
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium ">
                     <button
                       className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"

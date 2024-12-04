@@ -135,6 +135,8 @@ const NotFound = () => {
     } else {
       <Navigate to="/" />;
     }
+
+
   }, [Navigate]);
 
   return (
@@ -178,9 +180,12 @@ const App = () => {
     } else {
       setIsCustomerAdmin(false);
     }
+    // Set Admin
+
   }, []);
 
   useEffect(() => {
+
     fetchTranslations();
   }, []);
 
@@ -246,6 +251,7 @@ const App = () => {
             )}
 
             {isCustomerAdmin && (
+
               <>
                 <Route path="/edit-user/:id" element={<Auth><EditOrganizationalUser /></Auth>} />
                 <Route path="/customer-admin-add-user" element={<Auth><AddCustomerAdmin /></Auth>} />

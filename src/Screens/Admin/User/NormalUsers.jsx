@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaPencilAlt, FaTrashAlt, FaUsers } from "react-icons/fa";
 import Helpers from "../../../Config/Helpers";
 import Pagination from "../../../Components/Pagination";
 
@@ -103,6 +103,28 @@ const NormalUsers = () => {
     setModalError(null);
   };
 
+  const handleEdit = (userId) => {
+    // alert(userId)
+    navigate(`/admin/edit-user/${userId}`);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      // alert(id)
+      const response = await axios.delete(
+        `${Helpers.apiUrl}delete/${id}`,
+        Helpers.authHeaders
+      );
+      if (response.status !== 200) {
+        throw new Error(Helpers.getTranslationValue("user_delete_error"));
+      }
+      setUsers(users.filter((user) => user.id !== id));
+      setFilteredUsers(filteredUsers.filter((user) => user.id !== id));
+      Helpers.toast("success", Helpers.getTranslationValue("user_delete_msg"));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   const indexOfLastUser = (currentPage + 1) * itemsPerPage;
   const indexOfFirstUser = currentPage * itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -171,15 +193,15 @@ const NormalUsers = () => {
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-                        <thead className="bg-success-300">
+                        <thead className="bg-blue-500">
                           <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-100 bg-blue-500">
                               Sr. No
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-100 bg-blue-500">
                               Werkzeug
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-100 bg-blue-500">
                               Dateien hochgeladen
                             </th>
                           </tr>
@@ -334,6 +356,18 @@ const NormalUsers = () => {
                       {user.counter_limit}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center">
+                      <button
+                        className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                        onClick={() => handleEdit(user.id)}
+                      >
+                        <FaPencilAlt className="text-black" />
+                      </button>
+                      <button
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 ml-2"
+                        onClick={() => handleDelete(user.id)}
+                      >
+                        <FaTrashAlt className="text-black" />
+                      </button>
                       <button
                         className="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 ml-2"
                         onClick={() => handleShowModal(user.id)}

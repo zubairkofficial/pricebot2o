@@ -80,7 +80,7 @@ const AllUsers = () => {
     setUserToDelete(id);
     setShowDeleteConfirmModal(true);
   };
-  
+
   const confirmDeleteUser = async () => {
     try {
       const response = await axios.delete(
@@ -163,7 +163,7 @@ const AllUsers = () => {
 
   return (
     <section className="w-full h-full">
-       {showDeleteConfirmModal && (
+      {showDeleteConfirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
           <div className="bg-white rounded-lg p-6 shadow-md max-w-sm w-1/2">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
@@ -225,9 +225,9 @@ const AllUsers = () => {
                 <>
                   {/* Check if all tools are undefined (i.e., no tools are available for the user) */}
                   {documentCount === undefined &&
-                  contractSolutionCount === undefined &&
-                  dataProcessCount === undefined &&
-                  freeDataProcessCount === undefined ? (
+                    contractSolutionCount === undefined &&
+                    dataProcessCount === undefined &&
+                    freeDataProcessCount === undefined ? (
                     <p className="text-gray-500">
                       Keine Werkzeugnutzung gefunden
                     </p>
@@ -236,13 +236,13 @@ const AllUsers = () => {
                       <table className="min-w-full bg-white border border-gray-200 rounded-lg">
                         <thead className="bg-success-300">
                           <tr>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Sr. No
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Werkzeug
                             </th>
-                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-gray-50">
+                            <th className="px-6 py-3 border-b text-left text-sm font-medium text-white bg-blue-500">
                               Dateien hochgeladen
                             </th>
                           </tr>
@@ -383,8 +383,8 @@ const AllUsers = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {user.services
                         ? user.services
-                            .map((service) => service.name)
-                            .join(", ")
+                          .map((service) => service.name)
+                          .join(", ")
                         : ""}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
