@@ -181,6 +181,8 @@ function ContractAutomationSolution() {
             <option value="wind">Wind</option>
             <option value="pv">PV</option>
             <option value="pool">Pool</option>
+            <option value="kabel">Kabel</option>
+            <option value="forst">Forst</option>
           </select>
         </div>
         <input
